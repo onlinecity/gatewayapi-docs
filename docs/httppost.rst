@@ -33,7 +33,7 @@ params.
    Accept: application/json, text/javascript
    Content-Type: application/json
 
-   [ { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] } ]
+   {"messages": [ { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] } ]}
 
 **URL Params**
 
@@ -44,7 +44,7 @@ params.
    Accept: application/json, text/javascript
    Content-Type: application/json
 
-   [ { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] } ]
+   {"messages": [ { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] } ]}
 
 
 HTTP Basic Authentication
@@ -64,13 +64,13 @@ basic-cookie is ``username ":" password`` which is then base64 encoded.
    Accept: application/json, text/javascript
    Content-Type: application/json
 
-   [ { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] } ]
+   {"messages": [ { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] } ]}
 
 Basic auth also has the advantage of being easy to do with curl::
 
   curl -vv "https://myuser:mypass@gatewayapi.com/api/v2/sendsms" \
   -H "Content-Type: application/json" \
-  -d '[ { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] } ]'
+  -d '{"messages": [ { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] } ]}'
 
 SMS'es
 ------
@@ -96,18 +96,28 @@ Examples
       Accept: application/json, text/javascript
       Content-Type: application/json
 
-      [
-        {
-          "message": "Hello World",
-          "recipients": [
-            { "msisdn": 4512345678 },
-            { "countrycode": 45, "number": 87654321 }
+      {
+          "messages": [
+              {
+                  "message": "Hello World",
+                  "recipients": [
+                      {
+                          "msisdn": 4512345678
+                      },
+                      {
+                          "countrycode": 45,
+                          "number": 87654321
+                      }
+                  ]
+              }
           ]
-        }
-      ]
+      }
 
 
    **Fully fledged request**
+
+   The request will fail and return a form error. This is because ``message``
+   and ``payload`` can not both be set for the same message.
 
    .. sourcecode:: http
 
@@ -123,46 +133,79 @@ Examples
       Accept: application/json, text/javascript
       Content-Type: application/json
 
-      [
-        {
-          "class": "A",
-          "message": "Hello World, %1, --MYTAG--",
-          "recipients": [
-            {
-              "countrycode": 1,
-              "areacode": 514,
-              "number": 654321,
-              "mcc": 302,
-              "mnc": 720,
-              "charge": {
-                "amount": 1.23,
-                "currency": "CAD",
-                "code": "P01",
-                "description": "Example charged SMS",
-                "category": "SC12",
-                "servicename": "Example service"
-              },
-              "tagvalues": [
-                "foo",
-                "bar"
-              ]
-            }
-          ],
-          "sender": "Test Sender",
-          "sendtime": 915148800,
-          "tags": [
-            "--MYTAG--",
-            "%1"
-          ],
-          "userref": "1234",
-          "priority": "NORMAL",
-          "validity_period": 86400,
-          "encoding": "UTF8",
-          "destaddr": "MOBILE",
-          "udh": "BQQLhCPw",
-          "payload": "cGF5bG9hZCBlbmNvZGVkIGFzIGI2NAo="
-        }
-      ]
+      {
+          "message_class": "A",
+          "messages": [
+              {
+                  "message": "Hello World, %1, --MYTAG--",
+                  "payload": "cGF5bG9hZCBlbmNvZGVkIGFzIGI2NAo=",
+                  "recipients": [
+                      {
+                          "countrycode": 1,
+                          "areacode": 514,
+                          "number": 654321,
+                          "mcc": 302,
+                          "mnc": 720,
+                          "charge": {
+                              "amount": 1.23,
+                              "currency": "CAD",
+                              "code": "P01",
+                              "description": "Example charged SMS",
+                              "category": "SC12",
+                              "servicename": "Example service"
+                          },
+                          "tagvalues": [
+                              "foo",
+                              "bar"
+                          ]
+                      }
+                  ],
+                  "sender": "Test Sender",
+                  "sendtime": 915148800,
+                  "tags": [
+                      "--MYTAG--",
+                      "%1"
+                  ],
+                  "userref": "1234",
+                  "priority": "NORMAL",
+                  "validity_period": 86400,
+                  "encoding": "UTF8",
+                  "destaddr": "MOBILE",
+                  "udh": "BQQLhCPw"
+              }
+          ]
+      }
+
+   **Example response**
+
+   If the request succeed, the internal message identifiers are returned to
+   the caller like this:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {"ids": [132,134,135,137,138]}
+
+
+   If the request fails, the response will look like the example below:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 403 FORBIDDEN 
+      Content-Type: application/json
+
+      {
+          "class": "OcmgException",
+          "message": "Unauthorized IP-address: %1",
+          "code": 531,
+          "vars": ["127.0.0.1"] 
+          
+      }
+
+   ``code`` and ``vars`` are left out of the response if they are empty.
+
 
 
 v1 API (deprecated)
