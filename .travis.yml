@@ -18,8 +18,8 @@ script:
   cd docs && make html && cd ..
 after_success:
   - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && cd docs/_build/
-  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && lftp -u $FTP_USER,$FTP_PASSWORD -p 20002 sftp://77.66.8.130:20002/gatewayapi_docs/ -e "mirror --parallel=10 -p -R html; exit"
-  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && lftp -u $FTP_USER,$FTP_PASSWORD -p 20002 sftp://77.66.8.131:20002/gatewayapi_docs/ -e "mirror --parallel=10 -p -R html; exit"
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && lftp -u $FTP_USER,$FTP_PASSWORD -p 20002 sftp://77.66.8.130:20002/gatewayapi_docs/ -e "mirror --parallel=10 -p -R html docs; exit"
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && lftp -u $FTP_USER,$FTP_PASSWORD -p 20002 sftp://77.66.8.131:20002/gatewayapi_docs/ -e "mirror --parallel=10 -p -R html docs; exit"
 notifications:
   slack:
     secure: "ItcOX04vos+FejXxyKjjfPiDZ2U0EZEIa/xHJS4IEbEiSCgxOS1VxjeIsZBYsBFWd0ufztiiCNYJNg44hgYX8UqYQD7R9CyeesYq9YQa1JjyrihiZze3LOqZSmLES0hi1+7pJ8y4DkAyz0y1WMHlAnmXjnX4HS62W7zvCCmYcPg="
