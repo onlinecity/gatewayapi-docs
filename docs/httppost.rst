@@ -193,15 +193,15 @@ Examples
 
    .. sourcecode:: http
 
-      HTTP/1.1 403 FORBIDDEN 
+      HTTP/1.1 403 FORBIDDEN
       Content-Type: application/json
 
       {
           "class": "OcmgException",
           "message": "Unauthorized IP-address: %1",
           "code": 531,
-          "vars": ["127.0.0.1"] 
-          
+          "vars": ["127.0.0.1"]
+
       }
 
    ``code`` and ``vars`` are left out of the response if they are empty.
@@ -235,7 +235,7 @@ httppost.nimta.com domain.
    :form from: Optional alphanumeric sender. Maximum 11 characters
    :form callbackurl: Optional URL for status callbacks
    :form class: Class to use for message delivery. Defaults to 'A'
-   :reqheader Content-type: application/x-www-form-urlencoded
+   :reqheader Content-Type: application/x-www-form-urlencoded
    :status 200: with a plaintext body: "Processing:sessionid", with sessionid replaced with the given sessionid
    :status 400: if the request can't be processed due to an exception. The body contains the exception message
 
