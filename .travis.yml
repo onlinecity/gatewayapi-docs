@@ -4,6 +4,10 @@ addons:
   apt:
     packages:
       - lftp
+env:
+  global:
+    - "FTP_USER=travis"
+    - secure: "R4vg7DQ5b1lX28zT2DkdruX+3mIXj4+FJd1y5HY8zWdaj9JG/16T41nZxuZKsrzJuRjHtsUovStwquDRoOmOsabPfZTptPdTXnUA0hSv5uphcYyJIUDn2x2X+CWbK2Ts8UoFQRvP/P0+2IKqib8yFf+PCxsEDoCaS7PBhapDA3k="
 cache:
   - pip
   - apt
@@ -12,5 +16,12 @@ before_install:
 install:
   - pip install --upgrade sphinx sphinxcontrib-httpdomain
 script:
-  cd docs && make html
-
+  cd docs && make html && cd ..
+after_success:
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && cd docs/_build/
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && lftp -u $FTP_USER,$FTP_PASSWORD -p 20002 sftp://77.66.8.130:20002/gatewayapi_docs/ -e "mirror --parallel=10 -p -R html; exit"
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && lftp -u $FTP_USER,$FTP_PASSWORD -p 20002 sftp://77.66.8.131:20002/gatewayapi_docs/ -e "mirror --parallel=10 -p -R html; exit"
+notifications:
+  slack:
+    secure: "ItcOX04vos+FejXxyKjjfPiDZ2U0EZEIa/xHJS4IEbEiSCgxOS1VxjeIsZBYsBFWd0ufztiiCNYJNg44hgYX8UqYQD7R9CyeesYq9YQa1JjyrihiZze3LOqZSmLES0hi1+7pJ8y4DkAyz0y1WMHlAnmXjnX4HS62W7zvCCmYcPg="
+  email: false
