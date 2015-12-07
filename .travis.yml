@@ -13,6 +13,7 @@ env:
     - "FTP_USER=travis"
     - secure: "R4vg7DQ5b1lX28zT2DkdruX+3mIXj4+FJd1y5HY8zWdaj9JG/16T41nZxuZKsrzJuRjHtsUovStwquDRoOmOsabPfZTptPdTXnUA0hSv5uphcYyJIUDn2x2X+CWbK2Ts8UoFQRvP/P0+2IKqib8yFf+PCxsEDoCaS7PBhapDA3k="
 cache:
+  apt: true
   directories:
     - $HOME/.cache/pip
 before_install:
