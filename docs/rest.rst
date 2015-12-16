@@ -49,7 +49,7 @@ the timestamp is correct.
    Accept: application/json, text/javascript
    Content-Type: application/json
 
-   {"messages": [ { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] } ]}
+   { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] }
 
 **URL Params**
 
@@ -60,7 +60,7 @@ the timestamp is correct.
    Accept: application/json, text/javascript
    Content-Type: application/json
 
-   {"messages": [ { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] } ]}
+   { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] }
 
 
 .. _`basic-auth-howto`:
@@ -82,13 +82,13 @@ basic-cookie is ``username ":" password`` which is then base64 encoded.
    Accept: application/json, text/javascript
    Content-Type: application/json
 
-   {"messages": [ { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] } ]}
+   { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] }
 
 Basic auth also has the advantage of being easy to do with curl::
 
   curl -vv "https://myuser:mypass@gatewayapi.com/rest/mtsms" \
   -H "Content-Type: application/json" \
-  -d '{"messages": [ { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] } ]}'
+  -d '{ "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] }'
 
 
 Sending SMS'es
@@ -101,6 +101,8 @@ Request Examples
 ^^^^^^^^^^^^^^^^
 
 .. http:post:: /rest/mtsms
+
+   The root element can be either a dict with a single SMS or a list of SMS'es.
 
    **Minimal request**
 
@@ -118,14 +120,10 @@ Request Examples
       Content-Type: application/json
 
       {
-          "messages": [
-              {
-                  "message": "Hello World",
-                  "recipients": [
-                      { "msisdn": 4512345678 },
-                      { "msisdn": 4587654321 }
-                  ]
-              }
+          "message": "Hello World",
+          "recipients": [
+              { "msisdn": 4512345678 },
+              { "msisdn": 4587654321 }
           ]
       }
 
@@ -148,46 +146,50 @@ Request Examples
       Accept: application/json, text/javascript
       Content-Type: application/json
 
-      {
-          "message_class": "bulk",
-          "messages": [
-              {
-                  "message": "Hello World, %1, --MYTAG--",
-                  "payload": "cGF5bG9hZCBlbmNvZGVkIGFzIGI2NAo=",
-                  "recipients": [
-                      {
-                          "msisdn": 1514654321
-                          "mcc": 302,
-                          "mnc": 720,
-                          "charge": {
-                              "amount": 1.23,
-                              "currency": "CAD",
-                              "code": "P01",
-                              "description": "Example charged SMS",
-                              "category": "SC12",
-                              "servicename": "Example service"
-                          },
-                          "tagvalues": [
-                              "foo",
-                              "bar"
-                          ]
-                      }
-                  ],
-                  "sender": "Test Sender",
-                  "sendtime": 915148800,
-                  "tags": [
-                      "--MYTAG--",
-                      "%1"
-                  ],
-                  "userref": "1234",
-                  "priority": "NORMAL",
-                  "validity_period": 86400,
-                  "encoding": "UTF8",
-                  "destaddr": "MOBILE",
-                  "udh": "BQQLhCPw"
-              }
-          ]
-      }
+      [
+          {
+              "class": "bulk",
+              "message": "Hello World, %1, --MYTAG--",
+              "payload": "cGF5bG9hZCBlbmNvZGVkIGFzIGI2NAo=",
+              "recipients": [
+                  {
+                      "msisdn": 1514654321
+                      "mcc": 302,
+                      "mnc": 720,
+                      "charge": {
+                          "amount": 1.23,
+                          "currency": "CAD",
+                          "code": "P01",
+                          "description": "Example charged SMS",
+                          "category": "SC12",
+                          "servicename": "Example service"
+                      },
+                      "tagvalues": [
+                          "foo",
+                          "bar"
+                      ]
+                  }
+              ],
+              "sender": "Test Sender",
+              "sendtime": 915148800,
+              "tags": [
+                  "--MYTAG--",
+                  "%1"
+              ],
+              "userref": "1234",
+              "priority": "NORMAL",
+              "validity_period": 86400,
+              "encoding": "UTF8",
+              "destaddr": "MOBILE",
+              "udh": "BQQLhCPw"
+          },
+          {
+              "message": "Hello World",
+              "recipients": [
+                  { "msisdn": 4512345678 }
+              ]
+          }
+      ]
 
    **Example response**
 
@@ -241,10 +243,10 @@ using pip, simply do ``pip install requests_oauthlib``.
    key = 'Create-an-API-Key'
    secret = 'GoGenerateAnApiKeyAndSecret'
    gwapi = OAuth1Session(key, client_secret=secret)
-   req = {'message_class': 'bulk', 'messages': [{
+   req = {
        'recipients': [{'msisdn': 4512345678}],
        'message': 'Hello World',
-   }]}
+   }
    res = gwapi.post('https://gatewayapi.com/rest/mtsms', json=req)
    res.raise_for_status()
 
@@ -272,10 +274,10 @@ Install the deps with ``composer require "guzzlehttp/oauth-subscriber 0.3.*"``.
        'auth'     => 'oauth'
    ]);
 
-   $req = ['message_class' => 'bulk', 'messages' => [[
+   $req = [
        'recipients' => [['msisdn' => 4512345678]],
        'message'    => 'Hello World',
-   ]]];
+   ];
    $client->post('mtsms', ['json' => $req]);
 
 
@@ -322,12 +324,11 @@ composer or any other dependencies.
    }
 
    // Request body
-   $req = array('message_class' => 'bulk', 'messages' => array(
-       array(
-           'recipients' => array(array('msisdn' => 4512345678)),
-           'message' => 'Hello World',
-       )
-   ));
+   $req = array(
+       'recipients' => array(array('msisdn' => 4512345678)),
+       'message' => 'Hello World',
+   );
+
 
    // Send request with cURL
    $c = curl_init($uri);
@@ -354,17 +355,28 @@ this for shell scripting, because OAuth requires calculating a few variables.
    'oauth_timestamp="1450127578", oauth_version="1.0", '\
    'oauth_signature_method="HMAC-SHA1", '\
    'oauth_signature="lQzrZkJyQ9Gx27mh5z9waCwkGlQ%3D"' \
-   -d '{ "messages": [ { "recipients": [ { "msisdn": 4512345678 } '\
-   '],"message": "Hello World" } ], "message_class": "bulk" }'
+   -d '{ "message": "Hello World", '\
+   '"recipients": [ { "msisdn": 4512345678 } ] }'
 
 
 .. sourcecode:: bash
 
-  curl -v "https://myuser:mypass@gatewayapi.com/rest/mtsms" \
-  -H "Content-Type: application/json" \
-  -d '{"messages": [ { "message": "Hello World", '\
-  '"recipients": [ { "msisdn": 4512345678 } ] } ]}'
+   curl -v "https://myuser:mypass@gatewayapi.com/rest/mtsms" \
+   -H "Content-Type: application/json" \
+   -d '{ "message": "Hello World", '\
+   '"recipients": [ { "msisdn": 4512345678 } ] }'
 
+Webhooks
+--------
+
+Although the REST API will support polling for the message status, we strongly
+encourage to use our simple webhooks for geting Delivery Status Notifications,
+aka DSNs.
+
+In addition webhooks can be used to react to enduser initiated events, such as
+MO SMS (Mobile Originated SMS, or Incoming SMS).
+
+*Work in progress...*
 
 .. _`OAuth 1.0a`: http://tools.ietf.org/html/rfc5849
 .. _`two-legged`: http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/2/spec.html

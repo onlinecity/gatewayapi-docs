@@ -93,3 +93,12 @@ undocumented.
    :query alphatext: Optional alphanumeric sender. Maximum 11 characters
    :status 200: with a .NET hidden form or other nonsensical output
    :status 200: If the request can't be processed it will still return 200, but with a error message
+
+
+Webhooks
+--------
+
+Webhooks are used to respond to changes in the message delivery status, also
+known as Delivery Status Notifications or DSNs for short.
+
+*Work in progress...*
