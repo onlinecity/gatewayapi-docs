@@ -101,4 +101,13 @@ Webhooks
 Webhooks are used to respond to changes in the message delivery status, also
 known as Delivery Status Notifications or DSNs for short.
 
+Delivery Status Notification
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+By adding a URL to the callbackurl field, you can setup a webhook that will be
+called whenever the current status (state) of the message changes, ie. goes from
+a transient state (ie. BUFFERED) to final state (ie. DELIVERED) or an other
+transient state. Once a final state is reached we will no longer call your
+webhook with updates for this particular message and recipient.
+
 *Work in progress...*
