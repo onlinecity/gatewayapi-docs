@@ -371,7 +371,7 @@ Webhooks
 --------
 
 Although the REST API will support polling for the message status, we strongly
-encourage to use our simple webhooks for geting Delivery Status Notifications,
+encourage to use our simple webhooks for getting Delivery Status Notifications,
 aka DSNs.
 
 In addition webhooks can be used to react to enduser initiated events, such as
@@ -381,6 +381,8 @@ MO SMS (Mobile Originated SMS, or Incoming SMS).
 Delivery Status Notification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+States and status codes
+~~~~~~~~~~~~~~~~~~~~~~~
 By adding a URL to the callbackurl field, or setting one of your webhooks as
 the default for status notifications, you can setup a webhook that will be
 called whenever the current status (state) of the message changes, ie. goes
@@ -403,13 +405,13 @@ recipient.
       Unknown [shape=plaintext];
       Undeliverable [shape=box];
       Unknown -> Buffered -> Enroute -> Delivered [color=blue];
-      Unknown -> Undeliverable;
+      Unknown -> Undeliverable [style=dotted];
       Unknown -> Scheduled -> Buffered;
       Enroute -> Undeliverable;
       Enroute -> Expired;
-      Enroute -> Deleted [style=dotted];
       Scheduled -> Deleted;
       Enroute -> Rejected;
+      Enroute -> Deleted [style=dotted];
       Enroute -> Accepted [style=dotted];
       Enroute -> Skipped [style=dotted];
       { rank=same; Unknown Scheduled }
@@ -417,6 +419,73 @@ recipient.
 
 The normal path for messages are marked in blue above. The dotted lines are a
 very rare event not often used and/or applicable only to specific use cases.
+
+We try to deliver DSNs in a logical order, but they may not always arrive at
+your webhook in order and sometimes you may receive a transient state after
+already having received a final state. In this case you should ignore the
+transient state.
+
+============= =========================================
+Status        Description
+============= =========================================
+Unknown       Messages start here, but you should not encounter this state.
+Scheduled     Used for messages where you set a sendtime in the future.
+Buffered      The message is held in our internal queue and awaits delivery to the mobile network.
+Enroute       Message has been sent to mobile network, and is on it's way to it's final destination.
+Delivered     The end user's mobile device has confirmed the delivery, and if message is charged the charge was successful.
+Expired       Message has exceeded it's validity period without getting a delivery confirmation. No further delivery attempts.
+Deleted       Message was canceled.
+Undeliverable Message is permanently undeliverable. Most likely an invalid :term:`MSISDN`.
+Accepted      The mobile network has accepted the message on the end users behalf.
+Rejected      The mobile network has rejected the message. If this message was charged, the charge has failed.
+Skipped       The message was accepted, but was deliberately ignored due to network-specific rules.
+============= =========================================
+
+HTTP Callback
+~~~~~~~~~~~~~
+If you specify a callback url when sending your message, or have a webhook
+configured as your default webhook for status notification, we will perform a
+http request to your webhook with the following data.
+
+
+.. http:post:: /example/callback
+   :noindex:
+
+   Example of how our request to you could look like.
+
+   :<json integer id: The ID of the SMS/MMS this notification concerns
+   :<json integer msisdn: The :term:`MSISDN` of the mobile recipient.
+   :<json integer time: The UNIX Timestamp for the delivery status event
+   :<json string status: One of the states above, in all-caps, ie. DELIVERED
+   :<json string error: Optional error decription, if available.
+   :<json integer error_code: Optional numeric error, if available.
+   :<json string userref: If you specified a reference when sending the message, it's returned to you
+   :status 200: If you reply with a 2xx code, we will consider the DSN delivered successfully.
+   :status 500: If we get a code >= 300, we will re-attempt delivery of at a later time.
+
+   **Callback example**
+
+   .. sourcecode:: http
+
+      POST /example/callback HTTP/1.1
+      Host: example.com
+      Accept: */*
+      Content-Type: application/json
+
+      {
+          "id": 1000001,
+          "msisdn": 4587654321,
+          "time": 1450000000,
+          "status": "DELIVERED",
+          "userref": "foobar"
+      }
+
+   If we can't reach your server, or you reply with a http status code >= 300,
+   then we will re-attempt delivery of the DSN after a 60 second delay, with
+   truncated exponential backoff, doubling every attempt up to 2400 seconds
+   (40 minutes).
+   We expect you to reply with a 2XX status code within 60 seconds, or we
+   consider it a failed attempt.
 
 
 *Work in progress...*
