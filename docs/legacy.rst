@@ -17,6 +17,7 @@ the name you can send both GET and POST requests to this API endpoint.
 
 .. http:post:: /sendsms
    :deprecated:
+   :synopsis: Use REST API instead
 
    Send a SMS message.
 
@@ -25,12 +26,16 @@ the name you can send both GET and POST requests to this API endpoint.
 
    Arguments can be sent as POST (form encoded) or as GET.
 
+   If you don't know the mobile network operator or (smsc) then you can set it
+   to ie. "dk.unknown" for danish recipients, as long as your message is not
+   charged.
+
    :form user: account username
    :form password: account password
    :form to: One or more MSISDNs to send a message to. Ie 4512345678
    :form smsc: An ISO 3166-1 country code followed by a period and an ID representing the operator
    :form price: A numeric value with two decimals followed by an ISO 4217 currency code, ie. 10.00DKK
-   :form text: An alphanumeric value representing the content of the SMS
+   :form text: An alphanumeric value representing the content of the SMS. Must be ISO-8859-1 encoded.
    :form sessionid: Maximum length is 30 characters – and must always be unique. Recommended format is msisdn:time
    :form from: Optional alphanumeric sender. Maximum 11 characters
    :form callbackurl: Optional URL for status callbacks
@@ -76,6 +81,7 @@ undocumented.
 
 .. http:get:: /Gateway/Kunder/Opret/Gateway.aspx
    :deprecated:
+   :synopsis: Obsolete. Use REST API or httppost.nimta.com API instead.
 
    Send a SMS message.
 
@@ -95,19 +101,90 @@ undocumented.
    :status 200: If the request can't be processed it will still return 200, but with a error message
 
 
-Webhooks
---------
-
-Webhooks are used to respond to changes in the message delivery status, also
-known as Delivery Status Notifications or DSNs for short.
-
 Delivery Status Notification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Callbacks are used to respond to changes in the message delivery status, also
+known as Delivery Status Notifications or DSNs for short.
 
 By adding a URL to the callbackurl field, you can setup a webhook that will be
-called whenever the current status (state) of the message changes, ie. goes from
-a transient state (ie. BUFFERED) to final state (ie. DELIVERED) or an other
-transient state. Once a final state is reached we will no longer call your
-webhook with updates for this particular message and recipient.
+called so you can keep track of whether the message was delivered successfully
+or not, and if not then why.
 
-*Work in progress...*
+==== =================== =====
+Code Description         Cause
+==== =================== =====
+1    Delivered           All okay. Message delivered, and charged if charge was requested
+2    Insufficient funds  The recipient lacks the funds, ie. prepaid or cannot be charged.
+3    Blacklisted         The mobile subscriber is blacklisted and cannot receive messages
+4    Unknown recipient   The msisdn is not recognized by the operator
+5    Unknown status      Message is still enroute or an unknown error occurred
+6    Expired             Message has expired according to validity period
+7    Undeliverable       Message could not be delivered, typically because of error with content
+8    Deleted             Message was deleted and not delivered
+==== =================== =====
+
+If you set a callbackurl when you sent the message, we will call your url with
+one of these status codes and the sessionid you provided when you sent the
+message. You can use this sessionid to track the message in your internal
+systems.
+
+When calling your service, we will perform a GET request, ie.
+https://example.com/callback?sessionid=4587654321:1234&statuscode=1
+
+Beware that if you specify any query params in your callbackurl they will not
+be returned to you, only the sessionid and statuscode params will be included.
+
+.. http:get:: /example/callback
+   :noindex:
+
+   :query sessionid: The sessionid you provided when you sent the message. Optional.
+   :query statuscode: One of the status codes (integer) described above
+   :status 200: If you reply with exactly 200 (not 204 etc) we consider the DSN delivered successfully. Else we re-attempt later.
+
+Receiving SMS'es
+----------------
+When we receive a MO SMS (mobile originated SMS), we will look at the first word
+in the SMS, known as the keyword, and then route the SMS to the customer who
+have an active subscription on this keyword.
+
+We then send a HTTP GET request to the URL configured for that keyword, ie.
+https://example.com/mosms?sender=4512345678&smsc=unknown&sessionid=4512345678%3A9379401&appnr=1204&keyword=test
+
+You must respond with a very specific body, otherwise we'll treat your response
+as a failure and re-attempt delivery of the MO SMS. It's important that the
+content type is "text/plain" and your reply body is exactly
+``cmd=asynch-no-trace``, no extra whitespace or other output except headers is
+allowed.
+
+.. http:get:: /example/mosms
+   :noindex:
+
+   Example of how our request to you could look like. The path and hostname are
+   configureable of course.
+
+
+   :query sender: The MSISDN of the end user who initiated the MO SMS (sent it)
+   :query smsc: The SMSC of the end user, this can be used to later send a charged SMS
+   :query sessionid: To enable you to track the message we provide an unique sessionid
+   :query appnr: Application number or shortcode, where the user sent the SMS
+   :query keyword: The keyword we matched
+   :query text: The body of the SMS, excluding the matched keyword. Optional.
+   :resheader Content-Type: must be "text/plain"
+
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      GET /example/mosms?sender=4512345678&smsc=unknown&sessionid=4512345678%3A9379401&appnr=1204&keyword=test HTTP/1.1
+      Host: example.com
+      Accept: */*
+
+   **Mandatory response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: text/plain
+
+      cmd=asynch-no-trace

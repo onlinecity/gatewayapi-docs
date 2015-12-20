@@ -11,11 +11,11 @@ NSS 3.11+, Win2k8/Vista+, Java 7+).
 
 Authentication
 --------------
-Use either :ref:`oauth-howto` or :ref:`basic-auth-howto`. We encourage the use
-of :ref:`oauth-howto`, since it provides the best protection and although not
+Use either :ref:`oauth` or :ref:`HTTP Basic Authentication`. We encourage the use
+of :ref:`oauth`, since it provides the best protection and although not
 as ubiquitous as basic auth, it's well supported by most frameworks.
 
-.. _oauth-howto:
+.. _oauth:
 
 OAuth
 ^^^^^
@@ -63,7 +63,7 @@ the timestamp is correct.
    { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] }
 
 
-.. _`basic-auth-howto`:
+.. _`HTTP Basic Authentication`:
 
 HTTP Basic Authentication
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -94,13 +94,14 @@ Basic auth also has the advantage of being easy to do with curl::
 Sending SMS'es
 --------------
 
-Also known as MT SMS, short for Mobile Terminated SMS, is when you want to
+Also known as :term:`MT SMS`, short for Mobile Terminated SMS, is when you want to
 deliver a SMS to a users mobile device.
 
 Request Examples
 ^^^^^^^^^^^^^^^^
 
 .. http:post:: /rest/mtsms
+   :synopsis: Send a new SMS
 
    The root element can be either a dict with a single SMS or a list of SMS'es.
 
@@ -375,6 +376,48 @@ aka DSNs.
 
 In addition webhooks can be used to react to enduser initiated events, such as
 MO SMS (Mobile Originated SMS, or Incoming SMS).
+
+
+Delivery Status Notification
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+By adding a URL to the callbackurl field, or setting one of your webhooks as
+the default for status notifications, you can setup a webhook that will be
+called whenever the current status (state) of the message changes, ie. goes
+from a transient state (Circles, ie. Enroute) to final state (Boxes, ie.
+Delivered) or an other transient state. Once a final state is reached we will
+no longer call your webhook with updates for this particular message and
+recipient.
+
+.. graphviz::
+
+   digraph foo {
+      rankdir=LR;
+      size=5;
+      Delivered [shape=box];
+      Expired [shape=box];
+      Deleted [shape=box];
+      Accepted [shape=box];
+      Rejected [shape=box];
+      Skipped [shape=box];
+      Unknown [shape=plaintext];
+      Undeliverable [shape=box];
+      Unknown -> Buffered -> Enroute -> Delivered [color=blue];
+      Unknown -> Undeliverable;
+      Unknown -> Scheduled -> Buffered;
+      Enroute -> Undeliverable;
+      Enroute -> Expired;
+      Enroute -> Deleted [style=dotted];
+      Scheduled -> Deleted;
+      Enroute -> Rejected;
+      Enroute -> Accepted [style=dotted];
+      Enroute -> Skipped [style=dotted];
+      { rank=same; Unknown Scheduled }
+   }
+
+The normal path for messages are marked in blue above. The dotted lines are a
+very rare event not often used and/or applicable only to specific use cases.
+
 
 *Work in progress...*
 

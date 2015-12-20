@@ -29,7 +29,7 @@ import sphinx_rtd_theme
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinxcontrib.httpdomain']
+extensions = ['sphinxcontrib.httpdomain', 'sphinx.ext.graphviz']
 
 # Add any paths that contain templates here, relative to this directory.
 #templates_path = ['_templates']
@@ -182,6 +182,11 @@ html_static_path = []
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'httppostdoc'
+
+# The output format for Graphviz when building HTML files. This must be either
+# 'png' or 'svg'; the default is 'png'.
+graphviz_output_format = 'svg'
+
 
 
 # -- Options for LaTeX output ---------------------------------------------

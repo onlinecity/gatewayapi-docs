@@ -11,9 +11,15 @@ All new customers are encourage to use the new :ref:`rest`. However we also
 provide a few legacy APIs based on SOAP and HTTP POST/GET, which are still
 maintained although deprecated.
 
+If you are reading this online at https://gatewayapi.com/docs/ and require any
+assistence, please use the live chat feature at the bottom right of your screen.
+
 .. toctree::
    :maxdepth: 3
 
    rest
    legacy
    soap
+   glossary
+
+You can also consult the `HTTP Routing Table <http-routingtable.html>`_
