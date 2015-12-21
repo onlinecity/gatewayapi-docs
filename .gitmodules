@@ -1,4 +1,4 @@
 [submodule "docs/_themes"]
 	path = docs/_themes
-	url = git@github.com:onlinecity/sphinx_rtd_theme.git
+	url = https://github.com/onlinecity/sphinx_rtd_theme.git
 	branch = oc-style
