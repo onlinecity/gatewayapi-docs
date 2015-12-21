@@ -23,3 +23,6 @@ assistence, please use the live chat feature at the bottom right of your screen.
    glossary
 
 You can also consult the `HTTP Routing Table <http-routingtable.html>`_
+
+Writing and improving this documentation is an ongoing effort. Pull requests etc
+are most welcome. https://github.com/onlinecity/gatewayapi-docs
