@@ -105,6 +105,25 @@ Request Examples
 
    The root element can be either a dict with a single SMS or a list of SMS'es.
 
+   :<json string class: The message class to use for this request. Defaults to "bulk", if specified it must be the same for all messages in the request.
+   :<json string message: The content of the SMS, *always* specified in UTF-8 encoding, which we will transcode depending on the "encoding" field. The default is the usual :term:`GSM 03.38` encoding.
+   :<json string sender: Up to 11 alphanumeric characters, or 15 digits, that will be shown as the sender of the SMS.
+   :<json integer sendtime: Unix timestamp to schedule message sending at certain time.
+   :<json array tags: A list of string tags, which will be replaced with the tag values for each recipient.
+   :<json string userref: A transparent string reference, you may set to keep track of the message in your own systems. Returned to you when you receive a `Delivery Status Notification`_.
+   :<json string priority: One of 'BULK', 'NORMAL', 'URGENT' and 'VERY_URGENT'. Urgent and Very Urgent normally require the use of premium message class. Defaults to 'NORMAL'.
+   :<json integer validity_period: Specified in seconds. If message is not delivered within this timespan, it will expire and you will get a notification.
+   :<json string destaddr: One of 'DISPLAY', 'MOBILE', 'SIMCARD', 'EXTUNIT'. Use display to do "flash sms", a message displayed on screen immediately but not saved in the normal message inbox on the mobile device.
+   :<json string payload: If you are sending a binary SMS, ie. a SMS you have encoded yourself or with speciel content for feature phones (non-smartphones). You may specify a payload, encoded as Base64.
+   :<json string udh: UDH to enable additional functionality for binary SMS, encoded as Base64.
+   :<json array recipients: Array of recipients, described below:
+   :<jsonarr string msisdn: :term:`MSISDN` aka the full mobile phone number of the recipient.
+   :<jsonarr integer mcc: :term:`MCC`, mobile country code. Must be specified if doing charged SMS'es.
+   :<jsonarr integer mnc: :term:`MNC`, mobile network code. Must be specified if doing charged SMS'es.
+   :<jsonarr object charge: Charge data. More details on sending charged SMS'es to come.
+   :<jsonarr array tagvalues: A list of string values corresponding to the tags in message. The order and amount of tag values must exactly match the tags.
+   :>json array ids: If successful you receive a object containing a list of message ids.
+
    **Minimal request**
 
    .. sourcecode:: http
@@ -487,8 +506,6 @@ http request to your webhook with the following data.
    We expect you to reply with a 2XX status code within 60 seconds, or we
    consider it a failed attempt.
 
-
-*Work in progress...*
 
 .. _`OAuth 1.0a`: http://tools.ietf.org/html/rfc5849
 .. _`two-legged`: http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/2/spec.html
