@@ -49,7 +49,7 @@ explained here.
 
        * Special characters
 
-         * ¤ £ ¥
+         * (Currency sign) £ ¥
          * § ¿ _
          * (Newline \\n), (Carriage Return \\r)
 
