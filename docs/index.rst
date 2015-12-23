@@ -7,7 +7,7 @@ GatewayAPI.com documentation
 ============================
 
 Our documentation is broken into a few parts based on protocol.
-All new customers are encourage to use the new :ref:`rest`. However we also
+All new customers are encouraged to use the new :ref:`rest`. However we also
 provide a few legacy APIs based on SOAP and HTTP POST/GET, which are still
 maintained although deprecated.
 
