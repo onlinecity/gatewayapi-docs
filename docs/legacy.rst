@@ -12,7 +12,7 @@ the foreseeable future. However we are deprecating it since the REST API is
 where all future development takes place.
 
 This API is deprecated and only supports sending limited SMS messages. Despite
-the name you can send both GET and POST requests to this API endpoint.
+the name you can submit both GET and POST requests to this API endpoint.
 
 
 .. http:post:: /sendsms
@@ -32,7 +32,7 @@ the name you can send both GET and POST requests to this API endpoint.
 
    :form user: account username
    :form password: account password
-   :form to: One or more MSISDNs to send a message to. Ie 4512345678
+   :form to: One or more recipient MSISDNs to send a message to. Ie 4512345678
    :form smsc: An ISO 3166-1 country code followed by a period and an ID representing the operator
    :form price: A numeric value with two decimals followed by an ISO 4217 currency code, ie. 10.00DKK
    :form text: An alphanumeric value representing the content of the SMS. Must be ISO-8859-1 encoded.
@@ -72,11 +72,11 @@ the name you can send both GET and POST requests to this API endpoint.
 nimta.com
 ^^^^^^^^^
 
-This API available on www.nimta.com and nimta.com, is one of our first and has
-been deprecated since 2010, however it still works.
+This API is available at both www.nimta.com and nimta.com. The API is one of our first and has
+been deprecated since 2010. It remains operative, however.
 
 Originally this API supported various other features such as: WapPush, Charged
-Messaging and MMS, however these features are now defunct and thus left
+Messaging and MMS. These features are now defunct and thus left
 undocumented.
 
 .. http:get:: /Gateway/Kunder/Opret/Gateway.aspx
@@ -92,13 +92,13 @@ undocumented.
 
    :query username: account username
    :query password: account password
-   :query number: The mobile subscriber number, without country code but including any area code. Ie. 87654321
+   :query number: The recipient mobile subscriber number, without country code but including any area code. Ie. 87654321
    :query countryCode: The country code of the mobile subscriber, ie. 45
    :query message: The content of the SMS
    :query gatewayclass: Class to use for message delivery, defaults to 'A'
    :query alphatext: Optional alphanumeric sender. Maximum 11 characters
    :status 200: with a .NET hidden form or other nonsensical output
-   :status 200: If the request can't be processed it will still return 200, but with a error message
+   :status 200: If the request can't be processed it will still return 200, but with an error message
 
 
 Delivery Status Notification
@@ -106,7 +106,7 @@ Delivery Status Notification
 Callbacks are used to respond to changes in the message delivery status, also
 known as Delivery Status Notifications or DSNs for short.
 
-By adding a URL to the callbackurl field, you can setup a webhook that will be
+By adding a URL to the callbackurl field, you can set up a webhook that will be
 called so you can keep track of whether the message was delivered successfully
 or not, and if not then why.
 
@@ -114,8 +114,8 @@ or not, and if not then why.
 Code Description         Cause
 ==== =================== =====
 1    Delivered           All okay. Message delivered, and charged if charge was requested
-2    Insufficient funds  The recipient lacks the funds, ie. prepaid or cannot be charged.
-3    Blacklisted         The mobile subscriber is blacklisted and cannot receive messages
+2    Insufficient funds  The recipient lacks the funds, ie. prepaid, or cannot be charged.
+3    Blacklisted         The mobile subscriber is blacklisted by the operator, and cannot receive messages
 4    Unknown recipient   The msisdn is not recognized by the operator
 5    Unknown status      Message is still enroute or an unknown error occurred
 6    Expired             Message has expired according to validity period
@@ -144,8 +144,8 @@ be returned to you, only the sessionid and statuscode params will be included.
 Receiving SMS'es
 ----------------
 When we receive a MO SMS (mobile originated SMS), we will look at the first word
-in the SMS, known as the keyword, and then route the SMS to the customer who
-have an active subscription on this keyword.
+in the SMS, known as the keyword. The SMS is then routed to the customer who
+has an active subscription for this keyword.
 
 We then send a HTTP GET request to the URL configured for that keyword, ie.
 https://example.com/mosms?sender=4512345678&smsc=unknown&sessionid=4512345678%3A9379401&appnr=1204&keyword=test
@@ -159,7 +159,7 @@ allowed.
 .. http:get:: /example/mosms
    :noindex:
 
-   Example of how our request to you could look like. The path and hostname are
+   Example of what our request to you could look like. The path and hostname are
    configureable of course.
 
 
