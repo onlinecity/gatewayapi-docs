@@ -386,6 +386,40 @@ this for shell scripting, because OAuth requires calculating a few variables.
    -d '{ "message": "Hello World", '\
    '"recipients": [ { "msisdn": 4512345678 } ] }'
 
+
+.. _csharp:
+
+C#
+~~
+
+This example uses `RestSharp`_. If you're using the NuGet
+Package Manager Console: ``Install-Package RestSharp``.
+
+.. sourcecode:: csharp
+
+   var client = new RestSharp.RestClient("https://gatewayapi.com/rest");
+   var apiKey = "Create-an-API-Key";
+   var apiSecret = "GoGenerateAnApiKeyAndSecret";
+   client.Authenticator = RestSharp.Authenticators
+       .OAuth1Authenticator.ForRequestToken(apiKey, apiSecret);
+   var request = new RestSharp.RestRequest("mtsms", RestSharp.Method.POST);
+   request.AddJsonBody(new {
+       recipients = new[] { new { msisdn = 4512345678} },
+       message = "Hello World"
+   });
+   var response = client.Execute(request);
+
+   // On 200 OK, parse the list of SMS IDs else print error
+   if ((int) response.StatusCode == 200) {
+       var json = new RestSharp.Deserializers.JsonDeserializer();
+       var res = json.Deserialize<Dictionary<string, List<UInt64>>>(response);
+       foreach (var i in res["ids"]) {
+           Console.WriteLine(i);
+       }
+   } else {
+       Console.WriteLine(response.Content);
+   }
+
 Webhooks
 --------
 
@@ -512,4 +546,5 @@ http request to your webhook with the following data.
 .. _`HTTP Basic Auth`: http://tools.ietf.org/html/rfc1945#section-11.1
 .. _`OAuth Authorization header`: http://tools.ietf.org/html/rfc5849#section-3.5.1
 .. _`Requests-OAuthlib`: https://requests-oauthlib.readthedocs.org/
-.. _`Guzzle`: guzzlephp.org
+.. _`Guzzle`: http://guzzlephp.org/
+.. _`RestSharp`: http://restsharp.org/
