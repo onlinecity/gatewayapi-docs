@@ -116,6 +116,7 @@ Request Examples
    :<json string destaddr: One of 'DISPLAY', 'MOBILE', 'SIMCARD', 'EXTUNIT'. Use display to do "flash sms", a message displayed on screen immediately but not saved in the normal message inbox on the mobile device.
    :<json string payload: If you are sending a binary SMS, ie. a SMS you have encoded yourself or with speciel content for feature phones (non-smartphones). You may specify a payload, encoded as Base64.
    :<json string udh: UDH to enable additional functionality for binary SMS, encoded as Base64.
+   :<json string callback_url: If specified send status notifications to this URL, else use the default webhook.
    :<json array recipients: Array of recipients, described below:
    :<jsonarr string msisdn: :term:`MSISDN` aka the full mobile phone number of the recipient.
    :<jsonarr integer mcc: :term:`MCC`, mobile country code. Must be specified if doing charged SMS'es.
@@ -123,6 +124,12 @@ Request Examples
    :<jsonarr object charge: Charge data. More details on sending charged SMS'es to come.
    :<jsonarr array tagvalues: A list of string values corresponding to the tags in message. The order and amount of tag values must exactly match the tags.
    :>json array ids: If successful you receive a object containing a list of message ids.
+   :status 200: Returns a dict with message IDs on success
+   :status 400: Ie. invalid arguments, details in the JSON body
+   :status 401: Ie. invalid API key or signature
+   :status 403: Ie. unauthorized ip address
+   :status 422: Invalid json request body
+   :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
 
    **Minimal request**
 
@@ -201,7 +208,8 @@ Request Examples
               "validity_period": 86400,
               "encoding": "UTF8",
               "destaddr": "MOBILE",
-              "udh": "BQQLhCPw"
+              "udh": "BQQLhCPw",
+              "callback_url": "https://example.com/cb?foo=bar"
           },
           {
               "message": "Hello World",
@@ -514,7 +522,7 @@ http request to your webhook with the following data.
    :<json integer error_code: Optional numeric error, if available.
    :<json string userref: If you specified a reference when sending the message, it's returned to you
    :status 200: If you reply with a 2xx code, we will consider the DSN delivered successfully.
-   :status 500: If we get a code >= 300, we will re-attempt delivery of at a later time.
+   :status 500: If we get a code >= 300, we will re-attempt delivery at a later time.
 
    **Callback example**
 
