@@ -8,6 +8,9 @@ predominately on HTTP POST calls and JSON.
 To use this API you must be a customer on the GatewayAPI.com platform, and run
 on modern SSL/TLS software (support SHA-2 & ECDHE_ECDSA, ie. OpenSSL 1.0+,
 NSS 3.11+, Win2k8/Vista+, Java 7+).
+If you are stuck with ancient SSL/TLS software (OpenSSL 0.9.8, Win XP/2k3 or
+Java 6), use the https://badssl.gatewayapi.com/ domain instead.
+You can even use it without SSL at all if your setup requires it.
 
 Authentication
 --------------
