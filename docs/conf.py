@@ -230,6 +230,9 @@ latex_logo = 'gatewayapi-stacked.pdf'
 # If false, no module index is generated.
 #latex_domain_indices = True
 
+# Travis don't have newfloat.sty
+latex_additional_files = ["newfloat.sty"]
+
 
 # -- Options for manual page output ---------------------------------------
 
