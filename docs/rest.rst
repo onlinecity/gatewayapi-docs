@@ -251,7 +251,8 @@ Request Examples
         ]
       }
 
-   ``code`` and ``vars`` are left out of the response if they are empty.
+   ``code`` and ``variables`` are left out of the response if they are empty.
+   For a complete list of the various codes see :ref:`apierror`.
 
 Code Examples
 ^^^^^^^^^^^^^
@@ -445,6 +446,8 @@ MO SMS (Mobile Originated SMS, or Incoming SMS).
 Delivery Status Notification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. _states:
+
 States and status codes
 ~~~~~~~~~~~~~~~~~~~~~~~
 By adding a URL to the callbackurl field, or setting one of your webhooks as
@@ -522,7 +525,7 @@ http request to your webhook with the following data.
    :<json integer time: The UNIX Timestamp for the delivery status event
    :<json string status: One of the states above, in all-caps, ie. DELIVERED
    :<json string error: Optional error decription, if available.
-   :<json integer error_code: Optional numeric error, if available.
+   :<json string code: Optional numeric code, in hex, see :ref:`smserror`, if available.
    :<json string userref: If you specified a reference when sending the message, it's returned to you
    :status 200: If you reply with a 2xx code, we will consider the DSN delivered successfully.
    :status 500: If we get a code >= 300, we will re-attempt delivery at a later time.

@@ -20,6 +20,7 @@ assistence, please use the live chat feature at the bottom right of your screen.
    rest
    legacy
    soap
+   errors
    glossary
 
 You can also consult the `HTTP Routing Table <http-routingtable.html>`_
