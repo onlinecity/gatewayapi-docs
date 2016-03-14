@@ -432,6 +432,31 @@ Package Manager Console: ``Install-Package RestSharp``.
        Console.WriteLine(response.Content);
    }
 
+
+Ruby
+~~~~
+
+Install the deps with ``gem install oauth``.
+
+.. sourcecode:: ruby
+
+   require 'oauth'
+   require 'json'
+
+   consumer = OAuth::Consumer.new(
+     'Create-an-API-Key',
+     'GoGenerateAnApiKeyAndSecret',
+     :site => 'https://gatewayapi.com/rest',
+     :scheme => :header
+   )
+   access = OAuth::AccessToken.new consumer
+   body = JSON.generate({
+     'recipients' => [{'msisdn' => 4512345678}],
+     'message' => 'Hello World',
+   })
+   response = access.post('/mtsms', body, {'Content-Type'=>'application/json'})
+   puts response.body
+
 Webhooks
 --------
 
