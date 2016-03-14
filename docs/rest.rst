@@ -71,10 +71,10 @@ the timestamp is correct.
 HTTP Basic Authentication
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 `HTTP Basic auth`_ must only be used with HTTPS connections (SSL encrypted),
-since the credentials is sent as base64 encoded plaintext.
+since the credentials are sent as base64 encoded plaintext.
 
 Support is built-in on most network frameworks, but it's also simple to do
-yourself. The credentials is sent as "Authorization: Basic ``basic-cookie``".
+yourself. The credentials are sent as "Authorization: Basic ``basic-cookie``".
 basic-cookie is ``username ":" password`` which is then base64 encoded.
 
 .. sourcecode:: http
@@ -87,11 +87,7 @@ basic-cookie is ``username ":" password`` which is then base64 encoded.
 
    { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] }
 
-Basic auth also has the advantage of being easy to do with curl::
-
-  curl -vv "https://myuser:mypass@gatewayapi.com/rest/mtsms" \
-  -H "Content-Type: application/json" \
-  -d '{ "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] }'
+Basic auth also has the advantage of being easy to do with `cURL`_.
 
 
 Sending SMS'es
@@ -100,32 +96,23 @@ Sending SMS'es
 Also known as :term:`MT SMS`, short for Mobile Terminated SMS, is when you want to
 deliver a SMS to a users mobile device.
 
-Request Examples
-^^^^^^^^^^^^^^^^
+Basic usage
+^^^^^^^^^^^
+
+Also see `Advanced usage`_ for a complete example of all features.
 
 .. http:post:: /rest/mtsms
    :synopsis: Send a new SMS
 
    The root element can be either a dict with a single SMS or a list of SMS'es.
 
-   :<json string class: The message class to use for this request. Defaults to "bulk", if specified it must be the same for all messages in the request.
+   :<json string class: Default "bulk". The message class to use for this request. If specified it must be the same for all messages in the request.
    :<json string message: The content of the SMS, *always* specified in UTF-8 encoding, which we will transcode depending on the "encoding" field. The default is the usual :term:`GSM 03.38` encoding.
    :<json string sender: Up to 11 alphanumeric characters, or 15 digits, that will be shown as the sender of the SMS.
-   :<json integer sendtime: Unix timestamp to schedule message sending at certain time.
-   :<json array tags: A list of string tags, which will be replaced with the tag values for each recipient.
    :<json string userref: A transparent string reference, you may set to keep track of the message in your own systems. Returned to you when you receive a `Delivery Status Notification`_.
-   :<json string priority: One of 'BULK', 'NORMAL', 'URGENT' and 'VERY_URGENT'. Urgent and Very Urgent normally require the use of premium message class. Defaults to 'NORMAL'.
-   :<json integer validity_period: Specified in seconds. If message is not delivered within this timespan, it will expire and you will get a notification.
-   :<json string destaddr: One of 'DISPLAY', 'MOBILE', 'SIMCARD', 'EXTUNIT'. Use display to do "flash sms", a message displayed on screen immediately but not saved in the normal message inbox on the mobile device.
-   :<json string payload: If you are sending a binary SMS, ie. a SMS you have encoded yourself or with speciel content for feature phones (non-smartphones). You may specify a payload, encoded as Base64.
-   :<json string udh: UDH to enable additional functionality for binary SMS, encoded as Base64.
    :<json string callback_url: If specified send status notifications to this URL, else use the default webhook.
    :<json array recipients: Array of recipients, described below:
    :<jsonarr string msisdn: :term:`MSISDN` aka the full mobile phone number of the recipient.
-   :<jsonarr integer mcc: :term:`MCC`, mobile country code. Must be specified if doing charged SMS'es.
-   :<jsonarr integer mnc: :term:`MNC`, mobile network code. Must be specified if doing charged SMS'es.
-   :<jsonarr object charge: Charge data. More details on sending charged SMS'es to come.
-   :<jsonarr array tagvalues: A list of string values corresponding to the tags in message. The order and amount of tag values must exactly match the tags.
    :>json array ids: If successful you receive a object containing a list of message ids.
    :status 200: Returns a dict with message IDs on success
    :status 400: Ie. invalid arguments, details in the JSON body
@@ -133,8 +120,6 @@ Request Examples
    :status 403: Ie. unauthorized ip address
    :status 422: Invalid json request body
    :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
-
-   **Minimal request**
 
    .. sourcecode:: http
 
@@ -157,102 +142,6 @@ Request Examples
           ]
       }
 
-
-   **Fully fledged request**
-
-   This is a bit of contrived example since ``message`` and ``payload`` can't
-   both be set at the same time, but it shows every possible field in the API.
-
-   .. sourcecode:: http
-
-      POST /rest/mtsms HTTP/1.1
-      Host: gatewayapi.com
-      Authorization: OAuth oauth_consumer_key="Create-an-API-Key",
-        oauth_nonce="128817750813820944501450124113",
-        oauth_timestamp="1450124113",
-        oauth_version="1.0",
-        oauth_signature_method="HMAC-SHA1",
-        oauth_signature="t9w86dddubh4XofnnPgH%2BY6v5TU%3D"
-      Accept: application/json, text/javascript
-      Content-Type: application/json
-
-      [
-          {
-              "class": "bulk",
-              "message": "Hello World, %1, --MYTAG--",
-              "payload": "cGF5bG9hZCBlbmNvZGVkIGFzIGI2NAo=",
-              "recipients": [
-                  {
-                      "msisdn": 1514654321
-                      "mcc": 302,
-                      "mnc": 720,
-                      "charge": {
-                          "amount": 1.23,
-                          "currency": "CAD",
-                          "code": "P01",
-                          "description": "Example charged SMS",
-                          "category": "SC12",
-                          "servicename": "Example service"
-                      },
-                      "tagvalues": [
-                          "foo",
-                          "bar"
-                      ]
-                  }
-              ],
-              "sender": "Test Sender",
-              "sendtime": 915148800,
-              "tags": [
-                  "--MYTAG--",
-                  "%1"
-              ],
-              "userref": "1234",
-              "priority": "NORMAL",
-              "validity_period": 86400,
-              "encoding": "UTF8",
-              "destaddr": "MOBILE",
-              "udh": "BQQLhCPw",
-              "callback_url": "https://example.com/cb?foo=bar"
-          },
-          {
-              "message": "Hello World",
-              "recipients": [
-                  { "msisdn": 4512345678 }
-              ]
-          }
-      ]
-
-   **Example response**
-
-   If the request succeed, the internal message identifiers are returned to
-   the caller like this:
-
-   .. sourcecode:: http
-
-      HTTP/1.1 200 OK
-      Content-Type: application/json
-
-      {"ids": [132,134,135,137,138]}
-
-
-   If the request fails, the response will look like the example below:
-
-   .. sourcecode:: http
-
-      HTTP/1.1 403 FORBIDDEN
-      Content-Type: application/json
-
-      {
-        "code": "0x0213",
-        "incident_uuid": "d8127429-fa0c-4316-b1f2-e610c3958f43",
-        "message": "Unauthorized IP-address: %1",
-        "variables": [
-          "1.2.3.4"
-        ]
-      }
-
-   ``code`` and ``variables`` are left out of the response if they are empty.
-   For a complete list of the various codes see :ref:`apierror`.
 
 Code Examples
 ^^^^^^^^^^^^^
@@ -375,28 +264,14 @@ composer or any other dependencies.
 cURL
 ~~~~
 
-This is how you would do OAuth in curl, altough it's not likely that you'll use
-this for shell scripting, because OAuth requires calculating a few variables.
+OAuth in cURL / shell is not convenient, since the oauth header changes on every
+request, it's much easier to use :ref:`HTTP Basic Authentication` with cURL.
 
 .. sourcecode:: bash
 
-   curl -v https://gatewayapi.com/rest/mtsms \
-   -H 'Content-Type: application/json' \
-   -H 'Authorization: OAuth oauth_consumer_key="Create-an-API-Key", '\
-   'oauth_nonce="132016094718881349551450127578", '\
-   'oauth_timestamp="1450127578", oauth_version="1.0", '\
-   'oauth_signature_method="HMAC-SHA1", '\
-   'oauth_signature="lQzrZkJyQ9Gx27mh5z9waCwkGlQ%3D"' \
-   -d '{ "message": "Hello World", '\
-   '"recipients": [ { "msisdn": 4512345678 } ] }'
-
-
-.. sourcecode:: bash
-
-   curl -v "https://myuser:mypass@gatewayapi.com/rest/mtsms" \
+   curl -vv "https://myuser:mypass@gatewayapi.com/rest/mtsms" \
    -H "Content-Type: application/json" \
-   -d '{ "message": "Hello World", '\
-   '"recipients": [ { "msisdn": 4512345678 } ] }'
+   -d '{ "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] }'
 
 
 .. _csharp:
@@ -457,6 +332,139 @@ Install the deps with ``gem install oauth``.
    response = access.post('/mtsms', body, {'Content-Type'=>'application/json'})
    puts response.body
 
+
+Advanced usage
+^^^^^^^^^^^^^^
+
+.. http:post:: /rest/mtsms
+   :synopsis: Send a new SMS
+
+   The root element can be either a dict with a single SMS or a list of SMS'es.
+
+   :<json string class: Default 'bulk'. The message class to use for this request. If specified it must be the same for all messages in the request.
+   :<json string message: The content of the SMS, *always* specified in UTF-8 encoding, which we will transcode depending on the "encoding" field. The default is the usual :term:`GSM 03.38` encoding. Required unless payload is specified.
+   :<json string sender: Up to 11 alphanumeric characters, or 15 digits, that will be shown as the sender of the SMS.
+   :<json integer sendtime: Unix timestamp to schedule message sending at certain time.
+   :<json array tags: A list of string tags, which will be replaced with the tag values for each recipient.
+   :<json string userref: A transparent string reference, you may set to keep track of the message in your own systems. Returned to you when you receive a `Delivery Status Notification`_.
+   :<json string priority: Default 'NORMAL'. One of 'BULK', 'NORMAL', 'URGENT' and 'VERY_URGENT'. Urgent and Very Urgent normally require the use of premium message class.
+   :<json integer validity_period: Specified in seconds. If message is not delivered within this timespan, it will expire and you will get a notification.
+   :<json string destaddr: One of 'DISPLAY', 'MOBILE', 'SIMCARD', 'EXTUNIT'. Use display to do "flash sms", a message displayed on screen immediately but not saved in the normal message inbox on the mobile device.
+   :<json string payload: If you are sending a binary SMS, ie. a SMS you have encoded yourself or with speciel content for feature phones (non-smartphones). You may specify a payload, encoded as Base64. If specified, message must not be set and tags are unavailable.
+   :<json string udh: UDH to enable additional functionality for binary SMS, encoded as Base64.
+   :<json string callback_url: If specified send status notifications to this URL, else use the default webhook.
+   :<json array recipients: Array of recipients, described below:
+   :<jsonarr string msisdn: :term:`MSISDN` aka the full mobile phone number of the recipient.
+   :<jsonarr integer mcc: :term:`MCC`, mobile country code. Must be specified if doing charged SMS'es.
+   :<jsonarr integer mnc: :term:`MNC`, mobile network code. Must be specified if doing charged SMS'es.
+   :<jsonarr object charge: Charge data. More details on sending charged SMS'es to come.
+   :<jsonarr array tagvalues: A list of string values corresponding to the tags in message. The order and amount of tag values must exactly match the tags.
+   :>json array ids: If successful you receive a object containing a list of message ids.
+   :status 200: Returns a dict with message IDs on success
+   :status 400: Ie. invalid arguments, details in the JSON body
+   :status 401: Ie. invalid API key or signature
+   :status 403: Ie. unauthorized ip address
+   :status 422: Invalid json request body
+   :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
+
+
+   **Fully fledged request**
+
+   This is a bit of contrived example since ``message`` and ``payload`` can't
+   both be set at the same time, but it shows every possible field in the API.
+
+   .. sourcecode:: http
+
+      POST /rest/mtsms HTTP/1.1
+      Host: gatewayapi.com
+      Authorization: OAuth oauth_consumer_key="Create-an-API-Key",
+        oauth_nonce="128817750813820944501450124113",
+        oauth_timestamp="1450124113",
+        oauth_version="1.0",
+        oauth_signature_method="HMAC-SHA1",
+        oauth_signature="t9w86dddubh4XofnnPgH%2BY6v5TU%3D"
+      Accept: application/json, text/javascript
+      Content-Type: application/json
+
+      [
+          {
+              "class": "bulk",
+              "message": "Hello World, %1, --MYTAG--",
+              "payload": "cGF5bG9hZCBlbmNvZGVkIGFzIGI2NAo=",
+              "recipients": [
+                  {
+                      "msisdn": 1514654321
+                      "mcc": 302,
+                      "mnc": 720,
+                      "charge": {
+                          "amount": 1.23,
+                          "currency": "CAD",
+                          "code": "P01",
+                          "description": "Example charged SMS",
+                          "category": "SC12",
+                          "servicename": "Example service"
+                      },
+                      "tagvalues": [
+                          "foo",
+                          "bar"
+                      ]
+                  }
+              ],
+              "sender": "Test Sender",
+              "sendtime": 915148800,
+              "tags": [
+                  "--MYTAG--",
+                  "%1"
+              ],
+              "userref": "1234",
+              "priority": "NORMAL",
+              "validity_period": 86400,
+              "encoding": "UTF8",
+              "destaddr": "MOBILE",
+              "udh": "BQQLhCPw",
+              "callback_url": "https://example.com/cb?foo=bar"
+          },
+          {
+              "message": "Hello World",
+              "recipients": [
+                  { "msisdn": 4512345678 }
+              ]
+          }
+      ]
+
+   **Example response**
+
+   If the request succeed, the internal message identifiers are returned to
+   the caller like this:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {"ids": [132,134,135,137,138]}
+
+
+   If the request fails, the response will look like the example below:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 403 FORBIDDEN
+      Content-Type: application/json
+
+      {
+        "code": "0x0213",
+        "incident_uuid": "d8127429-fa0c-4316-b1f2-e610c3958f43",
+        "message": "Unauthorized IP-address: %1",
+        "variables": [
+          "1.2.3.4"
+        ]
+      }
+
+   ``code`` and ``variables`` are left out of the response if they are empty.
+   For a complete list of the various codes see :ref:`apierror`.
+
+
 Webhooks
 --------
 
@@ -509,8 +517,8 @@ recipient.
       { rank=same; Unknown Scheduled }
    }
 
-The normal path for messages are marked in blue above. The dotted lines are a
-very rare event not often used and/or applicable only to specific use cases.
+The normal path for messages are marked in blue above. The dotted lines are
+very rare events not often used and/or applicable only to specific use cases.
 
 We try to deliver DSNs in a logical order, but they may not always arrive at
 your webhook in order and sometimes you may receive a transient state after
