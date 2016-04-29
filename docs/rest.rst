@@ -77,6 +77,9 @@ Support is built-in on most network frameworks, but it's also simple to do
 yourself. The credentials are sent as "Authorization: Basic ``basic-cookie``".
 basic-cookie is ``username ":" password`` which is then base64 encoded.
 
+Basic auth uses credentials instead of API keys. You can find and create a set
+of credentials under "Settings", "Credentials (deprecated)".
+
 .. sourcecode:: http
 
    POST /rest/mtsms HTTP/1.1
@@ -269,7 +272,7 @@ request, it's much easier to use :ref:`HTTP Basic Authentication` with cURL.
 
 .. sourcecode:: bash
 
-   curl -vv "https://myuser:mypass@gatewayapi.com/rest/mtsms" \
+   curl -vv "https://cred_user:cred_pass@gatewayapi.com/rest/mtsms" \
    -H "Content-Type: application/json" \
    -d '{ "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] }'
 
@@ -315,6 +318,7 @@ Install the deps with ``gem install oauth``.
 
 .. sourcecode:: ruby
 
+   # encoding: UTF-8
    require 'oauth'
    require 'json'
 

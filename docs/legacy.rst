@@ -1,11 +1,22 @@
 Legacy HTTP API
 ===============
 
+For these APIs you need a set of credentials. These are different from the
+Oauth API the rest API uses. You'll find them in the dashboard, under Settings.
+
+If you are having problems connecting over SSL to gatewayapi.com, try
+badssl.gatewayapi.com. You can use badssl.gatewayapi.com without ssl, but we
+strongly recommend against it, since these APIs send your credentials in
+plaintext.
+
 Sending SMS'es
 --------------
 
 httppost.nimta.com
 ^^^^^^^^^^^^^^^^^^
+
+This API is available at httppost.nimta.com for the old gateway (oc.dk/gateway)
+and https://gatewayapi.com/legacy/http/v2/sendsms for the new.
 
 It's currently the endpoint with the most traffic and it's not going away for
 the foreseeable future. However we are deprecating it since the REST API is
@@ -30,8 +41,8 @@ the name you can submit both GET and POST requests to this API endpoint.
    to ie. "dk.unknown" for danish recipients, as long as your message is not
    charged.
 
-   :form user: account username
-   :form password: account password
+   :form user: credential username
+   :form password: credential password
    :form to: One or more recipient MSISDNs to send a message to. Ie 4512345678
    :form smsc: An ISO 3166-1 country code followed by a period and an ID representing the operator
    :form price: A numeric value with two decimals followed by an ISO 4217 currency code, ie. 10.00DKK
@@ -75,6 +86,8 @@ nimta.com
 This API is available at both www.nimta.com and nimta.com. The API is one of our first and has
 been deprecated since 2010. It remains operative, however.
 
+This API is also available at https://gatewayapi.com/legacy/http/v1/sendsms.
+
 Originally this API supported various other features such as: WapPush, Charged
 Messaging and MMS. These features are now defunct and thus left
 undocumented.
@@ -90,8 +103,8 @@ undocumented.
 
    Arguments can only be sent as GET Query Params.
 
-   :query username: account username
-   :query password: account password
+   :query username: credential username
+   :query password: credential password
    :query number: The recipient mobile subscriber number, without country code but including any area code. Ie. 87654321
    :query countryCode: The country code of the mobile subscriber, ie. 45
    :query message: The content of the SMS
