@@ -6,17 +6,20 @@ This is our new API which is available for GatewayAPI.com and based
 predominately on HTTP POST calls and JSON.
 
 To use this API you must be a customer on the GatewayAPI.com platform, and run
-on modern SSL/TLS software (support SHA-2 & ECDHE_ECDSA, ie. OpenSSL 1.0+,
-NSS 3.11+, Win2k8/Vista+, Java 7+).
-If you are stuck with ancient SSL/TLS software (OpenSSL 0.9.8, Win XP/2k3 or
-Java 6), use the https://badssl.gatewayapi.com/ domain instead.
-You can even use it without SSL at all if your setup requires it.
+on "modern" SSL/TLS software (support SHA-2, ie. OpenSSL 0.9.8+, NSS 3.11+,
+Win2k8/Vista+, Java 7+).
+If you are stuck on ie. Windows XP/2k3, try https://sha1.gatewayapi.com/.
+If nothing works, use http://badssl.gatewayapi.com/ - you can use this domain
+without SSL at all, but your API keys will be sent as cleartext, so we advise
+against it.
+
 
 Authentication
 --------------
-Use either :ref:`oauth` or :ref:`HTTP Basic Authentication`. We encourage the use
-of :ref:`oauth`, since it provides the best protection and although not
-as ubiquitous as basic auth, it's well supported by most frameworks.
+Use either :ref:`oauth`, :ref:`HTTP Basic Authentication` or
+:ref:`API Token`. We encourage the use of :ref:`oauth`, since it
+provides the best protection and although not as ubiquitous as basic auth, it's
+well supported by most frameworks.
 
 .. _oauth:
 
@@ -73,12 +76,14 @@ HTTP Basic Authentication
 `HTTP Basic auth`_ must only be used with HTTPS connections (SSL encrypted),
 since the credentials are sent as base64 encoded plaintext.
 
-Support is built-in on most network frameworks, but it's also simple to do
+Support is built-in on most networking frameworks, but it's also simple to do
 yourself. The credentials are sent as "Authorization: Basic ``basic-cookie``".
 basic-cookie is ``username ":" password`` which is then base64 encoded.
 
-Basic auth uses credentials instead of API keys. You can find and create a set
-of credentials under "Settings", "Credentials (deprecated)".
+You can use basic auth with credentials (deprecated: ie. username + password),
+or with an API Token. The API Token is sent as the username with password left
+empty. You can find and create a set of credentials under "Settings",
+"Credentials (deprecated)", the API Token is available under API Keys.
 
 .. sourcecode:: http
 
@@ -90,8 +95,32 @@ of credentials under "Settings", "Credentials (deprecated)".
 
    { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] }
 
-Basic auth also has the advantage of being easy to do with `cURL`_.
+If you can't use/specify an Authorization header, you can provide the username
+and password as form or query arguments. The username is sent as 'user', and
+the password as 'password'.
 
+.. _`API Token`:
+
+API Token
+^^^^^^^^^
+Your API keys are expressed as a key+secret combo, and as an API token. The
+key+secret is used for :ref:`oauth` while the token can be used for a simpler
+scheme with better compatibility.
+
+You can send the token as the username via :ref:`HTTP Basic Authentication`,
+or you may send the token as a query argument or form value. This means that
+if you can send a HTTP request, you can use Token Authentication.
+
+Example of JSON body and API token as a query argument.
+
+.. sourcecode:: http
+
+   POST /rest/mtsms?token=Go-Create-an-API-token HTTP/1.1
+   Host: gatewayapi.com
+   Accept: application/json, text/javascript
+   Content-Type: application/json
+
+   { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] }
 
 Sending SMS'es
 --------------
@@ -108,6 +137,7 @@ Also see `Advanced usage`_ for a complete example of all features.
    :synopsis: Send a new SMS
 
    The root element can be either a dict with a single SMS or a list of SMS'es.
+   You can send data in JSON format, or even as http form data or query args.
 
    :<json string class: Default "bulk". The message class to use for this request. If specified it must be the same for all messages in the request.
    :<json string message: The content of the SMS, *always* specified in UTF-8 encoding, which we will transcode depending on the "encoding" field. The default is the usual :term:`GSM 03.38` encoding.
@@ -145,6 +175,19 @@ Also see `Advanced usage`_ for a complete example of all features.
           ]
       }
 
+   .. sourcecode:: http
+
+      POST /rest/mtsms?token=Go-Create-an-API-token HTTP/1.1
+      Host: gatewayapi.com
+      Content-Type: application/x-www-form-urlencoded
+
+      message=Hello World&recipients.0.msisdn=4512345678&recipients.1.msisdn=4587654321
+
+   The two examples above do the exact same thing, but with different styles of
+   input. You can even send it all using just a GET url::
+
+     https://gatewayapi.com/rest/mtsms?token=Go-Create-an-API-token&message=Hello+World&recipients.0.msisdn=4512345678&recipients.1.msisdn=4587654321
+
 
 Code Examples
 ^^^^^^^^^^^^^
@@ -177,7 +220,24 @@ using pip, simply do ``pip install requests_oauthlib``.
 PHP
 ~~~
 
-If you are using composer, then you'll want to use our Guzzle example.
+For a really simple integration, the following will suffice:
+
+.. sourcecode:: php
+
+   <?php
+   // Query args
+   $query = http_build_query(array(
+       'token' => 'Go-Create-an-API-token',
+       'message' => 'Hello World',
+       'recipients.0.msisdn' => 4512345678,
+   ));
+   // Send it
+   $result = file_get_contents('https://gatewayapi.com/rest/mtsms?' . $query);
+   // Get SMS ids (optional)
+   print_r(json_decode($result)->ids);
+
+
+However if you are using composer, then you'll want to use our Guzzle example.
 Install the deps with ``composer require "guzzlehttp/oauth-subscriber 0.3.*"``.
 
 .. sourcecode:: php
@@ -267,14 +327,15 @@ composer or any other dependencies.
 cURL
 ~~~~
 
-OAuth in cURL / shell is not convenient, since the oauth header changes on every
-request, it's much easier to use :ref:`HTTP Basic Authentication` with cURL.
+API Tokens and the support for form data is a great match for cURL integration,
+since sending an SMS becomes as easy as:
 
 .. sourcecode:: bash
 
-   curl -vv "https://cred_user:cred_pass@gatewayapi.com/rest/mtsms" \
-   -H "Content-Type: application/json" \
-   -d '{ "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] }'
+   curl -v https://gatewayapi.com/rest/mtsms \
+     -u Go-Create-an-API-token: \
+     -d message="Hello World" \
+     -d recipients.0.msisdn=4512345678
 
 
 .. _csharp:
