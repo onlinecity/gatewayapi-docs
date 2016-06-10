@@ -2,7 +2,7 @@ Legacy HTTP API
 ===============
 
 For these APIs you need a set of credentials. These are different from the
-Oauth API the rest API uses. You'll find them in the dashboard, under Settings.
+API Keys the REST API uses. You'll find them in the dashboard, under Settings.
 
 If you are having problems connecting over SSL to gatewayapi.com, try
 badssl.gatewayapi.com. You can use badssl.gatewayapi.com without ssl, but we
@@ -18,9 +18,9 @@ httppost.nimta.com
 This API is available at httppost.nimta.com for the old gateway (oc.dk/gateway)
 and https://gatewayapi.com/legacy/http/v2/sendsms for the new.
 
-It's currently the endpoint with the most traffic and it's not going away for
-the foreseeable future. However we are deprecating it since the REST API is
-where all future development takes place.
+It's currently one of the endpoint with the most traffic and it's not going
+away for the foreseeable future. However we are deprecating it since the REST
+API is where all future development takes place.
 
 This API is deprecated and only supports sending limited SMS messages. Despite
 the name you can submit both GET and POST requests to this API endpoint.
@@ -46,11 +46,12 @@ the name you can submit both GET and POST requests to this API endpoint.
    :form to: One or more recipient MSISDNs to send a message to. Ie 4512345678
    :form smsc: An ISO 3166-1 country code followed by a period and an ID representing the operator
    :form price: A numeric value with two decimals followed by an ISO 4217 currency code, ie. 10.00DKK
-   :form text: An alphanumeric value representing the content of the SMS. Must be ISO-8859-1 encoded.
+   :form text: An alphanumeric value representing the content of the SMS.
    :form sessionid: Maximum length is 30 characters – and must always be unique. Recommended format is msisdn:time
    :form from: Optional alphanumeric sender. Maximum 11 characters
    :form callbackurl: Optional URL for status callbacks
    :form class: Class to use for message delivery. Defaults to 'A'
+   :form charset: Charset of inputs, either 'utf-8' or 'iso-8859-1' (default). Only available at gatewayapi.com.
    :reqheader Content-Type: application/x-www-form-urlencoded
    :status 200: with a plaintext body: "Processing:sessionid", with sessionid replaced with the given sessionid
    :status 400: if the request can't be processed due to an exception. The body contains the exception message
