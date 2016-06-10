@@ -18,7 +18,7 @@ httppost.nimta.com
 This API is available at httppost.nimta.com for the old gateway (oc.dk/gateway)
 and https://gatewayapi.com/legacy/http/v2/sendsms for the new.
 
-It's currently one of the endpoint with the most traffic and it's not going
+It's currently one of the endpoints with the most traffic and it's not going
 away for the foreseeable future. However we are deprecating it since the REST
 API is where all future development takes place.
 
