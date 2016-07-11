@@ -414,6 +414,7 @@ Advanced usage
    :<json string userref: A transparent string reference, you may set to keep track of the message in your own systems. Returned to you when you receive a `Delivery Status Notification`_.
    :<json string priority: Default 'NORMAL'. One of 'BULK', 'NORMAL', 'URGENT' and 'VERY_URGENT'. Urgent and Very Urgent normally require the use of premium message class.
    :<json integer validity_period: Specified in seconds. If message is not delivered within this timespan, it will expire and you will get a notification.
+   :<json string encoding: Encoding to use when sending the message. Defaults to 'UTF8', which means we will use :term:`GSM 03.38`.
    :<json string destaddr: One of 'DISPLAY', 'MOBILE', 'SIMCARD', 'EXTUNIT'. Use display to do "flash sms", a message displayed on screen immediately but not saved in the normal message inbox on the mobile device.
    :<json string payload: If you are sending a binary SMS, ie. a SMS you have encoded yourself or with speciel content for feature phones (non-smartphones). You may specify a payload, encoded as Base64. If specified, message must not be set and tags are unavailable.
    :<json string udh: UDH to enable additional functionality for binary SMS, encoded as Base64.
@@ -652,6 +653,92 @@ http request to your webhook with the following data.
    We expect you to reply with a 2XX status code within 60 seconds, or we
    consider it a failed attempt.
 
+
+.. _mosms:
+
+MO SMS (Receiving SMS'es)
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Web hooks are also used to receive SMS'es. We call this MO SMS (Mobile
+Originated SMS).
+
+Prerequisites
+~~~~~~~~~~~~~
+In order to receive a SMS, you'll need a short code and/or keyword to which the
+user sends the SMS. This short code and keyword is leased to you, so when we
+receive a SMS on the specific short code, with the specific keyword, we know
+where to deliver the SMS.
+
+You can either lease a keyword on a shared short code, such as +45 1204, or
+you can lease an entire short code, such as +45 60575797. Contact us via the
+live chat if you need a new short code and/or keyword.
+
+If you lease the keyword "foo" on the short code 45 1204, a Danish (+45) user
+would send ie. "foo hello world" to "1204", and you'll receive the SMS.
+
+Once you have a keyword lease, you'll need to assign the keyword to a
+webhook. You can do this from the dashboard.
+* If you do not have a webhook, add one.
+* Click the webhook you want to receive SMS'es.
+* Click the tab pane "Keywords"
+* Make sure the checkbox next to "Assign" is checked for the keywords you want
+to assign to this webhook.
+
+If you have any questions, please contact us using the live chat found ie. in
+the lower right when reading the documentation online.
+
+
+HTTP Callback
+~~~~~~~~~~~~~
+
+
+.. http:post:: /example/callback
+   :noindex:
+
+   Example of how our request to you could look like.
+   The many optional fields are rarely used.
+
+   :<json integer id: The ID of the MO SMS
+   :<json integer msisdn: The :term:`MSISDN` of the mobile device who sent the SMS.
+   :<json integer receiver: The short code on which the SMS was received.
+   :<json string message: The body of the SMS, incl. keyword.
+   :<json integer senttime: The UNIX Timestamp when the SMS was sent.
+   :<json string webhook_label: Label of the webhook who matched the SMS.
+   :<json string sender: If SMS was sent with a text based sender, then this field is set. *Optional.*
+   :<json integer mcc: :term:`MCC`, mobile country code. *Optional.*
+   :<json integer mnc: :term:`MNC`, mobile network code. *Optional.*
+   :<json integer validity_period: How long the SMS is valid. *Optional.*
+   :<json string encoding: Encoding of the received SMS. *Optional.*
+   :<json string udh: User data header of the received SMS. *Optional.*
+   :<json string payload: Binary payload of the received SMS. *Optional.*
+
+   :status 200: If you reply with a 2xx code, we will consider the DSN delivered successfully.
+   :status 500: If we get a code >= 300, we will re-attempt delivery at a later time.
+
+   **Callback example**
+
+   .. sourcecode:: http
+
+      POST /example/callback HTTP/1.1
+      Host: example.com
+      Accept: */*
+      Content-Type: application/json
+
+      {
+          "id": 1000001,
+          "msisdn": 4587654321,
+          "receiver": 451204,
+          "message": "foo Hello World",
+          "senttime": 1450000000,
+          "webhook_label": "test"
+      }
+
+   If we can't reach your server, or you reply with a http status code >= 300,
+   then we will re-attempt delivery of the MO SMS after a 60 second delay, with
+   truncated exponential backoff, doubling every attempt up to 2400 seconds
+   (40 minutes).
+   We expect you to reply with a 2XX status code within 60 seconds, or we
+   consider it a failed attempt.
 
 .. _`OAuth 1.0a`: http://tools.ietf.org/html/rfc5849
 .. _`two-legged`: http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/2/spec.html
