@@ -541,6 +541,9 @@ aka DSNs.
 In addition webhooks can be used to react to enduser initiated events, such as
 MO SMS (Mobile Originated SMS, or Incoming SMS).
 
+If you filter IPs, note that we will call your webhook from the IP range
+77.66.39.128/25. In the future we may add IPs but for now this is the range.
+
 
 Delivery Status Notification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
