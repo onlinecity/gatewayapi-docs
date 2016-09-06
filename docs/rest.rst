@@ -398,6 +398,32 @@ Install the deps with ``gem install oauth``.
    puts response.body
 
 
+Node.js
+~~~~~~~
+
+Install the deps with ``npm install request``.
+
+.. sourcecode:: js
+
+
+   var request = require('request');
+   request.post({
+     url: 'https://gatewayapi.com/rest/mtsms',
+     oauth: {
+       consumer_key: 'Create-an-API-Key',
+       consumer_secret: 'GoGenerateAnApiKeyAndSecret',
+     },
+     json: true,
+     body: {
+       sender: 'Example SMS',
+       message: 'Hello World',
+       recipients: [{msisdn: 4512345678}],
+     },
+   }, function (err, r, body) {
+     console.log(err ? err : body);
+   });
+
+
 Advanced usage
 ^^^^^^^^^^^^^^
 
