@@ -424,6 +424,78 @@ Install the deps with ``npm install request``.
    });
 
 
+Java
+~~~~
+
+Using nothing but standard edition java, you can send a SMS like so.
+
+.. sourcecode:: java
+
+   import java.io.DataOutputStream;
+   import java.net.URL;
+   import java.net.URLEncoder;
+   import javax.net.ssl.HttpsURLConnection;
+
+   public class HelloWorld {
+     public static void main(String[] args) throws Exception {
+       URL url = new URL("https://gatewayapi.com/rest/mtsms");
+       HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+       con.setDoOutput(true);
+
+       DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+       wr.writeBytes(
+         "token=Go-Create-an-API-token"
+         + "&sender=" + URLEncoder.encode("Example SMS", "UTF-8")
+         + "&message=" + URLEncoder.encode("Hello World", "UTF-8")
+         + "&recipients.0.msisdn=4512345678"
+       );
+       wr.close();
+
+       int responseCode = con.getResponseCode();
+       System.out.println("Got response " + responseCode);
+     }
+   }
+
+
+However we expect many of you are using OkHttp or similar, which gives you a
+nice API. Combine this with your favorite JSON package. Install the dependencies
+with.
+
+.. sourcecode:: java
+
+   compile 'com.squareup.okhttp3:okhttp:3.4.1'
+   compile 'se.akerfeldt:okhttp-signpost:1.1.0'
+   compile 'org.json:json:20160810'
+
+.. sourcecode:: java
+
+   final String key = "Create-an-API-Key";
+   final String secret = "GoGenerateAnApiKeyAndSecret";
+
+   OkHttpOAuthConsumer consumer = new OkHttpOAuthConsumer(key, secret);
+   OkHttpClient client = new OkHttpClient.Builder()
+           .addInterceptor(new SigningInterceptor(consumer))
+           .build();
+   JSONObject json = new JSONObject();
+   json.put("sender", "Example SMS");
+   json.put("message", "Hello World");
+   json.put("recipients", (new JSONArray()).put(
+           (new JSONObject()).put("msisdn", 4512345678L)
+   ));
+
+   RequestBody body = RequestBody.create(
+           MediaType.parse("application/json; charset=utf-8"), json.toString());
+   Request signedRequest = (Request) consumer.sign(
+           new Request.Builder()
+                   .url("https://gatewayapi.com/rest/mtsms")
+                   .post(body)
+                   .build()).unwrap();
+
+   try (Response response = client.newCall(signedRequest).execute()) {
+       System.out.println(response.body().string());
+   }
+
+
 Advanced usage
 ^^^^^^^^^^^^^^
 
