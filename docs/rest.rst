@@ -139,7 +139,7 @@ Also see `Advanced usage`_ for a complete example of all features.
    The root element can be either a dict with a single SMS or a list of SMS'es.
    You can send data in JSON format, or even as http form data or query args.
 
-   :<json string class: Default "bulk". The message class to use for this request. If specified it must be the same for all messages in the request.
+   :<json string class: Default "standard". The message class to use for this request. If specified it must be the same for all messages in the request.
    :<json string message: The content of the SMS, *always* specified in UTF-8 encoding, which we will transcode depending on the "encoding" field. The default is the usual :term:`GSM 03.38` encoding.
    :<json string sender: Up to 11 alphanumeric characters, or 15 digits, that will be shown as the sender of the SMS.
    :<json string userref: A transparent string reference, you may set to keep track of the message in your own systems. Returned to you when you receive a `Delivery Status Notification`_.
@@ -504,7 +504,7 @@ Advanced usage
 
    The root element can be either a dict with a single SMS or a list of SMS'es.
 
-   :<json string class: Default 'bulk'. The message class to use for this request. If specified it must be the same for all messages in the request.
+   :<json string class: Default 'standard'. The message class to use for this request. If specified it must be the same for all messages in the request.
    :<json string message: The content of the SMS, *always* specified in UTF-8 encoding, which we will transcode depending on the "encoding" field. The default is the usual :term:`GSM 03.38` encoding. Required unless payload is specified.
    :<json string sender: Up to 11 alphanumeric characters, or 15 digits, that will be shown as the sender of the SMS.
    :<json integer sendtime: Unix timestamp to schedule message sending at certain time.
@@ -552,7 +552,7 @@ Advanced usage
 
       [
           {
-              "class": "bulk",
+              "class": "standard",
               "message": "Hello World, %1, --MYTAG--",
               "payload": "cGF5bG9hZCBlbmNvZGVkIGFzIGI2NAo=",
               "recipients": [
