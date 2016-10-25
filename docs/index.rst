@@ -26,5 +26,10 @@ assistence, please use the live chat feature at the bottom right of your screen.
 
 You can also consult the `HTTP Routing Table <http-routingtable.html>`_
 
+In addition to our dashboard, which you can find on https://gatewayapi.com/app/,
+we also offer programmatic access to a few of the functions offered in the
+dashboard.
+You will find the documenation for these at https://gatewayapi.com/docs/website/
+
 Writing and improving this documentation is an ongoing effort. Pull requests etc
 are most welcome. https://github.com/onlinecity/gatewayapi-docs
