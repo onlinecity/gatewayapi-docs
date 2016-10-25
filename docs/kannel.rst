@@ -19,12 +19,12 @@ To use the API simply set up a new Kannel SMSC::
    system-type = kannel
    smsc-id = oc
    port = 13019
-   send-url = "https://gatewayapi.com/kannel/sendsms/bulk"
+   send-url = "https://gatewayapi.com/kannel/sendsms/standard"
    smsc-username = "{YOUR CREDENTIAL USERNAME}"
    smsc-password = "{YOUR CREDENTIAL PASSWORD}"
 
 The last path fragment is the message class to use. In this example set to
-'bulk'
+'standard'
 
 The important part is that you set the ``system-type`` to ``kannel``, which
 tells Kannel to use it's own protocol for this SMSC.
