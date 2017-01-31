@@ -124,3 +124,5 @@ Caveats
   If possible automatically try the other server if one fails.
 * The timestamp added to the files is in UTC
 * Existing files will be overwritten, but due to the timestamp this is unlikely.
+* Files larger than 30 MB will not be processed, we recommend you split very
+  large batches into smaller files of 10.000 rows each.
