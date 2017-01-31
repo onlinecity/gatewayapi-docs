@@ -77,7 +77,7 @@ Example of a unix encoded file
 
    "userref","msisdn","sender","class",message"
    "test","4510203040","MyCompany","standard","I'm John Doe, who ""randomly"" quote things."
-   ,"4512345678",,,"Optional fields"
+   ,"4512345678",,"standard","Optional fields"
 
 If you added ".excel" to the file name, excels format is used. The target is
 what excel outputs on windows, running a Western Language and using the Save As
