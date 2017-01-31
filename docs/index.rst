@@ -21,6 +21,7 @@ assistence, please use the live chat feature at the bottom right of your screen.
    legacy
    kannel
    soap
+   ftp
    errors
    glossary
 

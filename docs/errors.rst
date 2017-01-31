@@ -73,6 +73,7 @@ communicating with one of our API's ie. :ref:`rest`.
 0x0227  No push settings for account %1
 0x0228  No push setting for VAS ID
 0x0229  Invalid token
+0x022A  Account frozen, contact support
 0x0310  A message contains the same recipient more than once. MSISDNs %1 is duplicated
 0x0311  Priority %1 not available
 ======  =======================
