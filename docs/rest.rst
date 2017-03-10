@@ -147,7 +147,8 @@ Also see `Advanced usage`_ for a complete example of all features.
    :<json array recipients: Array of recipients, described below:
    :<jsonarr string msisdn: :term:`MSISDN` aka the full mobile phone number of the recipient.
    :>json array ids: If successful you receive a object containing a list of message ids.
-   :status 200: Returns a dict with message IDs on success
+   :>json dictionary usage: If successful containg a dictionary with each country you have sent to, each country show how many messages has ben sent respectively.
+   :status 200: Returns a dict with an array of message IDs and a dictionary with usage information on success
    :status 400: Ie. invalid arguments, details in the JSON body
    :status 401: Ie. invalid API key or signature
    :status 403: Ie. unauthorized ip address
@@ -848,3 +849,15 @@ HTTP Callback
 .. _`Requests-OAuthlib`: https://requests-oauthlib.readthedocs.org/
 .. _`Guzzle`: http://guzzlephp.org/
 .. _`RestSharp`: http://restsharp.org/
+
+Account Balance
+--------
+
+You can use the /me endpoint to check your account balance, and what currency your account is set too.
+
+.. http:get:: /rest/me
+   :synopsis: Get credit balance of your account.
+
+:>json float credit: Float showing how much credit is left on your account, for postpaid accounts the number is credit limit minus amount used.
+:>json string currency: Indicates whether your account uses DKK or EUR.
+:>json integer account id: The id of your account.
