@@ -147,7 +147,7 @@ Also see `Advanced usage`_ for a complete example of all features.
    :<json array recipients: Array of recipients, described below:
    :<jsonarr string msisdn: :term:`MSISDN` aka the full mobile phone number of the recipient.
    :>json array ids: If successful you receive a object containing a list of message ids.
-   :>json dictionary usage: If successful you receive a usage dictionary with usage information for you request. 
+   :>json dictionary usage: If successful you receive a usage dictionary with usage information for you request.
    :status 200: Returns a dict with an array of message IDs and a dictionary with usage information on success
    :status 400: Ie. invalid arguments, details in the JSON body
    :status 401: Ie. invalid API key or signature
@@ -858,8 +858,8 @@ You can use the /me endpoint to check your account balance, and what currency yo
 .. http:get:: /rest/me
    :synopsis: Get credit balance of your account.
 
-   :>json float credit: Float showing the remaining credit on your account.
-   :>json string currency: Indicates whether your account uses DKK or EUR.
+   :>json float credit: The remaining credit.
+   :>json string currency: The currency of your credit.
    :>json integer account id: The id of your account.
 
 
