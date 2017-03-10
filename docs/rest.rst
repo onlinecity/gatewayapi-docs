@@ -147,7 +147,7 @@ Also see `Advanced usage`_ for a complete example of all features.
    :<json array recipients: Array of recipients, described below:
    :<jsonarr string msisdn: :term:`MSISDN` aka the full mobile phone number of the recipient.
    :>json array ids: If successful you receive a object containing a list of message ids.
-   :>json dictionary usage: If successful containg a dictionary with each country you have sent to, each country show how many messages has ben sent respectively.
+   :>json dictionary usage: If successful you receive a usage dictionary with usage information for you request. 
    :status 200: Returns a dict with an array of message IDs and a dictionary with usage information on success
    :status 400: Ie. invalid arguments, details in the JSON body
    :status 401: Ie. invalid API key or signature
@@ -850,7 +850,7 @@ HTTP Callback
 .. _`Guzzle`: http://guzzlephp.org/
 .. _`RestSharp`: http://restsharp.org/
 
-Account Balance
+Check account balance
 --------
 
 You can use the /me endpoint to check your account balance, and what currency your account is set too.
@@ -858,6 +858,27 @@ You can use the /me endpoint to check your account balance, and what currency yo
 .. http:get:: /rest/me
    :synopsis: Get credit balance of your account.
 
-:>json float credit: Float showing how much credit is left on your account, for postpaid accounts the number is credit limit minus amount used.
-:>json string currency: Indicates whether your account uses DKK or EUR.
-:>json integer account id: The id of your account.
+   :>json float credit: Float showing the remaining credit on your account.
+   :>json string currency: Indicates whether your account uses DKK or EUR.
+   :>json integer account id: The id of your account.
+
+
+   :status 200: Returns a dict with an array containing information on your account.
+   :status 401: Ie. invalid API key or signature
+   :status 403: Ie. unauthorized ip address
+   :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
+
+   **Response example**
+
+   .. sourcecode:: http
+
+      GET /rest/me HTTP/1.1
+      Host: gatewayapi.com
+      Accept: */*
+      Content-Type: application/json
+
+      {
+          "credit": 1234.56,
+          "currency": "DKK",
+          "id": 1
+      }
