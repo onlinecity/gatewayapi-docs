@@ -147,7 +147,8 @@ Also see `Advanced usage`_ for a complete example of all features.
    :<json array recipients: Array of recipients, described below:
    :<jsonarr string msisdn: :term:`MSISDN` aka the full mobile phone number of the recipient.
    :>json array ids: If successful you receive a object containing a list of message ids.
-   :status 200: Returns a dict with message IDs on success
+   :>json dictionary usage: If successful you receive a usage dictionary with usage information for you request.
+   :status 200: Returns a dict with an array of message IDs and a dictionary with usage information on success
    :status 400: Ie. invalid arguments, details in the JSON body
    :status 401: Ie. invalid API key or signature
    :status 403: Ie. unauthorized ip address
@@ -848,3 +849,36 @@ HTTP Callback
 .. _`Requests-OAuthlib`: https://requests-oauthlib.readthedocs.org/
 .. _`Guzzle`: http://guzzlephp.org/
 .. _`RestSharp`: http://restsharp.org/
+
+Check account balance
+--------
+
+You can use the /me endpoint to check your account balance, and what currency your account is set too.
+
+.. http:get:: /rest/me
+   :synopsis: Get credit balance of your account.
+
+   :>json float credit: The remaining credit.
+   :>json string currency: The currency of your credit.
+   :>json integer account id: The id of your account.
+
+
+   :status 200: Returns a dict with an array containing information on your account.
+   :status 401: Ie. invalid API key or signature
+   :status 403: Ie. unauthorized ip address
+   :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
+
+   **Response example**
+
+   .. sourcecode:: http
+
+      GET /rest/me HTTP/1.1
+      Host: gatewayapi.com
+      Accept: */*
+      Content-Type: application/json
+
+      {
+          "credit": 1234.56,
+          "currency": "DKK",
+          "id": 1
+      }
