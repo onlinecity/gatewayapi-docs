@@ -147,7 +147,8 @@ Also see `Advanced usage`_ for a complete example of all features.
    :<json array recipients: Array of recipients, described below:
    :<jsonarr string msisdn: :term:`MSISDN` aka the full mobile phone number of the recipient.
    :>json array ids: If successful you receive a object containing a list of message ids.
-   :status 200: Returns a dict with message IDs on success
+   :>json dictionary usage: If successful you receive a usage dictionary with usage information for you request.
+   :status 200: Returns a dict with an array of message IDs and a dictionary with usage information on success
    :status 400: Ie. invalid arguments, details in the JSON body
    :status 401: Ie. invalid API key or signature
    :status 403: Ie. unauthorized ip address
@@ -343,8 +344,9 @@ since sending an SMS becomes as easy as:
 C#
 ~~
 
-This example uses `RestSharp`_. If you're using the NuGet
-Package Manager Console: ``Install-Package RestSharp``.
+This example uses `RestSharp`_. and `NewtonSoft`_. If you're using the NuGet
+Package Manager Console: ``Install-Package RestSharp``,
+``Install-Package Newtonsoft.Json -Version 9.0.1``.
 
 .. sourcecode:: csharp
 
@@ -362,14 +364,15 @@ Package Manager Console: ``Install-Package RestSharp``.
 
    // On 200 OK, parse the list of SMS IDs else print error
    if ((int) response.StatusCode == 200) {
-       var json = new RestSharp.Deserializers.JsonDeserializer();
-       var res = json.Deserialize<Dictionary<string, List<UInt64>>>(response);
+       var res = Newtonsoft.Json.Linq.JObject.Parse(response.Content);
        foreach (var i in res["ids"]) {
            Console.WriteLine(i);
        }
-   } else {
-       Console.WriteLine(response.Content);
-   }
+   } else if (response.ResponseStatus == RestSharp.ResponseStatus.Completed) {
+      Console.WriteLine(response.Content);
+    } else {
+      Console.WriteLine(response.ErrorMessage);
+    }
 
 
 Ruby
@@ -494,6 +497,27 @@ with.
    try (Response response = client.newCall(signedRequest).execute()) {
        System.out.println(response.body().string());
    }
+
+The code examples above will respond as follows. Usage is subject to change, and will in time contain more useful information on your request.
+
+**Response example**
+
+    .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+          "ids": [
+              421332671
+          ],
+          "usage": {
+              "countries": {
+                  "DK": 1
+              }
+          }
+      }
+
 
 
 Advanced usage
@@ -848,3 +872,35 @@ HTTP Callback
 .. _`Requests-OAuthlib`: https://requests-oauthlib.readthedocs.org/
 .. _`Guzzle`: http://guzzlephp.org/
 .. _`RestSharp`: http://restsharp.org/
+.. _`NewtonSoft`: http://www.newtonsoft.com/json
+
+Check account balance
+--------
+
+You can use the /me endpoint to check your account balance, and what currency your account is set too.
+
+.. http:get:: /rest/me
+   :synopsis: Get credit balance of your account.
+
+   :>json float credit: The remaining credit.
+   :>json string currency: The currency of your credit.
+   :>json integer account id: The id of your account.
+
+
+   :status 200: Returns a dict with an array containing information on your account.
+   :status 401: Ie. invalid API key or signature
+   :status 403: Ie. unauthorized ip address
+   :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
+
+   **Response example**
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+          "credit": 1234.56,
+          "currency": "DKK",
+          "id": 1
+      }
