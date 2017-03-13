@@ -498,27 +498,6 @@ with.
        System.out.println(response.body().string());
    }
 
-The code examples above will respond as follows. Usage is subject to change, and will in time contain more useful information on your request.
-
-**Response example**
-
-    .. sourcecode:: http
-
-      HTTP/1.1 200 OK
-      Content-Type: application/json
-
-      {
-          "ids": [
-              421332671
-          ],
-          "usage": {
-              "countries": {
-                  "DK": 1
-              }
-          }
-      }
-
-
 
 Advanced usage
 ^^^^^^^^^^^^^^
@@ -627,10 +606,22 @@ Advanced usage
 
    .. sourcecode:: http
 
-      HTTP/1.1 200 OK
-      Content-Type: application/json
+     HTTP/1.1 200 OK
+     Content-Type: application/json
 
-      {"ids": [132,134,135,137,138]}
+     {
+         "ids": [
+             421332671
+         ],
+         "usage": {
+             "countries": {
+                 "DK": 1
+             }
+         }
+     }
+
+   Please note that this response is subject to change and will continually,
+   be updated to contain more useful data.
 
 
    If the request fails, the response will look like the example below:
