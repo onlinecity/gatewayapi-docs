@@ -498,6 +498,27 @@ with.
        System.out.println(response.body().string());
    }
 
+The code examples above will respond as follows. Usage is subject to change, and will in time contain more useful information on your request.
+
+**Response example**
+
+    .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+          "ids": [
+              421332671
+          ],
+          "usage": {
+              "countries": {
+                  "DK": 1
+              }
+          }
+      }
+
+
 
 Advanced usage
 ^^^^^^^^^^^^^^
@@ -875,9 +896,7 @@ You can use the /me endpoint to check your account balance, and what currency yo
 
    .. sourcecode:: http
 
-      GET /rest/me HTTP/1.1
-      Host: gatewayapi.com
-      Accept: */*
+      HTTP/1.1 200 OK
       Content-Type: application/json
 
       {
