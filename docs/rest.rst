@@ -344,8 +344,9 @@ since sending an SMS becomes as easy as:
 C#
 ~~
 
-This example uses `RestSharp`_. If you're using the NuGet
-Package Manager Console: ``Install-Package RestSharp``.
+This example uses `RestSharp`_. and `NewtonSoft`_. If you're using the NuGet
+Package Manager Console: ``Install-Package RestSharp``,
+``Install-Package Newtonsoft.Json -Version 9.0.1``.
 
 .. sourcecode:: csharp
 
@@ -363,14 +364,15 @@ Package Manager Console: ``Install-Package RestSharp``.
 
    // On 200 OK, parse the list of SMS IDs else print error
    if ((int) response.StatusCode == 200) {
-       var json = new RestSharp.Deserializers.JsonDeserializer();
-       var res = json.Deserialize<Dictionary<string, List<UInt64>>>(response);
+       var res = Newtonsoft.Json.Linq.JObject.Parse(response.Content);
        foreach (var i in res["ids"]) {
            Console.WriteLine(i);
        }
-   } else {
-       Console.WriteLine(response.Content);
-   }
+   } else if (response.ResponseStatus == RestSharp.ResponseStatus.Completed) {
+      Console.WriteLine(response.Content);
+    } else {
+      Console.WriteLine(response.ErrorMessage);
+    }
 
 
 Ruby
@@ -849,6 +851,7 @@ HTTP Callback
 .. _`Requests-OAuthlib`: https://requests-oauthlib.readthedocs.org/
 .. _`Guzzle`: http://guzzlephp.org/
 .. _`RestSharp`: http://restsharp.org/
+.. _`NewtonSoft`: http://www.newtonsoft.com/json
 
 Check account balance
 --------
