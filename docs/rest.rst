@@ -604,21 +604,21 @@ Advanced usage
    If the request succeed, the internal message identifiers are returned to
    the caller like this:
 
-       .. sourcecode:: http
+   .. sourcecode:: http
 
-         HTTP/1.1 200 OK
-         Content-Type: application/json
+     HTTP/1.1 200 OK
+     Content-Type: application/json
 
-         {
-             "ids": [
-                 421332671
-             ],
-             "usage": {
-                 "countries": {
-                     "DK": 1
-                 }
+     {
+         "ids": [
+             421332671
+         ],
+         "usage": {
+             "countries": {
+                 "DK": 1
              }
          }
+     }
 
    Please note that this response is subject to change and will continually,
    be updated to contain more useful data.
