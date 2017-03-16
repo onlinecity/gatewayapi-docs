@@ -65,5 +65,41 @@ explained here.
 
          * ^ { } \ [ ] ~ | €
 
+   SMS length
+      A sms message has a maximum size of 140 bytes, messages larger than 140
+      bytes are chained together using some of these bytes, leaving 134 bytes
+      for the message on each "page".
+
+      Using GSM 03.38 the length is extended by
+      only using 7 bits per character instead of the normal 8 bits used by UTF-8
+      this gives 160 characters for one page messages, when chaining the
+      messages this extension by using 7 bits leave 153 characters.
+
+      Using UCS2 encoding will enable to use a wide range of different
+      characters that is not available in UTF-8, this is achieved by using
+      2 bytes per character. giving you 70 characters for one page messages,
+      if you go above 70 characters the messages will be chained giving you 134
+      bytes or 67 characters for your message.
+
+      In short:
+
+      * GSM 03.38
+
+        * Uses 7 bits per character, to extend the 140 bytes max length of a sms
+
+        * 160 characters for one page.
+
+        * Messages longer then 160 characters are chained and gives a length
+          of 153 characters per page.
+
+      * UCS2
+
+        * Allows the use of a lot of different special characters by using 2 bytes
+          per character
+
+        * 70 characters for one page.
+
+        * Messages longer then 70 characters are chained and gives a leaves
+          67 characters per page.
 
 *More to come...*

@@ -214,6 +214,7 @@ using pip, simply do ``pip install requests_oauthlib``.
    req = {
        'recipients': [{'msisdn': 4512345678}],
        'message': 'Hello World',
+       'sender': 'ExampleSMS',
    }
    res = gwapi.post('https://gatewayapi.com/rest/mtsms', json=req)
    res.raise_for_status()
@@ -229,6 +230,7 @@ For a really simple integration, the following will suffice:
    // Query args
    $query = http_build_query(array(
        'token' => 'Go-Create-an-API-token',
+       'sender' => 'ExampleSMS',
        'message' => 'Hello World',
        'recipients.0.msisdn' => 4512345678,
    ));
@@ -260,6 +262,7 @@ Install the deps with ``composer require "guzzlehttp/oauth-subscriber 0.3.*"``.
    ]);
 
    $req = [
+       'sender'     => 'ExampleSMS',
        'recipients' => [['msisdn' => 4512345678]],
        'message'    => 'Hello World',
    ];
@@ -312,6 +315,7 @@ composer or any other dependencies.
    $req = array(
        'recipients' => array(array('msisdn' => 4512345678)),
        'message' => 'Hello World',
+       'sender' => 'ExampleSMS',
    );
 
 
@@ -335,6 +339,7 @@ since sending an SMS becomes as easy as:
 
    curl -v https://gatewayapi.com/rest/mtsms \
      -u Go-Create-an-API-token: \
+     -d sender="ExampleSMS" \
      -d message="Hello World" \
      -d recipients.0.msisdn=4512345678
 
@@ -357,6 +362,7 @@ Package Manager Console: ``Install-Package RestSharp``,
        .OAuth1Authenticator.ForRequestToken(apiKey, apiSecret);
    var request = new RestSharp.RestRequest("mtsms", RestSharp.Method.POST);
    request.AddJsonBody(new {
+       sender = "ExampleSMS",
        recipients = new[] { new { msisdn = 4512345678} },
        message = "Hello World"
    });
@@ -396,6 +402,7 @@ Install the deps with ``gem install oauth``.
    body = JSON.generate({
      'recipients' => [{'msisdn' => 4512345678}],
      'message' => 'Hello World',
+     'sender' => 'ExampleSMS',
    })
    response = access.post('/mtsms', body, {'Content-Type'=>'application/json'})
    puts response.body
@@ -418,7 +425,7 @@ Install the deps with ``npm install request``.
      },
      json: true,
      body: {
-       sender: 'Example SMS',
+       sender: 'ExampleSMS',
        message: 'Hello World',
        recipients: [{msisdn: 4512345678}],
      },
@@ -448,7 +455,7 @@ Using nothing but standard edition java, you can send a SMS like so.
        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
        wr.writeBytes(
          "token=Go-Create-an-API-token"
-         + "&sender=" + URLEncoder.encode("Example SMS", "UTF-8")
+         + "&sender=" + URLEncoder.encode("ExampleSMS", "UTF-8")
          + "&message=" + URLEncoder.encode("Hello World", "UTF-8")
          + "&recipients.0.msisdn=4512345678"
        );
@@ -480,7 +487,7 @@ with.
            .addInterceptor(new SigningInterceptor(consumer))
            .build();
    JSONObject json = new JSONObject();
-   json.put("sender", "Example SMS");
+   json.put("sender", "ExampleSMS");
    json.put("message", "Hello World");
    json.put("recipients", (new JSONArray()).put(
            (new JSONObject()).put("msisdn", 4512345678L)
@@ -498,26 +505,31 @@ with.
        System.out.println(response.body().string());
    }
 
-The code examples above will respond as follows. Usage is subject to change, and will in time contain more useful information on your request.
+Httpie
+~~~~
+For quick testing with a pretty jsonified response in your terminal you can use
+`Httpie`. It can be done simply using your token as follows.
 
-**Response example**
+.. sourcecode:: bash
 
-    .. sourcecode:: http
+  http --auth=GoGenerateAnApiToken: \
+  https://gatewayapi.com/rest/mtsms \
+  sender='ExampleSMS' \
+  message='Hello world' \
+  recipients:='[{"msisdn": 4512345678}]'
 
-      HTTP/1.1 200 OK
-      Content-Type: application/json
+Or you can install the httpie-oauth library and use your API key and secret.
 
-      {
-          "ids": [
-              421332671
-          ],
-          "usage": {
-              "countries": {
-                  "DK": 1
-              }
-          }
-      }
+.. sourcecode:: bash
 
+  # install httpie oauth lib, with pip install httpie-oauth
+  http --auth-type=oauth1 \
+  --auth="Create-an-API-Key:" \
+  "GoGenerateAnApiKeyAndSecret" \
+  https://gatewayapi.com/rest/mtsms \
+  sender='ExampleSMS' \
+  message='Hello world' \
+  recipients:='[{"msisdn": 4512345678}]'
 
 
 Advanced usage
@@ -627,10 +639,22 @@ Advanced usage
 
    .. sourcecode:: http
 
-      HTTP/1.1 200 OK
-      Content-Type: application/json
+     HTTP/1.1 200 OK
+     Content-Type: application/json
 
-      {"ids": [132,134,135,137,138]}
+     {
+         "ids": [
+             421332671
+         ],
+         "usage": {
+             "countries": {
+                 "DK": 1
+             }
+         }
+     }
+
+   Please note that this response is subject to change and will continually,
+   be updated to contain more useful data.
 
 
    If the request fails, the response will look like the example below:
@@ -873,6 +897,7 @@ HTTP Callback
 .. _`Guzzle`: http://guzzlephp.org/
 .. _`RestSharp`: http://restsharp.org/
 .. _`NewtonSoft`: http://www.newtonsoft.com/json
+.. _`Httpie`: https://httpie.org
 
 Check account balance
 --------
