@@ -548,7 +548,7 @@ Advanced usage
    :<json string userref: A transparent string reference, you may set to keep track of the message in your own systems. Returned to you when you receive a `Delivery Status Notification`_.
    :<json string priority: Default 'NORMAL'. One of 'BULK', 'NORMAL', 'URGENT' and 'VERY_URGENT'. Urgent and Very Urgent normally require the use of premium message class.
    :<json integer validity_period: Specified in seconds. If message is not delivered within this timespan, it will expire and you will get a notification.
-   :<json string encoding: Encoding to use when sending the message. Defaults to 'UTF8', which means we will use :term:`GSM 03.38`.
+   :<json string encoding: Encoding to use when sending the message. Defaults to 'UTF8', which means we will use :term:`GSM 03.38`. Use :term:`UCS2` to send a unicode message.
    :<json string destaddr: One of 'DISPLAY', 'MOBILE', 'SIMCARD', 'EXTUNIT'. Use display to do "flash sms", a message displayed on screen immediately but not saved in the normal message inbox on the mobile device.
    :<json string payload: If you are sending a binary SMS, ie. a SMS you have encoded yourself or with speciel content for feature phones (non-smartphones). You may specify a payload, encoded as Base64. If specified, message must not be set and tags are unavailable.
    :<json string udh: UDH to enable additional functionality for binary SMS, encoded as Base64.
