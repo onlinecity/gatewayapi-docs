@@ -139,7 +139,7 @@ only the first character of the replacement is used.
 ==== ==== ===========
 Code Char Replacement
 ==== ==== ===========
-00A0  
+00A0
 00A1 ¡    !
 00A2 ¢    C/
 00A3 £    PS
