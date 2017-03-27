@@ -130,9 +130,9 @@ senders, and the sender may be automatically replaced or you may need to use a
 special sender for the destination/network.
 
 We recommend you stick with characters in the range a-zA-Z0-9, however if you
-do use ie. _`Latin-1` characters ie. (æøå) we will support it on connections
+do use `Latin-1`_ characters ie. (æøå) we will support it on connections
 where it is available. If the mobile network connection do not support these
-characters, we will automatically replace them with standard chracters
+characters, we will automatically replace them with basic latin chracters
 according to the table below. If the replacement results in a too long sender,
 only the first character of the replacement is used.
 
@@ -241,3 +241,5 @@ We route the traffic to the best connection regardless of their support of
 special characters, so you may experience the sender is replaced. With that
 said, if you have a special need for these characters in your sender fields,
 contact support and we can work something out.
+
+.. _`Latin-1`: https://unicode-table.com/en/blocks/latin-1-supplement/
