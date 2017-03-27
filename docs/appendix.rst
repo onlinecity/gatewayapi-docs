@@ -143,7 +143,7 @@ Code Char Replacement
 00A1 ¡    !
 00A2 ¢    C/
 00A3 £    PS
-00A4 ¤    $?
+00A4      $?
 00A5 ¥    Y=
 00A6 ¦    |
 00A7 §    SS
