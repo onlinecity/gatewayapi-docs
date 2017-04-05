@@ -23,7 +23,7 @@ assistence, please use the live chat feature at the bottom right of your screen.
    soap
    ftp
    errors
-   glossary
+   appendix
 
 You can also consult the `HTTP Routing Table <http-routingtable.html>`_
 
