@@ -152,7 +152,7 @@ Code Char Replacement
 00AA ª    a
 00AB «    <<
 00AC ¬    !
-00AD ­
+00AD
 00AE ®    \(r\)
 00AF ¯    \-
 00B0 °    deg
