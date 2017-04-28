@@ -88,8 +88,9 @@ SMS Length
 
   Using :term:`GSM 03.38` the length is extended by only using 7 bits per
   character instead of the normal 8 bits used by UTF-8 this gives 160
-  characters for one page messages, when chaining the messages this
-  extension by using 7 bits leave 153 characters.
+  characters for one page messages, if a messages is longer than those 160
+  charcters, 7 bits will be used to chain the messages together as pages
+  giving a total of 153 characters per page.
 
   Using :term:`UCS2` encoding will enable to use a wide range of different
   characters that is not available in :term:`GSM 03.38`, this is achieved
