@@ -553,13 +553,13 @@ Advanced usage
    :<json string payload: If you are sending a binary SMS, ie. a SMS you have encoded yourself or with speciel content for feature phones (non-smartphones). You may specify a payload, encoded as Base64. If specified, message must not be set and tags are unavailable.
    :<json string udh: UDH to enable additional functionality for binary SMS, encoded as Base64.
    :<json string callback_url: If specified send status notifications to this URL, else use the default webhook.
+   :<json string label: A label added to each sent message, can be used to uniquely identify a customer or company that you sent the message on behalf of, to help with invoicing your customers. If specied it must be the same for all messages in the request.
    :<json array recipients: Array of recipients, described below:
    :<jsonarr string msisdn: :term:`MSISDN` aka the full mobile phone number of the recipient.
    :<jsonarr integer mcc: :term:`MCC`, mobile country code. Must be specified if doing charged SMS'es.
    :<jsonarr integer mnc: :term:`MNC`, mobile network code. Must be specified if doing charged SMS'es.
    :<jsonarr object charge: Charge data. More details on sending charged SMS'es to come.
    :<jsonarr array tagvalues: A list of string values corresponding to the tags in message. The order and amount of tag values must exactly match the tags.
-   :<json string label: A label added to each sent message, can be used to uniquely identify a customer or company that you sent the message on behalf of, to help with invoicing your customers.
    :>json array ids: If successful you receive a object containing a list of message ids.
    :status 200: Returns a dict with message IDs on success
    :status 400: Ie. invalid arguments, details in the JSON body
