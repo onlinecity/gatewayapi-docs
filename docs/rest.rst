@@ -677,10 +677,69 @@ Advanced usage
    For a complete list of the various codes see :ref:`apierror`.
 
 
+Get SMS status
+--------------
+Please note we strongly recommend using `Webhooks`_ to get the status pushed to
+you when it changes, rather than poll for changes. We do not provide the same
+guarantees for this particular API endpoint as the others, since it runs on the
+reporting infrastructure.
+
+
+.. http:get:: /rest/mtsms/{id}
+   :synopsis: Get the current status of a SMS and it's recipients.
+
+   You can only get a SMS after it has been sent, since only then is it
+   transferred to long term storage.
+
+   The API will return a json dict with the same fields as when sending the
+   SMS (see above).
+
+   :arg integer id: A SMS ID, as returned when sending the SMS
+   :status 200: Returns a dict that represents the SMS on success
+   :status 400: Ie. invalid arguments, details in the JSON body
+   :status 401: Ie. invalid API key or signature
+   :status 403: Ie. unauthorized ip address
+   :status 404: SMS is not found, or is not yet transferred to datastore.
+   :status 422: Invalid json request body
+   :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
+
+
+Check account balance
+---------------------
+
+You can use the /me endpoint to check your account balance, and what currency your account is set too.
+
+.. http:get:: /rest/me
+   :synopsis: Get credit balance of your account.
+
+   :>json float credit: The remaining credit.
+   :>json string currency: The currency of your credit.
+   :>json integer account id: The id of your account.
+
+
+   :status 200: Returns a dict with an array containing information on your account.
+   :status 401: Ie. invalid API key or signature
+   :status 403: Ie. unauthorized ip address
+   :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
+
+   **Response example**
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+          "credit": 1234.56,
+          "currency": "DKK",
+          "id": 1
+      }
+
+
 Webhooks
 --------
 
-Although the REST API will support polling for the message status, we strongly
+Although the REST API supports polling for the message status, we strongly
 encourage to use our simple webhooks for getting Delivery Status Notifications,
 aka DSNs.
 
@@ -889,30 +948,28 @@ HTTP Callback
    We expect you to reply with a 2XX status code within 60 seconds, or we
    consider it a failed attempt.
 
-.. _`OAuth 1.0a`: http://tools.ietf.org/html/rfc5849
-.. _`two-legged`: http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/2/spec.html
-.. _`HTTP Basic Auth`: http://tools.ietf.org/html/rfc1945#section-11.1
-.. _`OAuth Authorization header`: http://tools.ietf.org/html/rfc5849#section-3.5.1
-.. _`Requests-OAuthlib`: https://requests-oauthlib.readthedocs.org/
-.. _`Guzzle`: http://guzzlephp.org/
-.. _`RestSharp`: http://restsharp.org/
-.. _`NewtonSoft`: http://www.newtonsoft.com/json
-.. _`Httpie`: https://httpie.org
 
-Check account balance
---------
+Get usage by label
+------------------
 
-You can use the /me endpoint to check your account balance, and what currency your account is set too.
+You can get the account usage for a specific date range, sub divided by label
+and country. This can be used for billing your own customers (specified by
+label) if you do not keep track of each sms sent yourself.
 
-.. http:get:: /rest/me
-   :synopsis: Get credit balance of your account.
+.. http:get:: /api/usage/labels
+   :synopsis: Get usage for a date range
 
-   :>json float credit: The remaining credit.
-   :>json string currency: The currency of your credit.
-   :>json integer account id: The id of your account.
+   :formparam from: The from date, in YYYY-MM-DD format
+   :formparam to: The to date, in YYYY-MM-DD format
+   :>jsonarr float amount: Amount of SMSes
+   :>jsonarr float cost: Cost of the SMSes
+   :>jsonarr string country: The country the SMSes was sent to
+   :>jsonarr string currency: Either DKK or EUR
+   :>jsonarr string label: The label specified when the SMSes was sent
+   :>jsonarr string messageclass_id: The class specified when the SMSes was sent
 
 
-   :status 200: Returns a dict with an array containing information on your account.
+   :status 200: Returns a array with a dict containing usage info.
    :status 401: Ie. invalid API key or signature
    :status 403: Ie. unauthorized ip address
    :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
@@ -924,8 +981,32 @@ You can use the /me endpoint to check your account balance, and what currency yo
       HTTP/1.1 200 OK
       Content-Type: application/json
 
-      {
-          "credit": 1234.56,
+      [
+        {
+          "amount": 29,
+          "cost": 3.48,
+          "country": "DK",
           "currency": "DKK",
-          "id": 1
-      }
+          "label": null,
+          "messageclass_id": "standard"
+        },
+        {
+          "amount": 6,
+          "cost": 1.5,
+          "country": "IT",
+          "currency": "DKK",
+          "label": null,
+          "messageclass_id": "standard"
+        }
+      ]
+
+.. _`OAuth 1.0a`: http://tools.ietf.org/html/rfc5849
+.. _`two-legged`: http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/2/spec.html
+.. _`HTTP Basic Auth`: http://tools.ietf.org/html/rfc1945#section-11.1
+.. _`OAuth Authorization header`: http://tools.ietf.org/html/rfc5849#section-3.5.1
+.. _`Requests-OAuthlib`: https://requests-oauthlib.readthedocs.org/
+.. _`Guzzle`: http://guzzlephp.org/
+.. _`RestSharp`: http://restsharp.org/
+.. _`NewtonSoft`: http://www.newtonsoft.com/json
+.. _`Httpie`: https://httpie.org
+
