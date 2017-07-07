@@ -1002,6 +1002,114 @@ label) if you do not keep track of each sms sent yourself.
         }
       ]
 
+.. _email:
+
+Sending emails (beta)
+---------------------
+You can send emails through gatewayapi using our email endpoint. This endpoint
+is in private beta, contact sales@gatewayapi.com to request access to the beta.
+
+.. http:post:: /rest/email
+   :synopsis: Send a new email
+
+   :<json string html: The html content of the email.
+   :<json string plaintext: The plain text content of the email.
+   :<json string subject: The subject line of the email.
+   :<json string from: The name and email of the sender, can be just the email if no name is specified, see below for format.
+   :<json string returnpath: Receive emails with bounce information.
+   :<json array tags: A list of string tags, which will be replaced with the tag values for each recipient, if used remember to also add tagvalues to all recipients.
+   :<json array attachments: A list of base64 encoded files to be attached to the email, described below:
+   :<json string data: The base64 encoded data of the file to attach.
+   :<json string filename: The name of the file attached to the email.
+   :<json string mimetype: The mimetype of the file, eg. text/csv.
+   :<json array recipients: list of email addresses to receive the email, described below:
+   :<json string address: The recipient email address.
+   :<json string name: The name of the recipient shown in the email client.
+   :<json array tagvalues: A list of string values corresponding to the tags in the email. The order and amount of tag values must exactly match the tags.
+   :status 200: Returns a dict with an array of message IDs and a dictionary with usage information on success
+   :status 400: Ie. invalid arguments, details in the JSON body
+   :status 401: Ie. invalid API key or signature
+   :status 403: Ie. unauthorized ip address
+   :status 422: Invalid json request body
+   :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
+
+
+   .. sourcecode:: http
+
+      POST /rest/email HTTP/1.1
+      Host: gatewayapi.com
+      Authorization: OAuth oauth_consumer_key="Create-an-API-Key",
+        oauth_nonce="128817750813820944501450124113",
+        oauth_timestamp="1450124113",
+        oauth_version="1.0",
+        oauth_signature_method="HMAC-SHA1",
+        oauth_signature="t9w86dddubh4XofnnPgH%2BY6v5TU%3D"
+      Accept: application/json, text/javascript
+      Content-Type: application/json
+
+      {
+          "html": "<b>Hello %firsname %surname Alderaan is about to be removed.",
+          "plaintext": "Hello %firsname %surname Alderaan is about to be removed.",
+          "subject": "Annihilation",
+          "from": "Darth Vader <darth@galacticempire.com>",
+          "returnpath": "bounce@galacticempire.com",
+          "tags": ["%firstname", "%surname"],
+          "recipients": [
+              { "address": "l.organa@rebel.com", "name": "Leia Organa", "tagvalues": ["Leia", "Organa"] },
+              { "address": "l.skywalker@jedi.com", "name": "Luke Skywalker", "tagvalues": ["Luke", "Skywalker"] }
+          ]
+      }
+
+
+   **Example response**
+
+     If the request succeed, the internal message identifiers are returned to
+     the caller like this:
+
+     .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+           "ids": [
+               431332671
+           ]
+       }
+
+
+Email code examples
+^^^^^^^^^^^^^^^^^^^
+Code examples for sending emails.
+
+Python
+~~~~~~
+
+For this example you'll need the excellent `Requests-OAuthlib`_. If you are
+using pip, simply do ``pip install requests_oauthlib``.
+
+.. sourcecode:: python
+
+  from requests_oauthlib import OAuth1Session
+  key = 'Go-Create-an-API-Key'
+  secret = 'Go-Create-an-API-Key-and-Secret'
+  gwapi = OAuth1Session(key, client_secret=secret)
+  req = {
+    'html': '<b>Hello %firsname %surname Alderaan is about to be removed.',
+    'plaintext': 'Hello %firsname %surname Alderaan is about to be removed.',
+    'subject': 'Annihilation',
+    'from': 'Darth Vader <darth@galacticempire.com>',
+    'returnpath': 'bounce@galacticempire.com',
+    'recipients': [{'address': 'l.organa@rebel.com', 'name': 'Leia Organa', 'tagvalues': ['Leia', 'Organa']}],
+    'tags': ['%firstname', '%surname']
+    'attachments': [{
+      'data': '/9j/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/yQALCAABAAEBAREA/8wABgAQEAX/2gAIAQEAAD8A0s8g/9k=',
+      'filename': 'kyber.jpeg', 'mimetype': 'image/jpeg'}]
+  }
+  res = gwapi.post('https://gatewayapi.com/rest/email', json=req)
+  print(res.json())
+  res.raise_for_status()
+
 .. _`OAuth 1.0a`: http://tools.ietf.org/html/rfc5849
 .. _`two-legged`: http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/2/spec.html
 .. _`HTTP Basic Auth`: http://tools.ietf.org/html/rfc1945#section-11.1
