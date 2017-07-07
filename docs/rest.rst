@@ -187,7 +187,13 @@ Also see `Advanced usage`_ for a complete example of all features.
    The two examples above do the exact same thing, but with different styles of
    input. You can even send it all using just a GET url::
 
-     https://gatewayapi.com/rest/mtsms?token=Go-Create-an-API-token&message=Hello+World&recipients.0.msisdn=4512345678&recipients.1.msisdn=4587654321
+.. http:get:: /rest/mtsms
+  :synopsis: Send a new SMS
+
+  You can use GET requests to send your SMS'es as well. Just pass the
+  parameters you need as query parameters.
+
+  https://gatewayapi.com/rest/mtsms?token=Go-Create-an-API-token&message=Hello+World&recipients.0.msisdn=4512345678&recipients.1.msisdn=4587654321
 
 
 Code Examples
@@ -506,7 +512,7 @@ with.
    }
 
 Httpie
-~~~~
+~~~~~~~
 For quick testing with a pretty jsonified response in your terminal you can use
 `Httpie`. It can be done simply using your token as follows.
 
@@ -678,70 +684,87 @@ Advanced usage
    ``code`` and ``variables`` are left out of the response if they are empty.
    For a complete list of the various codes see :ref:`apierror`.
 
+Retrieve SMS'es
+----------------
 
-Get SMS status
---------------
-Please note we strongly recommend using `Webhooks`_ to get the status pushed to
-you when it changes, rather than poll for changes. We do not provide the same
-guarantees for this particular API endpoint as the others, since it runs on the
-reporting infrastructure.
+You can use http get requests to retrieve a message based on its id, this will
+give you back the original message that you send, including delivery status and
+error codes if something went wrong. You get the ID when you send your message,
+so remember to keep track of the id, if you need to retrieve a message.
 
+.. http:get:: /rest/mtsms/<message_id>
+  :synopsis: Get SMS corresponding to id
 
-.. http:get:: /rest/mtsms/{id}
-   :synopsis: Get the current status of a SMS and it's recipients.
+  **Example response**
 
-   You can only get a SMS after it has been sent, since only then is it
-   transferred to long term storage.
+  .. sourcecode:: http
 
-   The API will return a json dict with the same fields as when sending the
-   SMS (see above).
+    HTTP/1.0 200 OK
+    Content-Length: 729
+    Content-Type: application/json
+    Date: Thu, 1 Jan 1970 00:00:00 GMT
+    Server: Werkzeug/0.11.15 Python/3.6.0
 
-   :arg integer id: A SMS ID, as returned when sending the SMS
-   :status 200: Returns a dict that represents the SMS on success
-   :status 400: Ie. invalid arguments, details in the JSON body
-   :status 401: Ie. invalid API key or signature
-   :status 403: Ie. unauthorized ip address
-   :status 404: SMS is not found, or is not yet transferred to datastore.
-   :status 422: Invalid json request body
-   :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
+     [
+         {
+             "class": "standard",
+             "message": "Hello World, regards %Firstname, --Lastname--",
+             "payload": null,
+             "id": 1
+             "label": "Deathstar inc."
+             "recipients": [
+                 {
+                     "country": "DK",
+                     "csms": 1,
+                     "dsnerror": null,
+                     "dsnerrorcode": null,
+                     "dsnstatus": "DELIVERED",
+                     "dsntime": 1498040129.0,
+                     "mcc": 302,
+                     "mnc": 720,
+                     "msisdn": 1514654321,
+                     "senttime": 1498040069.0,
+                     "tagvalues": [
+                         "Vader",
+                         "Darth"
+                     ]
+                 }
+                 {
 
+                    "country": "DK",
+                    "csms": 1,
+                    "dsnerror": null,
+                    "dsnerrorcode": null,
+                    "dsnstatus": "DELIVERED",
+                    "dsntime": 1498040129.0,
+                    "mcc": 238,
+                    "mnc": 1,
+                    "msisdn": 4512345678,
+                    "senttime": 1498040069.0,
+                    "tagvalues": null
+                },
 
-Check account balance
----------------------
-
-You can use the /me endpoint to check your account balance, and what currency your account is set too.
-
-.. http:get:: /rest/me
-   :synopsis: Get credit balance of your account.
-
-   :>json float credit: The remaining credit.
-   :>json string currency: The currency of your credit.
-   :>json integer account id: The id of your account.
-
-
-   :status 200: Returns a dict with an array containing information on your account.
-   :status 401: Ie. invalid API key or signature
-   :status 403: Ie. unauthorized ip address
-   :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
-
-   **Response example**
-
-   .. sourcecode:: http
-
-      HTTP/1.1 200 OK
-      Content-Type: application/json
-
-      {
-          "credit": 1234.56,
-          "currency": "DKK",
-          "id": 1
-      }
-
+             ],
+             "sender": "Test Sender",
+             "sendtime": 915148800,
+             "tags": [
+                 "--Lastname--",
+                 "%Firstname"
+             ],
+             "userref": "1234",
+             "priority": "NORMAL",
+             "validity_period": 86400,
+             "encoding": "UTF8",
+             "destaddr": "MOBILE",
+             "udh": null,
+             "callback_url": "https://example.com/cb?foo=bar"
+         }
+     ]
 
 Webhooks
 --------
 
-Although the REST API supports polling for the message status, we strongly
+Although the REST API will support polling for the message status, we strongly
 encourage to use our simple webhooks for getting Delivery Status Notifications,
 aka DSNs.
 
@@ -950,28 +973,30 @@ HTTP Callback
    We expect you to reply with a 2XX status code within 60 seconds, or we
    consider it a failed attempt.
 
+.. _`OAuth 1.0a`: http://tools.ietf.org/html/rfc5849
+.. _`two-legged`: http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/2/spec.html
+.. _`HTTP Basic Auth`: http://tools.ietf.org/html/rfc1945#section-11.1
+.. _`OAuth Authorization header`: http://tools.ietf.org/html/rfc5849#section-3.5.1
+.. _`Requests-OAuthlib`: https://requests-oauthlib.readthedocs.org/
+.. _`Guzzle`: http://guzzlephp.org/
+.. _`RestSharp`: http://restsharp.org/
+.. _`NewtonSoft`: http://www.newtonsoft.com/json
+.. _`Httpie`: https://httpie.org
 
-Get usage by label
-------------------
+Check account balance
+----------------------
 
-You can get the account usage for a specific date range, sub divided by label
-and country. This can be used for billing your own customers (specified by
-label) if you do not keep track of each sms sent yourself.
+You can use the /me endpoint to check your account balance, and what currency your account is set too.
 
-.. http:get:: /api/usage/labels
-   :synopsis: Get usage for a date range
+.. http:get:: /rest/me
+   :synopsis: Get credit balance of your account.
 
-   :formparam from: The from date, in YYYY-MM-DD format
-   :formparam to: The to date, in YYYY-MM-DD format
-   :>jsonarr float amount: Amount of SMSes
-   :>jsonarr float cost: Cost of the SMSes
-   :>jsonarr string country: The country the SMSes was sent to
-   :>jsonarr string currency: Either DKK or EUR
-   :>jsonarr string label: The label specified when the SMSes was sent
-   :>jsonarr string messageclass_id: The class specified when the SMSes was sent
+   :>json float credit: The remaining credit.
+   :>json string currency: The currency of your credit.
+   :>json integer account id: The id of your account.
 
 
-   :status 200: Returns a array with a dict containing usage info.
+   :status 200: Returns a dict with an array containing information on your account.
    :status 401: Ie. invalid API key or signature
    :status 403: Ie. unauthorized ip address
    :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
@@ -983,32 +1008,113 @@ label) if you do not keep track of each sms sent yourself.
       HTTP/1.1 200 OK
       Content-Type: application/json
 
-      [
-        {
-          "amount": 29,
-          "cost": 3.48,
-          "country": "DK",
+      {
+          "credit": 1234.56,
           "currency": "DKK",
-          "label": null,
-          "messageclass_id": "standard"
-        },
-        {
-          "amount": 6,
-          "cost": 1.5,
-          "country": "IT",
-          "currency": "DKK",
-          "label": null,
-          "messageclass_id": "standard"
-        }
-      ]
+          "id": 1
+      }
 
-.. _`OAuth 1.0a`: http://tools.ietf.org/html/rfc5849
-.. _`two-legged`: http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/2/spec.html
-.. _`HTTP Basic Auth`: http://tools.ietf.org/html/rfc1945#section-11.1
-.. _`OAuth Authorization header`: http://tools.ietf.org/html/rfc5849#section-3.5.1
-.. _`Requests-OAuthlib`: https://requests-oauthlib.readthedocs.org/
-.. _`Guzzle`: http://guzzlephp.org/
-.. _`RestSharp`: http://restsharp.org/
-.. _`NewtonSoft`: http://www.newtonsoft.com/json
-.. _`Httpie`: https://httpie.org
+Sending emails
+---------------
+You can send emails through gatewayapi using our email endpoint.
 
+.. http:post:: /rest/email
+   :synopsis: Send a new email
+
+   :<json string html: The html content of the email.
+   :<json string plaintext: The plain text content of the email.
+   :<json string subject: The subject line of the email.
+   :<json string from: The name and email of the sender, can be just the email if no name is specified, see below for format.
+   :<json string returnpath: Receive emails with bounce information.
+   :<json array tags: A list of string tags, which will be replaced with the tag values for each recipient, if used remember to also add tagvalues to all recipients.
+   :<json array attachments: A list of base64 encoded files to be attached to the email, described below:
+   :<json string data: The base64 encoded data of the file to attach.
+   :<json string filename: The name of the file attached to the email.
+   :<json string mimetype: The mimetype of the file, eg. text/csv.
+   :<json array recipients: list of email addresses to receive the email, described below:
+   :<json string address: The recipient email address.
+   :<json string name: The name of the recipient shown in the email client.
+   :<json array tagvalues: A list of string values corresponding to the tags in the email. The order and amount of tag values must exactly match the tags.
+   :status 200: Returns a dict with an array of message IDs and a dictionary with usage information on success
+   :status 400: Ie. invalid arguments, details in the JSON body
+   :status 401: Ie. invalid API key or signature
+   :status 403: Ie. unauthorized ip address
+   :status 422: Invalid json request body
+   :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
+
+
+   .. sourcecode:: http
+
+      POST /rest/mtsms HTTP/1.1
+      Host: gatewayapi.com
+      Authorization: OAuth oauth_consumer_key="Create-an-API-Key",
+        oauth_nonce="128817750813820944501450124113",
+        oauth_timestamp="1450124113",
+        oauth_version="1.0",
+        oauth_signature_method="HMAC-SHA1",
+        oauth_signature="t9w86dddubh4XofnnPgH%2BY6v5TU%3D"
+      Accept: application/json, text/javascript
+      Content-Type: application/json
+
+      {
+          "html": "<b>Hello %firsname %surname Alderaan is about to be removed.",
+          "plaintext": "Hello %firsname %surname Alderaan is about to be removed.",
+          "subject": "Annihilation",
+          "from": "Darth Vader <darth@galacticempire.com>",
+          "returnpath": "bounce@galacticempire.com",
+          "tags": ["%firstname", "%surname"],
+          "recipients": [
+              { "address": "l.organa@rebel.com", "name": "Leia Organa", "tagvalues": ["Leia", "Organa"] },
+              { "address": "l.skywalker@jedi.com", "name": "Luke Skywalker", "tagvalues": ["Luke", "Skywalker"] }
+          ]
+      }
+
+
+   **Example response**
+
+     If the request succeed, the internal message identifiers are returned to
+     the caller like this:
+
+     .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+           "ids": [
+               431332671
+           ]
+       }
+
+
+Email code examples
+^^^^^^^^^^^^^^^^^^^
+Code examples for sending emails.
+
+Python
+~~~~~~
+
+For this example you'll need the excellent `Requests-OAuthlib`_. If you are
+using pip, simply do ``pip install requests_oauthlib``.
+
+.. sourcecode:: python
+
+  from requests_oauthlib import OAuth1Session
+  key = 'Go-Create-an-API-Key'
+  secret = 'Go-Create-an-API-Key-and-Secret'
+  gwapi = OAuth1Session(key, client_secret=secret)
+  req = {
+    'html': '<b>Hello %firsname %surname Alderaan is about to be removed.',
+    'plaintext': 'Hello %firsname %surname Alderaan is about to be removed.',
+    'subject': 'Annihilation',
+    'from': 'Darth Vader <darth@galacticempire.com>',
+    'returnpath': 'bounce@galacticempire.com',
+    'recipients': [{'address': 'l.organa@rebel.com', 'name': 'Leia Organa', 'tagvalues': ['Leia', 'Organa']}],
+    'tags': ['%firstname', '%surname']
+    'attachments': [{
+      'data': '/9j/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/yQALCAABAAEBAREA/8wABgAQEAX/2gAIAQEAAD8A0s8g/9k=',
+      'filename': 'kyber.jpeg', 'mimetype': 'image/jpeg'}]
+  }
+  res = gwapi.post('https://gatewayapi.com/rest/email', json=req)
+  print(res.json())
+  res.raise_for_status()
