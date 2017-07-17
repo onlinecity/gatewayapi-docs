@@ -706,6 +706,28 @@ reporting infrastructure.
    :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
 
 
+Delete scheduled SMS
+---------------------
+If you send smses using the sendtime parameter to schedule the sms for a specific time.
+You can send us DELETE requests for the id of the schudeled message and remove it from,
+the queue.
+
+.. http:delete:: /rest/mtsms/{id}
+   :synopsis: Delete the message with id, from our queue.
+
+   You can only delete smses that have been added to the queue using the sendtime
+   parameter.
+
+   :arg integer id: A SMS ID, as returned when sending the SMS
+   :status 204:
+   :status 410: Message is already gone, either deleted or has been sent.
+   :status 400: Ie. invalid arguments, details in the JSON body
+   :status 401: Ie. invalid API key or signature
+   :status 403: Ie. unauthorized ip address
+   :status 404: SMS is not found, or is not yet transferred to datastore.
+   :status 422: Invalid json request body
+   :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
+
 Check account balance
 ---------------------
 
@@ -1119,4 +1141,3 @@ using pip, simply do ``pip install requests_oauthlib``.
 .. _`RestSharp`: http://restsharp.org/
 .. _`NewtonSoft`: http://www.newtonsoft.com/json
 .. _`Httpie`: https://httpie.org
-
