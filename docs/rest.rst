@@ -705,6 +705,7 @@ reporting infrastructure.
    :status 422: Invalid json request body
    :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
 
+.. _delete:
 
 Delete scheduled SMS
 ---------------------
