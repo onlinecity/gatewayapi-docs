@@ -53,3 +53,7 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+
+
+# Editor
+.DS_Store
