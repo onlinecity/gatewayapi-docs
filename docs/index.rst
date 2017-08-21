@@ -22,6 +22,7 @@ assistence, please use the live chat feature at the bottom right of your screen.
    kannel
    soap
    ftp
+   email-to-sms
    errors
    appendix
 
