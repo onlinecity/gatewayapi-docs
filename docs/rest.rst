@@ -187,7 +187,13 @@ Also see `Advanced usage`_ for a complete example of all features.
    The two examples above do the exact same thing, but with different styles of
    input. You can even send it all using just a GET url::
 
-     https://gatewayapi.com/rest/mtsms?token=Go-Create-an-API-token&message=Hello+World&recipients.0.msisdn=4512345678&recipients.1.msisdn=4587654321
+.. http:get:: /rest/mtsms
+  :synopsis: Send a new SMS
+
+  You can use GET requests to send your SMS'es as well. Just pass the
+  parameters you need as query parameters.
+
+  https://gatewayapi.com/rest/mtsms?token=Go-Create-an-API-token&message=Hello+World&recipients.0.msisdn=4512345678&recipients.1.msisdn=4587654321
 
 
 Code Examples
@@ -506,7 +512,7 @@ with.
    }
 
 Httpie
-~~~~
+~~~~~~~
 For quick testing with a pretty jsonified response in your terminal you can use
 `Httpie`. It can be done simply using your token as follows.
 
@@ -678,6 +684,82 @@ Advanced usage
    ``code`` and ``variables`` are left out of the response if they are empty.
    For a complete list of the various codes see :ref:`apierror`.
 
+Retrieve SMS'es
+----------------
+
+You can use http get requests to retrieve a message based on its id, this will
+give you back the original message that you send, including delivery status and
+error codes if something went wrong. You get the ID when you send your message,
+so remember to keep track of the id, if you need to retrieve a message.
+
+.. http:get:: /rest/mtsms/<message_id>
+  :synopsis: Get SMS corresponding to id
+
+  **Example response**
+
+  .. sourcecode:: http
+
+    HTTP/1.0 200 OK
+    Content-Length: 729
+    Content-Type: application/json
+    Date: Thu, 1 Jan 1970 00:00:00 GMT
+    Server: Werkzeug/0.11.15 Python/3.6.0
+
+     [
+         {
+             "class": "standard",
+             "message": "Hello World, regards %Firstname, --Lastname--",
+             "payload": null,
+             "id": 1
+             "label": "Deathstar inc."
+             "recipients": [
+                 {
+                     "country": "DK",
+                     "csms": 1,
+                     "dsnerror": null,
+                     "dsnerrorcode": null,
+                     "dsnstatus": "DELIVERED",
+                     "dsntime": 1498040129.0,
+                     "mcc": 302,
+                     "mnc": 720,
+                     "msisdn": 1514654321,
+                     "senttime": 1498040069.0,
+                     "tagvalues": [
+                         "Vader",
+                         "Darth"
+                     ]
+                 }
+                 {
+
+                    "country": "DK",
+                    "csms": 1,
+                    "dsnerror": null,
+                    "dsnerrorcode": null,
+                    "dsnstatus": "DELIVERED",
+                    "dsntime": 1498040129.0,
+                    "mcc": 238,
+                    "mnc": 1,
+                    "msisdn": 4512345678,
+                    "senttime": 1498040069.0,
+                    "tagvalues": null
+                },
+
+             ],
+             "sender": "Test Sender",
+             "sendtime": 915148800,
+             "tags": [
+                 "--Lastname--",
+                 "%Firstname"
+             ],
+             "userref": "1234",
+             "priority": "NORMAL",
+             "validity_period": 86400,
+             "encoding": "UTF8",
+             "destaddr": "MOBILE",
+             "udh": null,
+             "callback_url": "https://example.com/cb?foo=bar"
+         }
+     ]
 
 Get SMS status
 --------------
