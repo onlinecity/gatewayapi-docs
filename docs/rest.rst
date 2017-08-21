@@ -560,6 +560,7 @@ Advanced usage
    :<jsonarr integer mnc: :term:`MNC`, mobile network code. Must be specified if doing charged SMS'es.
    :<jsonarr object charge: Charge data. More details on sending charged SMS'es to come.
    :<jsonarr array tagvalues: A list of string values corresponding to the tags in message. The order and amount of tag values must exactly match the tags.
+   :<json string label: A label added to each sent message, can be used to uniquely identify a customer or company that you sent the message on behalf of, to help with invoicing your customers.
    :>json array ids: If successful you receive a object containing a list of message ids.
    :status 200: Returns a dict with message IDs on success
    :status 400: Ie. invalid arguments, details in the JSON body
