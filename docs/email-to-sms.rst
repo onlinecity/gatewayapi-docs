@@ -14,7 +14,7 @@ for sending smses.
 Whitelisting emails
 ^^^^^^^^^^^^^^^^^^^
 
-To whitelist emails and domains go to "Settings" "Email Whitelisting", add an email like
+To whitelist emails and domains go to "Settings" "Email Whitelist", add an email like
 me@example.com or an entire domain e.g. @example.com if your whole organisation
 should be able to send messages this way.
 
