@@ -1065,7 +1065,7 @@ You can get the account usage for a specific date range, sub divided by label
 and country. This can be used for billing your own customers (specified by
 label) if you do not keep track of each sms sent yourself.
 
-.. http:get:: /api/usage/labels
+.. http:post:: /api/usage/labels
    :synopsis: Get usage for a date range
 
    :<json string from: The from date, in YYYY-MM-DD format
