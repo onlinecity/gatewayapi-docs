@@ -546,7 +546,7 @@ Advanced usage
 
    The root element can be either a dict with a single SMS or a list of SMS'es.
 
-   :<json string class: Default 'standard'. The message class, 'standard' or 'premium', to use for this request. If specified it must be the same for all messages in the request.
+   :<json string class: Default 'standard'. The message class, 'standard', 'premium' or 'secret' to use for this request. If specified it must be the same for all messages in the request. The secret class can be used to blur the message content you send, used for very sensitive data. It is priced as premium and uses the same routes, which ensures end to end encryption of your messages. Access to the secret class will be very strictly controlled.
    :<json string message: The content of the SMS, *always* specified in UTF-8 encoding, which we will transcode depending on the "encoding" field. The default is the usual :term:`GSM 03.38` encoding. Required unless payload is specified.
    :<json string sender: Up to 11 alphanumeric characters, or 15 digits, that will be shown as the sender of the SMS.
    :<json integer sendtime: Unix timestamp (seconds since epoch) to schedule message sending at certain time.
@@ -566,6 +566,7 @@ Advanced usage
    :<jsonarr integer mnc: :term:`MNC`, mobile network code. Must be specified if doing charged SMS'es.
    :<jsonarr object charge: Charge data. More details on sending charged SMS'es to come.
    :<jsonarr array tagvalues: A list of string values corresponding to the tags in message. The order and amount of tag values must exactly match the tags.
+   :<json int max_parts: A number between 1 and 255 used to limit the number of smses a single message will send. Can be used if you send smses from systems that generates messages that you can't control, this way you can ensure that you don't send very long smses. You will not be charged for more than the amount specified here. Can't be used with Tags or BINARY smses.
    :>json array ids: If successful you receive a object containing a list of message ids.
    :status 200: Returns a dict with message IDs on success
    :status 400: Ie. invalid arguments, details in the JSON body
