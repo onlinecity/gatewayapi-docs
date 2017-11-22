@@ -1247,3 +1247,94 @@ using pip, simply do ``pip install requests_oauthlib``.
 .. _`RestSharp`: http://restsharp.org/
 .. _`NewtonSoft`: http://www.newtonsoft.com/json
 .. _`Httpie`: https://httpie.org
+
+HLR and Number lookup
+---------------------
+We are at work on expanding our services with a HLR API, for now we are offering
+a number lookup API for danish numbers only. This will only be available to selected customer.
+If you have use of this API talk to us on support and we will figure something out.
+Requested numbers can be of any of these forms '+4512345678', 004512345678, 4512345678.
+
+
+.. http:post:: /rest/hlr
+   :synopsis: Lookup requested numbers.
+
+   :<json array msisdns: List of numbers to lookup.
+   :status 200: Returns a dict with information for each number in the request.
+   :status 400: Ie. invalid arguments, details in the JSON body
+   :status 401: Ie. invalid API key or signature
+   :status 403: Ie. unauthorized ip address, or account is not authorized to use this API.
+   :status 422: Invalid json request body
+   :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
+
+   **Example response**
+
+     If the requests succeeds information for each valid number passed to the API,
+     will be returned as below.
+
+     .. sourcecode:: http
+
+       HTTP/1.1 200 OK
+       Content-Type: application/json
+
+       {
+          "currency": "DKK",
+          "hlr": {
+              "4512345678": {
+                  "current_carrier": {
+                      "mcc": "238",
+                      "mnc": "20",
+                      "name": "Telia"
+                  },
+                  "network_operator": {
+                      "mcc": "238",
+                      "mnc": "20",
+                      "name": "Telia"
+                  },
+                  "original_carrier": {
+                      "mcc": "238",
+                      "mnc": "20",
+                      "name": "Telia"
+                  },
+              "ported": false,
+              "type": "GSM"
+              }
+          },
+          "lookups": 1,
+          "total_cost": 0.06
+        }
+
+Code examples
+^^^^^^^^^^^^^^^^^^^
+Code examples for hlr lookups
+
+
+Python
+~~~~~~
+
+For this example you'll need the excellent `Requests-OAuthlib`_. If you are
+using pip, simply do ``pip install requests_oauthlib``.
+
+.. sourcecode:: python
+
+  from requests_oauthlib import OAuth1Session
+  key = 'Go-Create-an-API-Key'
+  secret = 'Go-Create-an-API-Key-and-Secret'
+  gwapi = OAuth1Session(key, client_secret=secret)
+  req = {
+      'msisdns': [4512345678]
+  }
+  res = gwapi.post('https://gatewayapi.com/rest/email', json=req)
+  print(res.json())
+  res.raise_for_status()
+
+Httpie
+~~~~~~~
+For quick testing with a pretty jsonified response in your terminal you can use
+`Httpie`. It can be done simply using your token as follows.
+
+.. sourcecode:: bash
+
+  http --auth=GoGenerateAnApiToken: \
+  https://gatewayapi.com/rest/hlr \
+  msisdns:='[451234678]'
