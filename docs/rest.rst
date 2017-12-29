@@ -687,16 +687,30 @@ Advanced usage
    ``code`` and ``variables`` are left out of the response if they are empty.
    For a complete list of the various codes see :ref:`apierror`.
 
-Retrieve SMS'es
-----------------
+Get SMS and SMS status
+---------------------------
 
 You can use http get requests to retrieve a message based on its id, this will
 give you back the original message that you send, including delivery status and
 error codes if something went wrong. You get the ID when you send your message,
 so remember to keep track of the id, if you need to retrieve a message.
 
+Please note we strongly recommend using `Webhooks`_ to get the status pushed to
+you when it changes, rather than poll for changes. We do not provide the same
+guarantees for this particular API endpoint as the others, since it runs on the
+reporting infrastructure.
+
 .. http:get:: /rest/mtsms/<message_id>
   :synopsis: Get SMS corresponding to id
+
+  :arg integer id: A SMS ID, as returned when sending the SMS
+  :status 200: Returns a dict that represents the SMS on success
+  :status 400: Ie. invalid arguments, details in the JSON body
+  :status 401: Ie. invalid API key or signature
+  :status 403: Ie. unauthorized ip address
+  :status 404: SMS is not found, or is not yet transferred to datastore.
+  :status 422: Invalid json request body
+  :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
 
   **Example response**
 
@@ -764,31 +778,6 @@ so remember to keep track of the id, if you need to retrieve a message.
          }
      ]
 
-Get SMS status
---------------
-Please note we strongly recommend using `Webhooks`_ to get the status pushed to
-you when it changes, rather than poll for changes. We do not provide the same
-guarantees for this particular API endpoint as the others, since it runs on the
-reporting infrastructure.
-
-
-.. http:get:: /rest/mtsms/{id}
-   :synopsis: Get the current status of a SMS and it's recipients.
-
-   You can only get a SMS after it has been sent, since only then is it
-   transferred to long term storage.
-
-   The API will return a json dict with the same fields as when sending the
-   SMS (see above).
-
-   :arg integer id: A SMS ID, as returned when sending the SMS
-   :status 200: Returns a dict that represents the SMS on success
-   :status 400: Ie. invalid arguments, details in the JSON body
-   :status 401: Ie. invalid API key or signature
-   :status 403: Ie. unauthorized ip address
-   :status 404: SMS is not found, or is not yet transferred to datastore.
-   :status 422: Invalid json request body
-   :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
 
 .. _delete:
 
