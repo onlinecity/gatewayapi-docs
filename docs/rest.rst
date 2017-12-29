@@ -687,8 +687,8 @@ Advanced usage
    ``code`` and ``variables`` are left out of the response if they are empty.
    For a complete list of the various codes see :ref:`apierror`.
 
-Retrieve SMS and SMS status
-----------------
+Get SMS and SMS status
+---------------------------
 
 You can use http get requests to retrieve a message based on its id, this will
 give you back the original message that you send, including delivery status and
