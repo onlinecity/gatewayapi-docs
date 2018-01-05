@@ -246,6 +246,37 @@ For a really simple integration, the following will suffice:
    print_r(json_decode($result)->ids);
 
 
+The above example is good for trying to get a quick sms through to your number
+as a test, but is not recommened for production use, you should consider the
+below examples, using composer or cURL.
+
+.. sourcecode:: php
+
+   <?php
+   $recipients = ['4527128516', '4561856583'];
+   $url = "https://gatewayapi.com/rest/mtsms";
+   $api_token = "Go-Create-An-API-token";
+   $json = [
+      'sender' => 'Eatmore Dev',
+      'message' => 'SMS Test',
+      'recipients' => [],
+   ];
+   foreach ($recipients as $msisdn) {
+      $json['recipients'][] = ['msisdn' => $msisdn];
+   }
+   $ch = curl_init();
+   curl_setopt($ch,CURLOPT_URL, $url);
+   curl_setopt($ch,CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+   curl_setopt($ch,CURLOPT_USERPWD, $api_token.":");
+   curl_setopt($ch,CURLOPT_POSTFIELDS, json_encode($json));
+   curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
+   $result = curl_exec($ch);
+   curl_close($ch);
+   print($result); // print result as json string
+   $json = json_decode($result); // convert to object
+   print_r($json->ids); // print the array with ids
+   print_r($json->usage->total_cost); // print total cost from ‘usage’ object
+
 However if you are using composer, then you'll want to use our Guzzle example.
 Install the deps with ``composer require "guzzlehttp/oauth-subscriber 0.3.*"``.
 
