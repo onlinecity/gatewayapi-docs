@@ -724,11 +724,9 @@ Get SMS and SMS status
 You can use http get requests to retrieve a message based on its id, this will
 give you back the original message that you send, including delivery status and
 error codes if something went wrong. You get the ID when you send your message,
-so remember to keep track of the id, if you need to retrieve a message.
-
-You can only get a SMS after it has been sent, since only then is it
-transferred to long term storage. The API will return a json dict with the
-same fields as when sending the SMS (see above).
+so remember to keep track of the id, if you need to retrieve a message. This is
+only possible after the message has been sent, since only then is it
+transferred to long term storage.
 
 Please note we strongly recommend using `Webhooks`_ to get the status pushed to
 you when it changes, rather than poll for changes. We do not provide the same
