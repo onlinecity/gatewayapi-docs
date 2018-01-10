@@ -726,6 +726,10 @@ give you back the original message that you send, including delivery status and
 error codes if something went wrong. You get the ID when you send your message,
 so remember to keep track of the id, if you need to retrieve a message.
 
+You can only get a SMS after it has been sent, since only then is it
+transferred to long term storage. The API will return a json dict with the
+same fields as when sending the SMS (see above).
+
 Please note we strongly recommend using `Webhooks`_ to get the status pushed to
 you when it changes, rather than poll for changes. We do not provide the same
 guarantees for this particular API endpoint as the others, since it runs on the
