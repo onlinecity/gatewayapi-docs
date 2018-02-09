@@ -196,6 +196,15 @@ Also see `Advanced usage`_ for a complete example of all features.
   https://gatewayapi.com/rest/mtsms?token=Go-Create-an-API-token&message=Hello+World&recipients.0.msisdn=4512345678&recipients.1.msisdn=4587654321
 
 
+Connection limit
+^^^^^^^^^^^^^^^^
+Our API has a limit of 40 open connections per IP address, if you have more
+than 40 open connections our web server will reject your requests.
+If you need to send lots of smses consider bulking your requests with multiple
+recipients, you can use tags and tagvalues to add unique data per recipient,
+bulking your requests will also increase your delivery speed compared to making
+a single request per recipient.
+
 Code Examples
 ^^^^^^^^^^^^^
 Since sending SMS'es is a central part of most customers' use cases we'll list
@@ -257,8 +266,8 @@ below examples, using composer or cURL.
    $url = "https://gatewayapi.com/rest/mtsms";
    $api_token = "Go-Create-An-API-token";
    $json = [
-      'sender' => 'Eatmore Dev',
-      'message' => 'SMS Test',
+      'sender' => 'ExampleSMS',
+      'message' => 'Hello world',
       'recipients' => [],
    ];
    foreach ($recipients as $msisdn) {
