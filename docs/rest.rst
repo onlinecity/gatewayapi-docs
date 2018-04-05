@@ -1094,20 +1094,20 @@ Authentication token
 
 When setting up your webhook you have an option to add an authentication token
 if you add text to this field we will use it to make a JWT token, which
-we will send back to your server in the X-Gwapi-Signature header.
+we will send back to your server in the :code:`X-Gwapi-Signature` header.
 
 JWT is widely supported and you can find libraries for mostly any programming
-language on jwt.io, that will show you how to verify the token.
+language on https://jwt.io, that will show you how to verify the token.
 
-To verify you need the token we send in the X-Gwapi-Signature and the
-authentication token that you chose when setting up your webhook.
+To verify you need the token we send in the :code:`X-Gwapi-Signature` header
+and the authentication token that you chose when setting up your webhook.
 
 
 Code Examples
 ~~~~~~~~~~~~~
 
-How to verify JWT tokens in differnt languages more examples can be found via
-jwt.io
+How to verify JWT tokens in differnt languages. More examples can be found on
+https://jwt.io
 
 - PHP
 .. sourcecode:: php
