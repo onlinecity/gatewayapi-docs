@@ -1107,7 +1107,11 @@ Code Examples
 ~~~~~~~~~~~~~
 
 How to verify JWT tokens in differnt languages. More examples can be found on
-https://jwt.io
+https://jwt.io.
+
+In the following examples the secret shared between you and GatewayAPI are
+written directly in the code, in production environments, the shared secret
+should be part of your configuration, so it is better protected.
 
 - PHP
 .. sourcecode:: php
@@ -1142,7 +1146,7 @@ https://jwt.io
   # The secret chosen by you when setting up your webhook
   secret = 'secret'
   # Verify
-  decoded = jwt.decode(token, 'secret', algorithms=['HS256'])
+  decoded = jwt.decode(token, secret, algorithms=['HS256'])
   print(decoded)
 
 - NodeJS
