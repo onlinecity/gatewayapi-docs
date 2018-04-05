@@ -1036,7 +1036,6 @@ to assign to this webhook.
 If you have any questions, please contact us using the live chat found ie. in
 the lower right when reading the documentation online.
 
-
 HTTP Callback
 ~~~~~~~~~~~~~
 
@@ -1088,6 +1087,83 @@ HTTP Callback
    (40 minutes).
    We expect you to reply with a 2XX status code within 60 seconds, or we
    consider it a failed attempt.
+
+
+Authentication token
+^^^^^^^^^^^^^^^^^^^^
+
+When setting up your webhook you have an option to add an authentication token
+if you add text to this field we will use it to make a JWT token, which
+we will send back to your server in the X-Gwapi-Signature header.
+
+JWT is widely supported and you can find libraries for mostly any programming
+language on jwt.io, that will show you how to verify the token.
+
+To verify you need the token we send in the X-Gwapi-Signature and the
+authentication token that you chose when setting up your webhook.
+
+
+Code Examples
+~~~~~~~~~~~~~
+
+How to verify JWT tokens in differnt languages more examples can be found via
+jwt.io
+
+- PHP
+.. sourcecode:: php
+
+  <?php
+  require_once 'vendor/autoload.php';
+  use \Firebase\JWT\JWT;
+  /*
+    Token is extracted from the X-Gwapi-Signature header in the post request
+    received on your webserver.
+  */
+  $token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MjM4MTcwMywibXNpc2RuIjo0NTQyNjA5MDQ1LCJ0aW1lIjoxNTIyNzY0MDYyLCJzdGF0dXMiOiJERUxJVkVSRUQiLCJlcnJvciI6bnVsbCwiY29kZSI6bnVsbCwidXNlcnJlZiI6bnVsbCwiY2FsbGJhY2tfdXJsIjoiaHR0cDovL2JiYWY3MTQyLm5ncm9rLmlvIiwiYXBpIjo0fQ.KdfDH65bnQtgxEkFnpAQodOciAJedZFB13r9wEo8t3Y';
+  // secret is the secret token you have chosen when setting up your webhook.
+  $secret = "secret";
+  // Verify.
+  $decoded = JWT::decode($token, $secret, array('HS256'));
+  print_r($decoded);
+  ?>
+
+- Python
+.. sourcecode:: python
+
+  # The token variable contains the jwt token
+  # extracted from X-Gwapi-Signature header from the post request received.
+  # on your webserver
+  token = (
+    'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MjM4MTcwMywibXNpc2RuIjo'
+    '0NTQyNjA5MDQ1LCJ0aW1lIjoxNTIyNzY0MDYyLCJzdGF0dXMiOiJERUxJVkVSRUQiLCJlcnJ'
+    'vciI6bnVsbCwiY29kZSI6bnVsbCwidXNlcnJlZiI6bnVsbCwiY2FsbGJhY2tfdXJsIjoiaHR'
+    '0cDovL2JiYWY3MTQyLm5ncm9rLmlvIiwiYXBpIjo0fQ.KdfDH65bnQtgxEkFnpAQodOciAJ'
+    'edZFB13r9wEo8t3Y')
+  # The secret chosen by you when setting up your webhook
+  secret = 'secret'
+  # Verify
+  decoded = jwt.decode(token, 'secret', algorithms=['HS256'])
+  print(decoded)
+
+- NodeJS
+.. sourcecode:: js
+
+  var jwt = require('jsonwebtoken');
+  // var secret is the secret that you chose and entered on gatewayapi.com
+  // when setting up your webhook.
+  var secret = 'secret'
+  var auth = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MjM4MTcwMywibXNpc2RuIjo0NTQyNjA5MDQ1LCJ0aW1lIjoxNTIyNzY0MDYyLCJzdGF0dXMiOiJERUxJVkVSRUQiLCJlcnJvciI6bnVsbCwiY29kZSI6bnVsbCwidXNlcnJlZiI6bnVsbCwiY2FsbGJhY2tfdXJsIjoiaHR0cDovL2JiYWY3MTQyLm5ncm9rLmlvIiwiYXBpIjo0fQ.KdfDH65bnQtgxEkFnpAQodOciAJedZFB13r9wEo8t3Y'
+  var decoded = jwt.verify(auth, secret);
+  console.log(decoded);
+
+- Ruby
+.. sourcecode:: ruby
+
+  require 'jwt'
+  token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MjM4MTcwMywibXNpc2RuIjo0NTQyNjA5MDQ1LCJ0aW1lIjoxNTIyNzY0MDYyLCJzdGF0dXMiOiJERUxJVkVSRUQiLCJlcnJvciI6bnVsbCwiY29kZSI6bnVsbCwidXNlcnJlZiI6bnVsbCwiY2FsbGJhY2tfdXJsIjoiaHR0cDovL2JiYWY3MTQyLm5ncm9rLmlvIiwiYXBpIjo0fQ.KdfDH65bnQtgxEkFnpAQodOciAJedZFB13r9wEo8t3Y'
+  secret = 'secret'
+  decoded = JWT.decode token, secret
+  puts decoded_token
 
 
 Get usage by label
