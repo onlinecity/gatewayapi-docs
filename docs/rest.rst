@@ -1455,7 +1455,10 @@ For quick testing with a pretty jsonified response in your terminal you can use
 Refund charged sms
 ------------------
 Charged smses that have successfully been captured are eligible for refunds.
-Sending charged smses requires special setup and permissions. You will not 
+Sending charged smses requires special setup and permissions. You will not
+immediately know if the refund is successful, this info will be send to your
+callback url, or will be visible through the sms log on your backend when
+updated.
 
 .. http:post:: /rest/refund
    :synopsis: Refund a successfully charged sms.
