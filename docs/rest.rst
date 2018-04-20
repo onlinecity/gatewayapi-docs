@@ -1435,7 +1435,7 @@ using pip, simply do ``pip install requests_oauthlib``.
   req = {
       'msisdns': [4512345678]
   }
-  res = gwapi.post('https://gatewayapi.com/rest/email', json=req)
+  res = gwapi.post('https://gatewayapi.com/rest/hlr', json=req)
   print(res.json())
   res.raise_for_status()
 
@@ -1449,3 +1449,27 @@ For quick testing with a pretty jsonified response in your terminal you can use
   http --auth=GoGenerateAnApiToken: \
   https://gatewayapi.com/rest/hlr \
   msisdns:='[451234678]'
+
+.. _refund:
+
+Refund charged sms
+------------------
+Charged smses that have successfully been captured are eligible for refunds.
+Sending charged smses requires special setup and permissions.
+
+.. http:post:: /rest/refund
+   :synopsis: Refund a successfully charged sms.
+
+   Only charged smses with charge status capture, can be refunded.
+
+   :<json integer mtsms_id: The id of the charged sms to refund.
+   :<json integer msisdn: The id of the charged sms to refund.
+   :<json integer callback_url: Optional url for getting status of the refund.
+   :status 204:
+   :status 410: Message is already gone, either deleted or has been sent.
+   :status 400: Ie. invalid arguments, details in the JSON body
+   :status 401: Ie. invalid API key or signature
+   :status 403: Ie. unauthorized ip address
+   :status 404: SMS is not found.
+   :status 422: Invalid json request body
+   :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
