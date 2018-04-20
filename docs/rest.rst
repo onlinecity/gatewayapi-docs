@@ -1455,7 +1455,7 @@ For quick testing with a pretty jsonified response in your terminal you can use
 Refund charged sms
 ------------------
 Charged smses that have successfully been captured are eligible for refunds.
-Sending charged smses requires special setup and permissions.
+Sending charged smses requires special setup and permissions. You will not 
 
 .. http:post:: /rest/refund
    :synopsis: Refund a successfully charged sms.
@@ -1466,7 +1466,6 @@ Sending charged smses requires special setup and permissions.
    :<json integer msisdn: The id of the charged sms to refund.
    :<json string callback_url: Optional url for getting status of the refund.
    :status 204:
-   :status 410: Message is already gone, either deleted or has been sent.
    :status 400: Ie. invalid arguments, details in the JSON body
    :status 401: Ie. invalid API key or signature
    :status 403: Ie. unauthorized ip address
