@@ -1464,7 +1464,7 @@ Sending charged smses requires special setup and permissions.
 
    :<json integer mtsms_id: The id of the charged sms to refund.
    :<json integer msisdn: The id of the charged sms to refund.
-   :<json integer callback_url: Optional url for getting status of the refund.
+   :<json string callback_url: Optional url for getting status of the refund.
    :status 204:
    :status 410: Message is already gone, either deleted or has been sent.
    :status 400: Ie. invalid arguments, details in the JSON body
