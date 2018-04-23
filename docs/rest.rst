@@ -1466,7 +1466,7 @@ updated.
    Only charged smses with charge status capture, can be refunded.
 
    :<json integer mtsms_id: The id of the charged sms to refund.
-   :<json integer msisdn: The id of the charged sms to refund.
+   :<json integer msisdn: The msisdn the charged messages was sent to.
    :<json string callback_url: Optional url for getting status of the refund.
    :status 204:
    :status 400: Ie. invalid arguments, details in the JSON body
