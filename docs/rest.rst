@@ -1475,3 +1475,19 @@ updated.
    :status 404: SMS is not found.
    :status 422: Invalid json request body
    :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
+
+
+.. graphviz::
+
+  digraph chargestate {
+     rankdir=LR;
+     size=5;
+     AUTHORIZED [shape=box];
+     CAPTURED [shape=box];
+     REFUNDED [shape=box];
+     CANCELLED [shape=box];
+     FAILED [shape=box];
+     AUTHORIZED -> CAPTURED [color=blue];
+     AUTHORIZED -> CAPTURED -> REFUNDED [style=dotted];
+     AUTHORIZED -> CANCELLED [style=dotted];
+  }
