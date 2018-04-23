@@ -956,6 +956,48 @@ Rejected      The mobile network has rejected the message. If this message was c
 Skipped       The message was accepted, but was deliberately ignored due to network-specific rules.
 ============= =========================================
 
+Charge status
+~~~~~~~~~~~~~
+For overcharged smses there is an extra status for the charging. The 'Nocharge'
+state is a placeholder for the start of the charging flow.
+
+The 'Refund_fail' state is just a notification, the actual state will still be 
+'Captured'.
+
+.. graphviz::
+
+   digraph foocharge {
+      rankdir=LR;
+      size=5;
+      Refund_fail [shape=box];
+      Refunded [shape=box];
+      Captured [shape=box];
+      Authorized [shape=box];
+      Failed [shape=box];
+      Cancelled [shape=box];
+      Nocharge [shape=plaintext];
+      Nocharge -> Authorized -> Captured [color=blue];
+      Authorized -> Cancelled [style=dotted];
+      Nocharge -> Failed;
+      Captured -> Refunded;
+      Captured -> Refund_fail;
+   }
+
+The normal path for messages are marked in blue above. The dotted lines are
+very rare events not often used and/or applicable only to specific use cases.
+
+============= =========================================
+Status        Description
+============= =========================================
+Nocharge      Messages start here, but you should not encounter this state.
+Authorized    The transaction is authorized
+Cancelled     The transaction is cancelled or timed out 
+Captured      The transaction is captured and the amount will be charged from the recipients phone bill
+Failed        The transaction failed. Usually because the phone number has blocked for overcharged sms 
+Refunded      A previously captured transaction has been successfully refunded to the phone owner
+Refund_fail   The refund procedure failed.
+============= =========================================
+
 HTTP Callback
 ~~~~~~~~~~~~~
 If you specify a callback url when sending your message, or have a webhook
@@ -992,7 +1034,8 @@ http request to your webhook with the following data.
           "msisdn": 4587654321,
           "time": 1450000000,
           "status": "DELIVERED",
-          "userref": "foobar"
+          "userref": "foobar",
+          "charge_status": "CAPTURED"
       }
 
    If we can't reach your server, or you reply with a http status code >= 300,
@@ -1001,6 +1044,8 @@ http request to your webhook with the following data.
    (40 minutes).
    We expect you to reply with a 2XX status code within 60 seconds, or we
    consider it a failed attempt.
+
+   The `charge_status` is only present for overcharged smses.
 
 
 .. _mosms:
