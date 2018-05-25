@@ -63,7 +63,7 @@ a SMS to Email web hook.
 
 
 SMS to Email Webhook
-^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
 
 Navigate to "Settings" "Web hooks" and setup a web hook, of the type, SMS to Email
 Give your web hook a name, and add email adresses that should receive the smses.
