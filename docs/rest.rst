@@ -140,12 +140,12 @@ Also see `Advanced usage`_ for a complete example of all features.
    You can send data in JSON format, or even as http form data or query args.
 
    :<json string class: Default "standard". The message class to use for this request. If specified it must be the same for all messages in the request.
-   :<json string message: The content of the SMS, *always* specified in UTF-8 encoding, which we will transcode depending on the "encoding" field. The default is the usual :term:`GSM 03.38` encoding.
-   :<json string sender: Up to 11 alphanumeric characters, or 15 digits, that will be shown as the sender of the SMS.
+   :<json string message: The content of the SMS, *always* specified in UTF-8 encoding, which we will transcode depending on the "encoding" field. The default is the usual :term:`GSM 03.38` encoding. *required*
+   :<json string sender: Up to 11 alphanumeric characters, or 15 digits, that will be shown as the sender of the SMS. See :ref:`smssender`
    :<json string userref: A transparent string reference, you may set to keep track of the message in your own systems. Returned to you when you receive a `Delivery Status Notification`_.
    :<json string callback_url: If specified send status notifications to this URL, else use the default webhook.
-   :<json array recipients: Array of recipients, described below:
-   :<jsonarr string msisdn: :term:`MSISDN` aka the full mobile phone number of the recipient.
+   :<json array recipients: Array of recipients, described below. The number of recipients in a single message is limited to 10.000. *required*
+   :<jsonarr string msisdn: :term:`MSISDN` aka the full mobile phone number of the recipient. *required*
    :>json array ids: If successful you receive a object containing a list of message ids.
    :>json dictionary usage: If successful you receive a usage dictionary with usage information for you request.
    :status 200: Returns a dict with an array of message IDs and a dictionary with usage information on success
@@ -185,7 +185,7 @@ Also see `Advanced usage`_ for a complete example of all features.
       message=Hello World&recipients.0.msisdn=4512345678&recipients.1.msisdn=4587654321
 
    The two examples above do the exact same thing, but with different styles of
-   input. You can even send it all using just a GET url::
+   input. You can even send it all using just a GET url
 
 .. http:get:: /rest/mtsms
   :synopsis: Send a new SMS
@@ -588,7 +588,7 @@ Advanced usage
 
    :<json string class: Default 'standard'. The message class, 'standard', 'premium' or 'secret' to use for this request. If specified it must be the same for all messages in the request. The secret class can be used to blur the message content you send, used for very sensitive data. It is priced as premium and uses the same routes, which ensures end to end encryption of your messages. Access to the secret class will be very strictly controlled.
    :<json string message: The content of the SMS, *always* specified in UTF-8 encoding, which we will transcode depending on the "encoding" field. The default is the usual :term:`GSM 03.38` encoding. Required unless payload is specified.
-   :<json string sender: Up to 11 alphanumeric characters, or 15 digits, that will be shown as the sender of the SMS.
+   :<json string sender: Up to 11 alphanumeric characters, or 15 digits, that will be shown as the sender of the SMS. See :ref:`smssender`
    :<json integer sendtime: Unix timestamp (seconds since epoch) to schedule message sending at certain time.
    :<json array tags: A list of string tags, which will be replaced with the tag values for each recipient.
    :<json string userref: A transparent string reference, you may set to keep track of the message in your own systems. Returned to you when you receive a `Delivery Status Notification`_.
@@ -600,13 +600,11 @@ Advanced usage
    :<json string udh: UDH to enable additional functionality for binary SMS, encoded as Base64.
    :<json string callback_url: If specified send status notifications to this URL, else use the default webhook.
    :<json string label: A label added to each sent message, can be used to uniquely identify a customer or company that you sent the message on behalf of, to help with invoicing your customers. If specied it must be the same for all messages in the request.
-   :<json array recipients: Array of recipients, described below:
-   :<jsonarr string msisdn: :term:`MSISDN` aka the full mobile phone number of the recipient.
-   :<jsonarr integer mcc: :term:`MCC`, mobile country code. Must be specified if doing charged SMS'es.
-   :<jsonarr integer mnc: :term:`MNC`, mobile network code. Must be specified if doing charged SMS'es.
-   :<jsonarr object charge: Charge data. More details on sending charged SMS'es to come.
-   :<jsonarr array tagvalues: A list of string values corresponding to the tags in message. The order and amount of tag values must exactly match the tags.
    :<json int max_parts: A number between 1 and 255 used to limit the number of smses a single message will send. Can be used if you send smses from systems that generates messages that you can't control, this way you can ensure that you don't send very long smses. You will not be charged for more than the amount specified here. Can't be used with Tags or BINARY smses.
+   :<json array recipients: Array of recipients, described below. The number of recipients in a single message is limited to 10.000. *required*
+   :<jsonarr string msisdn: :term:`MSISDN` aka the full mobile phone number of the recipient. *required*
+   :<jsonarr object charge: Charge data. See `Overcharged SMSes`_.
+   :<jsonarr array tagvalues: A list of string values corresponding to the tags in message. The order and amount of tag values must exactly match the tags.
    :>json array ids: If successful you receive a object containing a list of message ids.
    :status 200: Returns a dict with message IDs on success
    :status 400: Ie. invalid arguments, details in the JSON body
@@ -619,7 +617,8 @@ Advanced usage
    **Fully fledged request**
 
    This is a bit of contrived example since ``message`` and ``payload`` can't
-   both be set at the same time, but it shows every possible field in the API.
+   both be set at the same time, but it shows every possible field in the API
+   like multiple recipients to the same message and multiple messages in the same payload.
 
    .. sourcecode:: http
 
@@ -642,19 +641,16 @@ Advanced usage
               "label": "Deathstar inc."
               "recipients": [
                   {
-                      "msisdn": 1514654321
-                      "mcc": 302,
-                      "mnc": 720,
-                      "charge": {
-                          "amount": 1.23,
-                          "currency": "CAD",
-                          "code": "P01",
-                          "description": "Example charged SMS",
-                          "category": "SC12",
-                          "servicename": "Example service"
-                      },
+                      "msisdn": 1514654321,
                       "tagvalues": [
                           "Vader",
+                          "Darth"
+                      ]
+                  },
+                  {
+                      "msisdn": 1514654322,
+                      "tagvalues": [
+                          "Maul",
                           "Darth"
                       ]
                   }
@@ -693,14 +689,14 @@ Advanced usage
 
      {
          "ids": [
-             421332671
+             421332671, 4421332672
          ],
          "usage": {
              "countries": {
-                 "DK": 1
+                 "DK": 3
              },
              "currency": "DKK",
-             "total_cost": 0.12
+             "total_cost": 0.36
          }
      }
 
@@ -726,6 +722,63 @@ Advanced usage
 
    ``code`` and ``variables`` are left out of the response if they are empty.
    For a complete list of the various codes see :ref:`apierror`.
+
+Overcharged SMSes
+^^^^^^^^^^^^^^^^^
+
+Overcharged SMSes are only possible in Denmark for the moment. Contact our support if you are interested in using this feature.
+
+An overcharged SMS is sent like a normal SMS, with a few extra parameters and restrictions.
+
+Only one recipient per message is allowed. Messageclass *charge* must be used. Sendername is limited to ``1204`` or your own shortcode.
+
+The ``charge`` object in recipient takes the following. See `Advanced usage`_ for full list of parameters.
+
+.. http:post:: /rest/mtsms
+
+   :<json float amount: The amount to be charged including VAT. *required*
+   :<json string currency: Currency used in ISO 4217. *required*
+   :<json string code: Product code. P01-P10. *required*
+   :<json string description: Description of the charge to appear on the phonebill for the MSISDN owner. *required*
+   :<json string category: Service category category. SC00-SC34. *required*
+
+
+**Full example**
+
+   .. sourcecode:: http
+
+      POST /rest/mtsms HTTP/1.1
+      Host: gatewayapi.com
+      Authorization: OAuth oauth_consumer_key="Create-an-API-Key",
+        oauth_nonce="128817750813820944501450124113",
+        oauth_timestamp="1450124113",
+        oauth_version="1.0",
+        oauth_signature_method="HMAC-SHA1",
+        oauth_signature="t9w86dddubh4XofnnPgH%2BY6v5TU%3D"
+      Accept: application/json, text/javascript
+      Content-Type: application/json
+
+      [
+          {
+              "message": "Thank you for your purchase",
+              "class": "charge",
+              "sender": 1204,
+              "recipients": [
+                  {
+                    "msisdn": 4512345678,
+                    "charge": {
+                      "amount": 50.75,
+                      "currency": "DKK",
+                      "code": "P01",
+                      "category": "SC29",
+                      "description": "Nokia tune",
+                    }
+                  }
+              ]
+          }
+      ]
+
+See `Charge status`_ for info about status reports and `Refund charged sms`_ for info about refunding a charged sms.
 
 Get SMS and SMS status
 ---------------------------
@@ -758,7 +811,7 @@ reporting infrastructure.
 
   .. sourcecode:: http
 
-    HTTP/1.0 200 OK
+    HTTP/1.1 200 OK
     Content-Length: 729
     Content-Type: application/json
     Date: Thu, 1 Jan 1970 00:00:00 GMT
@@ -961,7 +1014,7 @@ Charge status
 For overcharged smses there is an extra status for the charging. The 'Nocharge'
 state is a placeholder for the start of the charging flow.
 
-The 'Refund_fail' state is just a notification, the actual state will still be 
+The 'Refund_fail' state is just a notification, the actual state will still be
 'Captured'.
 
 .. graphviz::
@@ -991,9 +1044,9 @@ Status        Description
 ============= =========================================
 Nocharge      Messages start here, but you should not encounter this state.
 Authorized    The transaction is authorized
-Cancelled     The transaction is cancelled or timed out 
+Cancelled     The transaction is cancelled or timed out
 Captured      The transaction is captured and the amount will be charged from the recipients phone bill
-Failed        The transaction failed. Usually because the phone number has blocked for overcharged sms 
+Failed        The transaction failed. Usually because the phone number has blocked for overcharged sms
 Refunded      A previously captured transaction has been successfully refunded to the phone owner
 Refund_fail   The refund procedure failed.
 ============= =========================================
@@ -1159,6 +1212,7 @@ written directly in the code, in production environments, the shared secret
 should be part of your configuration, so it is better protected.
 
 - PHP
+
 .. sourcecode:: php
 
   <?php
@@ -1177,6 +1231,7 @@ should be part of your configuration, so it is better protected.
   ?>
 
 - Python
+
 .. sourcecode:: python
 
   # The token variable contains the jwt token
@@ -1195,6 +1250,7 @@ should be part of your configuration, so it is better protected.
   print(decoded)
 
 - NodeJS
+
 .. sourcecode:: js
 
   var jwt = require('jsonwebtoken');
@@ -1206,6 +1262,7 @@ should be part of your configuration, so it is better protected.
   console.log(decoded);
 
 - Ruby
+
 .. sourcecode:: ruby
 
   require 'jwt'

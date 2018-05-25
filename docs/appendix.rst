@@ -120,6 +120,8 @@ SMS Length
     * Messages longer then 70 characters are chained and gives a leaves
       67 characters per page.
 
+.. _smssender:
+
 SMS Sender
 ----------
 The originator of the SMS message. The SMS standards limit the length up to 15
