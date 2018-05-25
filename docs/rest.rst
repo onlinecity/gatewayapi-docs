@@ -617,7 +617,7 @@ Advanced usage
    **Fully fledged request**
 
    This is a bit of contrived example since ``message`` and ``payload`` can't
-   both be set at the same time, but it shows every possible field in the API 
+   both be set at the same time, but it shows every possible field in the API
    like multiple recipients to the same message and multiple messages in the same payload.
 
    .. sourcecode:: http
@@ -733,7 +733,7 @@ An overcharged SMS is sent like a normal SMS, with a few extra parameters and re
 Only one recipient per message is allowed. Messageclass *charge* must be used. Sendername is limited to ``1204`` or your own shortcode.
 
 The ``charge`` object in recipient takes the following. See `Advanced usage`_ for full list of parameters.
- 
+
 .. http:post:: /rest/mtsms
 
    :<json float amount: The amount to be charged including VAT. *required*
@@ -745,39 +745,38 @@ The ``charge`` object in recipient takes the following. See `Advanced usage`_ fo
 
 **Full example**
 
-.. sourcecode:: http
+   .. sourcecode:: http
 
-   POST /rest/mtsms HTTP/1.1
-   Host: gatewayapi.com
-   Authorization: OAuth oauth_consumer_key="Create-an-API-Key",
-     oauth_nonce="128817750813820944501450124113",
-     oauth_timestamp="1450124113",
-     oauth_version="1.0",
-     oauth_signature_method="HMAC-SHA1",
-     oauth_signature="t9w86dddubh4XofnnPgH%2BY6v5TU%3D"
-   Accept: application/json, text/javascript
-   Content-Type: application/json
+      POST /rest/mtsms HTTP/1.1
+      Host: gatewayapi.com
+      Authorization: OAuth oauth_consumer_key="Create-an-API-Key",
+        oauth_nonce="128817750813820944501450124113",
+        oauth_timestamp="1450124113",
+        oauth_version="1.0",
+        oauth_signature_method="HMAC-SHA1",
+        oauth_signature="t9w86dddubh4XofnnPgH%2BY6v5TU%3D"
+      Accept: application/json, text/javascript
+      Content-Type: application/json
 
-   [
-       {
-           "class": "charge",
-           "message": "Thank you for buying our awesome product",
-           "sender": "1204",
-           "recipients": [
-               {
-                   "msisdn": 1514654321,
-                   "charge": {
-                     "amount": 12.5,
-                     "currency": 'DKK',
-                     "code": "P01",
-                     "description": "Product Name",
-                     "category": "SC29"
-                   }
-               }
-           ]
-       }
-   ]
-
+      [
+          {
+              "message": "Thank you for your purchase",
+              "class": "charge",
+              "sender": 1204,
+              "recipients": [
+                  {
+                    "msisdn": 4512345678,
+                    "charge": {
+                      "amount": 50.75,
+                      "currency": "DKK",
+                      "code": "P01",
+                      "category": "SC29",
+                      "description": "Nokia tune",
+                    }
+                  }
+              ]
+          }
+      ]
 
 See `Charge status`_ for info about status reports and `Refund charged sms`_ for info about refunding a charged sms.
 
@@ -812,7 +811,7 @@ reporting infrastructure.
 
   .. sourcecode:: http
 
-    HTTP/1.0 200 OK
+    HTTP/1.1 200 OK
     Content-Length: 729
     Content-Type: application/json
     Date: Thu, 1 Jan 1970 00:00:00 GMT
@@ -1015,7 +1014,7 @@ Charge status
 For overcharged smses there is an extra status for the charging. The 'Nocharge'
 state is a placeholder for the start of the charging flow.
 
-The 'Refund_fail' state is just a notification, the actual state will still be 
+The 'Refund_fail' state is just a notification, the actual state will still be
 'Captured'.
 
 .. graphviz::
@@ -1045,9 +1044,9 @@ Status        Description
 ============= =========================================
 Nocharge      Messages start here, but you should not encounter this state.
 Authorized    The transaction is authorized
-Cancelled     The transaction is cancelled or timed out 
+Cancelled     The transaction is cancelled or timed out
 Captured      The transaction is captured and the amount will be charged from the recipients phone bill
-Failed        The transaction failed. Usually because the phone number has blocked for overcharged sms 
+Failed        The transaction failed. Usually because the phone number has blocked for overcharged sms
 Refunded      A previously captured transaction has been successfully refunded to the phone owner
 Refund_fail   The refund procedure failed.
 ============= =========================================
