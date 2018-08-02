@@ -593,7 +593,7 @@ Advanced usage
    :<json array tags: A list of string tags, which will be replaced with the tag values for each recipient.
    :<json string userref: A transparent string reference, you may set to keep track of the message in your own systems. Returned to you when you receive a `Delivery Status Notification`_.
    :<json string priority: Default 'NORMAL'. One of 'BULK', 'NORMAL', 'URGENT' and 'VERY_URGENT'. Urgent and Very Urgent normally require the use of premium message class.
-   :<json integer validity_period: Specified in seconds. If message is not delivered within this timespan, it will expire and you will get a notification.
+   :<json integer validity_period: Specified in seconds. If message is not delivered within this timespan, it will expire and you will get a notification. The minimum value is 60. Every value under 60 will be set to 60.
    :<json string encoding: Encoding to use when sending the message. Defaults to 'UTF8', which means we will use :term:`GSM 03.38`. Use :term:`UCS2` to send a unicode message.
    :<json string destaddr: One of 'DISPLAY', 'MOBILE', 'SIMCARD', 'EXTUNIT'. Use display to do "flash sms", a message displayed on screen immediately but not saved in the normal message inbox on the mobile device.
    :<json string payload: If you are sending a binary SMS, ie. a SMS you have encoded yourself or with speciel content for feature phones (non-smartphones). You may specify a payload, encoded as Base64. If specified, message must not be set and tags are unavailable.
@@ -1092,10 +1092,9 @@ http request to your webhook with the following data.
       }
 
    If we can't reach your server, or you reply with a http status code >= 300,
-   then we will re-attempt delivery of the DSN after a 60 second delay, with
-   truncated exponential backoff, doubling every attempt up to 2400 seconds
-   (40 minutes).
-   We expect you to reply with a 2XX status code within 60 seconds, or we
+   then we will re-attempt delivery of the DSN after a 60 second delay, then
+   120 seconds, 360 seconds, 24 minutes, 2 hours and lastly after 12 hours.
+   We expect you to reply with a 2XX status code within 15 seconds, or we
    consider it a failed attempt.
 
    The `charge_status` is only present for overcharged smses.
@@ -1180,10 +1179,9 @@ HTTP Callback
       }
 
    If we can't reach your server, or you reply with a http status code >= 300,
-   then we will re-attempt delivery of the MO SMS after a 60 second delay, with
-   truncated exponential backoff, doubling every attempt up to 2400 seconds
-   (40 minutes).
-   We expect you to reply with a 2XX status code within 60 seconds, or we
+   then we will re-attempt delivery of the DSN after a 60 second delay, then
+   120 seconds, 360 seconds, 24 minutes, 2 hours and lastly after 12 hours.
+   We expect you to reply with a 2XX status code within 15 seconds, or we
    consider it a failed attempt.
 
 
