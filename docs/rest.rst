@@ -923,12 +923,65 @@ You can use the /me endpoint to check your account balance, and what currency yo
       HTTP/1.1 200 OK
       Content-Type: application/json
 
-      {
+       {
           "credit": 1234.56,
           "currency": "DKK",
           "id": 1
-      }
+       }
 
+Get prices
+---------------------
+
+You can use the prices endpoint to get our price as csv, xlsx or json.
+
+.. http:get:: /api/prices/list/sms/<type>
+   :synopsis: Get credit balance of your account.
+
+   :status 200: Returns a dict with an array containing information on your account.
+   :status 403: Ie. unauthorized ip address
+   :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
+
+   **Response example**
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+       {
+          "premium": [
+            {
+              "country": "AD",
+              "country_name": "Andorra",
+              "dkk": 0.33000,
+              "eur": 0.04430,
+              "prefix": 376
+            },
+            {
+              "country": "AE",
+              "country_name": "United Arab Emirates",
+              "dkk": 0.19000,
+              "eur": 0.02600,
+              "prefix": 971
+            }
+          ],
+          "standard": [
+            {
+              "country": "AD",
+              "country_name": "Andorra",
+              "dkk": 0.31000,
+              "eur": 0.04160,
+              "prefix": 376
+            },
+            {
+              "country": "AE",
+              "country_name": "United Arab Emirates",
+              "dkk": 0.16000,
+              "eur": 0.02100,
+              "prefix": 971
+            }
+          ]
+       }
 
 Webhooks
 --------
