@@ -1333,8 +1333,9 @@ label) if you do not keep track of each sms sent yourself.
 .. http:post:: /api/usage/labels
    :synopsis: Get usage for a date range
 
-   :<json string from: The from date, in YYYY-MM-DD format
-   :<json string to: The to date, in YYYY-MM-DD format
+   :<json string from: The from date, in YYYY-MM-DD format *required*
+   :<json string to: The to date, in YYYY-MM-DD format *required*
+   :<json string label: Optional label you want to look for.
    :>jsonarr float amount: Amount of SMSes
    :>jsonarr float cost: Cost of the SMSes
    :>jsonarr string country: The country the SMSes was sent to
