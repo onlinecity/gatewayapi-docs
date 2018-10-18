@@ -935,7 +935,7 @@ Get prices
 You can use the prices endpoint to get our price as csv, xlsx or json.
 
 .. http:get:: /api/prices/list/sms/<type>
-   :synopsis: Get credit balance of your account.
+   :synopsis: Get current prices for all countries
 
    :status 200: Returns a dict with an array containing information on your account.
    :status 403: Ie. unauthorized ip address
