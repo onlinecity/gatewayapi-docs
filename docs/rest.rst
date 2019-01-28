@@ -128,6 +128,18 @@ Sending SMS'es
 Also known as :term:`MT SMS`, short for Mobile Terminated SMS, is when you want to
 deliver a SMS to a users mobile device.
 
+Message Filtering
+^^^^^^^^^^^^^^^^^
+
+Some messages contain links that due to phising attacks and generally unwanted spam cannot be accepted into the GatewayAPI, each account has a whitelist of links that are allowed, unique to that account, and approved by our staff. Any links found in the messages are checked against the whitelist, using the following method:
+
+- A bare domain (such as ``gatewayapi.com``) allows all links pointing to that domain.
+- A specific link (such as ``gatewayapi.com/docs``) only allows exactly that link to be allowed through the whitelist check.
+
+Some certain accounts are marked as especially trusted and are excempt from having the messages checked.
+
+You can check your list of whitelisted links on the dashboard.
+
 Basic usage
 ^^^^^^^^^^^
 
