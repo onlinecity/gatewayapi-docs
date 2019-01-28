@@ -45,36 +45,37 @@ These cover codes 0x0100-0x07FF. You might encounter these when
 communicating with one of our API's ie. :ref:`rest`.
 
 ======  ================ ========================
- Code   HTTP Status Code Description                                                                    
-======  ================ ========================                                                        
-0x0210  401              Invalid username: %1                                                           
-0x0210  401              Invalid username: %1                                                           
-0x0211  401              Invalid password                                                               
-0x0212  401              Invalid IP-address: %1                                                         
-0x0213  403              Unauthorized IP-address: %1                                                    
-0x0214  403              Temporary blacklist for MSISDN %1 with hash %2                                 
-0x0215  403              MSISDN %1 blacklisted                                                          
-0x0216  403              Insufficient credit                                                            
-0x0217  403              Unauthorized destination: country %1                                           
-0x0218  422              Unknown message class id %1                                                    
-0x0219  403              E-mail not enabled for account                                                 
-0x021A  403              HLR not enabled for account                                                    
-0x021B  403              Phonebook not enabled for account                                              
-0x021C  403              MMS not enabled for account                                                    
-0x021D  403              SMS not enabled for account                                                    
-0x021E  500              Message class %1 is not configured for %2                                      
-0x021F  403              Unauthorized operator: MCC %1, MNC %2                                          
-0x0220  400              Unsupported parameter %1                                                       
-0x0221  400              Unsupported signature method %1                                                
-0x0222  400              Missing required parameter %1                                                  
-0x0223  401              Invalid Consumer Key                                                           
-0x0224  401              Invalid signature                                                              
-0x0225  401              Expired timestamp                                                              
-0x0226  401              Invalid / used nonce                                                           
-0x0229  401              Invalid token                                                                  
-0x022A  403              Account frozen, contact support                                                
-0x0310  422              A message contains the same recipient more than once. MSISDNs %1 is duplicated 
-0x0311  422              Priority %1 not available                                                      
+ Code   HTTP Status Code Description
+======  ================ ========================
+0x0210  401              Invalid username: %1
+0x0210  401              Invalid username: %1
+0x0211  401              Invalid password
+0x0212  401              Invalid IP-address: %1
+0x0213  403              Unauthorized IP-address: %1
+0x0214  403              Temporary blacklist for MSISDN %1 with hash %2
+0x0215  403              MSISDN %1 blacklisted
+0x0216  403              Insufficient credit
+0x0217  403              Unauthorized destination: country %1
+0x0218  422              Unknown message class id %1
+0x0219  403              E-mail not enabled for account
+0x021A  403              HLR not enabled for account
+0x021B  403              Phonebook not enabled for account
+0x021C  403              MMS not enabled for account
+0x021D  403              SMS not enabled for account
+0x021E  500              Message class %1 is not configured for %2
+0x021F  403              Unauthorized operator: MCC %1, MNC %2
+0x0220  400              Unsupported parameter %1
+0x0221  400              Unsupported signature method %1
+0x0222  400              Missing required parameter %1
+0x0223  401              Invalid Consumer Key
+0x0224  401              Invalid signature
+0x0225  401              Expired timestamp
+0x0226  401              Invalid / used nonce
+0x0229  401              Invalid token
+0x022A  403              Account frozen, contact support
+0x0310  422              A message contains the same recipient more than once. MSISDNs %1 is duplicated
+0x0311  422              Priority %1 not available
+0x0312  422              Messages filtered based on content
 ======  ================ ========================
 
 .. _smserror:
