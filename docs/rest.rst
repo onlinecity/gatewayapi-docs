@@ -138,7 +138,7 @@ Some messages contain links that due to phising attacks and generally unwanted s
 
 Some certain accounts are marked as especially trusted and are excempt from having their messages checked.
 
-You can check your list of whitelisted links on the dashboard.
+You can submit new links, as well as check the current whitelist on the dashboard under Settings.
 
 Basic usage
 ^^^^^^^^^^^
