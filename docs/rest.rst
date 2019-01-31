@@ -136,7 +136,7 @@ Some messages contain links that due to phising attacks and generally unwanted s
 - A bare domain (such as ``gatewayapi.com``) allows all links pointing to that domain.
 - A specific link (such as ``gatewayapi.com/docs``) only allows exactly that link to be allowed through the whitelist check.
 
-Some certain accounts are marked as especially trusted and are excempt from having the messages checked.
+Some certain accounts are marked as especially trusted and are excempt from having their messages checked.
 
 You can check your list of whitelisted links on the dashboard.
 
