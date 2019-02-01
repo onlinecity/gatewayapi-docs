@@ -131,7 +131,7 @@ deliver a SMS to a users mobile device.
 Message Filtering
 ^^^^^^^^^^^^^^^^^
 
-Some messages contain links that due to phising attacks and generally unwanted spam cannot be accepted. Each account has a whitelist of links that are allowed, unique to that account, and approved by our staff. Any links found in the messages are checked against the whitelist, using the following method:
+Some messages contain links that due to phishing attacks and generally unwanted spam cannot be accepted. Each account has a whitelist of links that are allowed, unique to that account, and approved by our staff. Any links found in the messages are checked against the whitelist, using the following method:
 
 - A bare domain (such as ``gatewayapi.com``) allows all links pointing to that domain.
 - A specific link (such as ``gatewayapi.com/docs``) only allows exactly that link to be allowed through the whitelist check.
