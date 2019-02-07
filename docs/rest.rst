@@ -140,6 +140,8 @@ Some certain accounts are marked as especially trusted and are excempt from havi
 
 You can submit new links, as well as check the current whitelist on the dashboard under Settings.
 
+To learn more about the our efforts to stopping malicious messages, go read the blog post about `stopping illegal sms trafic`_.
+
 Basic usage
 ^^^^^^^^^^^
 
@@ -1524,6 +1526,7 @@ using pip, simply do ``pip install requests_oauthlib``.
 .. _`RestSharp`: http://restsharp.org/
 .. _`NewtonSoft`: http://www.newtonsoft.com/json
 .. _`Httpie`: https://httpie.org
+.. _`stopping illegal sms trafic`: https://gatewayapi.com/blog/tech/2019/02/07/blocking-illegal-sms-traffic.html
 
 HLR and Number lookup
 ---------------------
