@@ -128,6 +128,20 @@ Sending SMS'es
 Also known as :term:`MT SMS`, short for Mobile Terminated SMS, is when you want to
 deliver a SMS to a users mobile device.
 
+Message Filtering
+^^^^^^^^^^^^^^^^^
+
+Some messages contain links that due to phishing attacks and generally unwanted spam cannot be accepted. Each account has a whitelist of links that are allowed, unique to that account, and approved by our staff. Any links found in the messages are checked against the whitelist, using the following method:
+
+- A bare domain (such as ``gatewayapi.com``) allows all links pointing to that domain.
+- A specific link (such as ``gatewayapi.com/docs``) only allows exactly that link to be allowed through the whitelist check.
+
+Some certain accounts are marked as especially trusted and are excempt from having their messages checked.
+
+You can submit new links, as well as check the current whitelist on the dashboard under Settings.
+
+To learn more about the our efforts to stopping malicious messages, go read the blog post about `stopping illegal sms trafic`_.
+
 Basic usage
 ^^^^^^^^^^^
 
@@ -1512,6 +1526,7 @@ using pip, simply do ``pip install requests_oauthlib``.
 .. _`RestSharp`: http://restsharp.org/
 .. _`NewtonSoft`: http://www.newtonsoft.com/json
 .. _`Httpie`: https://httpie.org
+.. _`stopping illegal sms trafic`: https://gatewayapi.com/blog/tech/2019/02/07/blocking-illegal-sms-traffic.html
 
 HLR and Number lookup
 ---------------------
