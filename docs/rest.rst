@@ -740,7 +740,7 @@ Advanced usage
 Overcharged SMSes
 ^^^^^^^^^^^^^^^^^
 
-Overcharged SMSes are only possible in Denmark for the moment. Contact our support if you are interested in using this feature.
+*Overcharged SMSes are only possible in Denmark for the moment. Contact our support if you are interested in using this feature.*
 
 An overcharged SMS is sent like a normal SMS, with a few extra parameters and restrictions.
 
@@ -1022,7 +1022,7 @@ By adding a URL to the callbackurl field, or setting one of your webhooks as
 the default for status notifications, you can setup a webhook that will be
 called whenever the current status (state) of the message changes, ie. goes
 from a transient state (Circles, ie. Enroute) to final state (Boxes, ie.
-Delivered) or an other transient state. Once a final state is reached we will
+DELIVERED) or an other transient state. Once a final state is reached we will
 no longer call your webhook with updates for this particular message and
 recipient.
 
@@ -1031,25 +1031,25 @@ recipient.
    digraph foo {
       rankdir=LR;
       size=5;
-      Delivered [shape=box];
-      Expired [shape=box];
-      Deleted [shape=box];
-      Accepted [shape=box];
-      Rejected [shape=box];
-      Skipped [shape=box];
-      Unknown [shape=plaintext];
-      Undeliverable [shape=box];
-      Unknown -> Buffered -> Enroute -> Delivered [color=blue];
-      Unknown -> Undeliverable [style=dotted];
-      Unknown -> Scheduled -> Buffered;
-      Enroute -> Undeliverable;
-      Enroute -> Expired;
-      Scheduled -> Deleted;
-      Enroute -> Rejected;
-      Enroute -> Deleted [style=dotted];
-      Enroute -> Accepted [style=dotted];
-      Enroute -> Skipped [style=dotted];
-      { rank=same; Unknown Scheduled }
+      DELIVERED [shape=box];
+      EXPIRED [shape=box];
+      DELETED [shape=box];
+      ACCEPTED [shape=box];
+      REJECTED [shape=box];
+      SKIPPED [shape=box];
+      UNKNOWN [shape=plaintext];
+      UNDELIVERABLE [shape=box];
+      UNKNOWN -> BUFFERED -> ENROUTE -> DELIVERED [color=blue];
+      UNKNOWN -> UNDELIVERABLE [style=dotted];
+      UNKNOWN -> SCHEDULED -> Buffered;
+      ENROUTE -> UNDELIVERABLE;
+      ENROUTE -> EXPIRED;
+      SCHEDULED -> DELETED;
+      ENROUTE -> REJECTED;
+      ENROUTE -> DELETED [style=dotted];
+      ENROUTE -> ACCEPTED [style=dotted];
+      ENROUTE -> SKIPPED [style=dotted];
+      { rank=same; UNKNOWN SCHEDULED }
    }
 
 The normal path for messages are marked in blue above. The dotted lines are
@@ -1063,44 +1063,44 @@ transient state.
 ============= =========================================
 Status        Description
 ============= =========================================
-Unknown       Messages start here, but you should not encounter this state.
-Scheduled     Used for messages where you set a sendtime in the future.
-Buffered      The message is held in our internal queue and awaits delivery to the mobile network.
-Enroute       Message has been sent to mobile network, and is on it's way to it's final destination.
-Delivered     The end user's mobile device has confirmed the delivery, and if message is charged the charge was successful.
-Expired       Message has exceeded it's validity period without getting a delivery confirmation. No further delivery attempts.
-Deleted       Message was canceled.
-Undeliverable Message is permanently undeliverable. Most likely an invalid :term:`MSISDN`.
-Accepted      The mobile network has accepted the message on the end users behalf.
-Rejected      The mobile network has rejected the message. If this message was charged, the charge has failed.
-Skipped       The message was accepted, but was deliberately ignored due to network-specific rules.
+UNKNOWN       Messages start here, but you should not encounter this state.
+SCHEDULED     Used for messages where you set a sendtime in the future.
+BUFFERED      The message is held in our internal queue and awaits delivery to the mobile network.
+ENROUTE       Message has been sent to mobile network, and is on it's way to it's final destination.
+DELIVERED     The end user's mobile device has confirmed the delivery, and if message is charged the charge was successful.
+EXPIRED       Message has exceeded it's validity period without getting a delivery confirmation. No further delivery attempts.
+DELETED       Message was canceled.
+UNDELIVERABLE Message is permanently undeliverable. Most likely an invalid :term:`MSISDN`.
+ACCEPTED      The mobile network has accepted the message on the end users behalf.
+REJECTED      The mobile network has rejected the message. If this message was charged, the charge has failed.
+SKIPPED       The message was accepted, but was deliberately ignored due to network-specific rules.
 ============= =========================================
 
 Charge status
 ~~~~~~~~~~~~~
-For overcharged smses there is an extra status for the charging. The 'Nocharge'
+For overcharged smses there is an extra status for the charging. The 'NOCHARGE'
 state is a placeholder for the start of the charging flow.
 
-The 'Refund_fail' state is just a notification, the actual state will still be
-'Captured'.
+The 'REFUND_FAIL' state is just a notification, the actual state will still be
+'CAPTURED'.
 
 .. graphviz::
 
    digraph foocharge {
       rankdir=LR;
       size=5;
-      Refund_fail [shape=box];
-      Refunded [shape=box];
-      Captured [shape=box];
-      Authorized [shape=box];
-      Failed [shape=box];
-      Cancelled [shape=box];
-      Nocharge [shape=plaintext];
-      Nocharge -> Authorized -> Captured [color=blue];
-      Authorized -> Cancelled [style=dotted];
-      Nocharge -> Failed;
-      Captured -> Refunded;
-      Captured -> Refund_fail;
+      REFUND_FAIL [shape=box];
+      REFUNDED [shape=box];
+      CAPTURED [shape=box];
+      AUTHORIZED [shape=box];
+      FAILED [shape=box];
+      CANCELLED [shape=box];
+      NOCHARGE [shape=plaintext];
+      NOCHARGE -> AUTHORIZED -> CAPTURED [color=blue];
+      AUTHORIZED -> CANCELLED [style=dotted];
+      NOCHARGE -> FAILED;
+      CAPTURED -> REFUNDED;
+      CAPTURED -> REFUND_FAIL;
    }
 
 The normal path for messages are marked in blue above. The dotted lines are
@@ -1109,13 +1109,13 @@ very rare events not often used and/or applicable only to specific use cases.
 ============= =========================================
 Status        Description
 ============= =========================================
-Nocharge      Messages start here, but you should not encounter this state.
-Authorized    The transaction is authorized
-Cancelled     The transaction is cancelled or timed out
-Captured      The transaction is captured and the amount will be charged from the recipients phone bill
-Failed        The transaction failed. Usually because the phone number has blocked for overcharged sms
-Refunded      A previously captured transaction has been successfully refunded to the phone owner
-Refund_fail   The refund procedure failed.
+NOCHARGE      Messages start here, but you should not encounter this state.
+AUTHORIZED    The transaction is authorized
+CANCELLED     The transaction is cancelled or timed out
+CAPTURED      The transaction is captured and the amount will be charged from the recipients phone bill
+FAILED        The transaction failed. Usually because the phone number has blocked for overcharged sms
+REFUNDED      A previously captured transaction has been successfully refunded to the phone owner
+REFUND_FAIL   The refund procedure failed.
 ============= =========================================
 
 HTTP Callback
