@@ -23,6 +23,7 @@ assistence, please use the live chat feature at the bottom right of your screen.
    soap
    ftp
    email-to-sms
+   smpp
    errors
    appendix
 
