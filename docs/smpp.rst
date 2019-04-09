@@ -1,7 +1,7 @@
 SMPP
 ====
 
-We ofer SMPP connection for select customers. Contact sales@gatewayapi.com to get access. We use SMPP version 3.4, which should be backwards compatible with version 3.3.
+We offer SMPP connection for select customers. Contact sales@gatewayapi.com to get access. We use SMPP version 3.4, which should be backwards compatible with version 3.3.
 
 Connection
 ----------
@@ -10,6 +10,7 @@ Use the following to connect
 ================= =================================
 Host              smpp1.gatewayapi.com
 Port              7777
+Port TLS          7778
 Bind type         Transceiver or transmitter and receiver.
 Maximum sessions  1 transceiver or 1 transmitter/receiver.
 ================= =================================
