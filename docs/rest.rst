@@ -1137,6 +1137,8 @@ http request to your webhook with the following data.
    :<json string error: Optional error decription, if available.
    :<json string code: Optional numeric code, in hex, see :ref:`smserror`, if available.
    :<json string userref: If you specified a reference when sending the message, it's returned to you
+   :<json string country_code: Optional country code of the msisdn.
+   :<json integer country_prefix: Optional country prefix of the msisdn.
    :status 200: If you reply with a 2xx code, we will consider the DSN delivered successfully.
    :status 500: If we get a code >= 300, we will re-attempt delivery at a later time.
 
@@ -1155,7 +1157,9 @@ http request to your webhook with the following data.
           "time": 1450000000,
           "status": "DELIVERED",
           "userref": "foobar",
-          "charge_status": "CAPTURED"
+          "charge_status": "CAPTURED",
+          "country_code": "DK",
+          "country_prefix": 45
       }
 
    If we can't reach your server, or you reply with a http status code >= 300,
@@ -1223,6 +1227,9 @@ HTTP Callback
    :<json string encoding: Encoding of the received SMS. *Optional.*
    :<json string udh: User data header of the received SMS. *Optional.*
    :<json string payload: Binary payload of the received SMS. *Optional.*
+   :<json string country_code: Optional country code of the msisdn.
+   :<json integer country_prefix: Optional country prefix of the msisdn.
+
 
    :status 200: If you reply with a 2xx code, we will consider the DSN delivered successfully.
    :status 500: If we get a code >= 300, we will re-attempt delivery at a later time.
@@ -1242,7 +1249,9 @@ HTTP Callback
           "receiver": 451204,
           "message": "foo Hello World",
           "senttime": 1450000000,
-          "webhook_label": "test"
+          "webhook_label": "test",
+          "country_code": "DK",
+          "country_prefix": 45
       }
 
    If we can't reach your server, or you reply with a http status code >= 300,
