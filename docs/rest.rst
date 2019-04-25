@@ -1346,6 +1346,68 @@ should be part of your configuration, so it is better protected.
   puts decoded_token
 
 
+Get MOSMS by API
+----------------
+A webhook is required to receive incoming messages, but in addition messages can also be retreived using a GET request.
+
+.. http:get:: /rest/mosms
+   :synopsis: Get incoming messages for a date range
+
+   :query from: The from date, in YYYY-MM-DD format *required*
+   :query to: The to date, in YYYY-MM-DD format *required*
+   :query page:      Page number
+   :query per_page:  Results per page (max 200)
+   :>jsonarr int results:   Total results
+   :>jsonarr int pages:     Pages available
+   :>jsonarr int per_page:  Results per page
+   :>jsonarr int page:      Current page
+   :>jsonarr array messages:  Array of messages
+
+   **Example request**
+
+   .. sourcecode:: http
+
+     GET /rest/mosms?from=2019-01-01&to=2019-01-14
+
+   **Example response**
+
+   .. sourcecode:: http
+
+     HTTP/1.1 200 OK
+     Content-Type: application/json
+
+     {
+       "messages": [
+          {
+            "anonymized": null,
+            "encoding": null,
+            "message": "test",
+            "mosms_id": 2398517,
+            "msisdn": 4512345678,
+            "receiver": 451204,
+            "sender": null,
+            "senttime": 1554465205.0,
+            "webhook": "Rukikab"
+          },
+          {
+            "anonymized": null,
+            "encoding": null,
+            "message": "test2",
+            "mosms_id": 2398518,
+            "msisdn": 4512345678,
+            "receiver": 451204,
+            "sender": null,
+            "senttime": 1554465459.0,
+            "webhook": "Fibotfus"
+          }
+       ],
+       "page": 1,
+       "pages": 1,
+       "per_page": 50,
+       "results": 2
+     }
+
+
 Get usage by label
 ------------------
 
