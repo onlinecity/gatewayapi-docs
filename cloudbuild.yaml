@@ -15,6 +15,7 @@ steps:
     docker build
     -t eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME-$SHORT_SHA
     -t eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME
+    -file Dockerfile.dev
     .
   waitFor: ['builder']
   id: runner
