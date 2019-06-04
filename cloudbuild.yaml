@@ -37,15 +37,15 @@ steps:
   args: 
     - '-c'
       #- 'sleep 999'
-      #- 'ls -al'
+    - 'ls -al'
     - 'git submodule init && git submodule update'
   volumes:
   - name: 'ssh'
     path: /root/.ssh
   waitFor: ['ssh']
   id: git
-  env:
-  - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=1'
+  #  env:
+  #  - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=1'
 
 
 - name: 'eu.gcr.io/gatewayapi-212008/sphinx'
