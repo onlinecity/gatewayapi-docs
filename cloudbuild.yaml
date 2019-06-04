@@ -43,6 +43,9 @@ steps:
     path: /root/.ssh
   waitFor: ['ssh']
   id: git
+  env:
+  - 'GIT_DISCOVERY_ACROSS_FILESYSTEM=1'
+
 
 - name: 'eu.gcr.io/gatewayapi-212008/sphinx'
   entrypoint: 'bash'
