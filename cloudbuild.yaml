@@ -1,10 +1,47 @@
 steps:
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+  - kms
+  - decrypt
+  - --ciphertext-file=oc-bot.enc
+  - --plaintext-file=/root/.ssh/id_rsa
+  - --location=global
+  - --keyring=github
+  - --key=github-key
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+  waitFor: ['-']
+  id: decrypt
+
+
+# Set up git with key and domain.
+- name: 'gcr.io/cloud-builders/git'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    chmod 600 /root/.ssh/id_rsa
+    cat <<EOF >/root/.ssh/config
+    Hostname github.com
+    IdentityFile /root/.ssh/id_rsa
+    EOF
+    #mv known_hosts /root/.ssh/known_hosts
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+  waitFor: ['decrypt']
+  id: ssh
+
 - name: gcr.io/cloud-builders/git
   entrypoint: 'bash'
   args: 
     - '-c'
     - 'git submodule init && git submodule update'
-  waitFor: ['-']
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+  waitFor: ['ssh']
   id: git
 
 - name: 'eu.gcr.io/gatewayapi-212008/sphinx'
