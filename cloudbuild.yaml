@@ -1,10 +1,18 @@
 steps:
+- name: gcr.io/cloud-builders/git
+  entrypoint: 'bash'
+  args: 
+    - '-c'
+    - 'git submodule init && git submodule update'
+  waitFor: ['-']
+  id: git
+
 - name: 'eu.gcr.io/gatewayapi-212008/sphinx'
   entrypoint: 'bash'
   args:
     - '-c'
     - 'cd docs && make html latexpdf'
-  waitFor: ['-'] # The '-' indicates that this step begins immediately.
+  waitFor: ['git'] # The '-' indicates that this step begins immediately.
   id: builder
 
 - name: 'gcr.io/cloud-builders/docker'
