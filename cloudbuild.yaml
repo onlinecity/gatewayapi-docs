@@ -37,7 +37,7 @@ steps:
   args: 
     - '-c'
       #- 'sleep 999'
-    - 'ls -al'
+      #- 'ls -al'
     - 'git submodule init && git submodule update'
   volumes:
   - name: 'ssh'
