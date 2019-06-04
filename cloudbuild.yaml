@@ -27,22 +27,24 @@ steps:
   - >-
     if [ "$BRANCH_NAME" == "master" ] || [ "$TAG_NAME" ] ; then
       docker push eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME-$SHORT_SHA;
+      docker push eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME;
+
     fi
   waitFor: ['runner']
   id: push
 
-  #- name: 'gcr.io/cloud-builders/kubectl'
-  #  entrypoint: 'bash'
-  #  args:
-  #  - '-c'
-  #  - >-
-  #    if [ "$BRANCH_NAME" != "master" ] || [ "$TAG_NAME" ] ; then
-  #      /builder/kubectl.bash set image deployment/web-app web-app=eu.gcr.io/gatewayapi-212008/gatewayapi-com:$BRANCH_NAME$TAG_NAME-$SHORT_SHA --namespace gwapi;
-  #    fi
-  #  env:
-  #    - 'CLOUDSDK_COMPUTE_ZONE=europe-west1'
-  #    - 'CLOUDSDK_CONTAINER_CLUSTER=gatewayapi-stage'
-  #  waitFor: ['push']
+- name: 'gcr.io/cloud-builders/kubectl'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - >-
+    if [ "$BRANCH_NAME" != "master" ] || [ "$TAG_NAME" ] ; then
+      /builder/kubectl.bash set image deployment/docs docs=eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME-$SHORT_SHA --namespace gwapi;
+    fi
+  env:
+    - 'CLOUDSDK_COMPUTE_ZONE=europe-west1'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=gatewayapi-stage'
+  waitFor: ['push']
 images:
 - eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME-$SHORT_SHA
 - eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME  
