@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  Host: gatewayapi.dev
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: docs-configmap
+  namespace: gwapi
