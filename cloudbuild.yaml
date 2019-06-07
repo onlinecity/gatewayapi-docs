@@ -51,44 +51,16 @@ steps:
   waitFor: ['git'] # The '-' indicates that this step begins immediately.
   id: builder
 
-- name: 'gcr.io/cloud-builders/docker'
+- name: 'gcr.io/cloud-builders/gsutil'
   entrypoint: 'bash'
   args:
   - '-c'
-  - >-
-    docker build
-    -t eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME-$SHORT_SHA
-    -t eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME
-    -f Dockerfile
-    .
-  waitFor: ['builder']
-  id: runner
-
-- name: 'gcr.io/cloud-builders/docker'
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - >-
-    if [ "$BRANCH_NAME" == "master" ] || [ "$TAG_NAME" ] ; then
-      docker push eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME-$SHORT_SHA;
-      docker push eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME;
-
+  - >
+    cd docs/_build/html &&
+    if [ "$BRANCH_NAME" == "master" ] ; then
+        gsutil -m cp -R * gs://gatewayapi-cdn/docs/
+    else
+        gsutil -m cp -R * gs://gatewayapi-cdn-dev/docs/
     fi
-  waitFor: ['runner']
-  id: push
-
-- name: 'gcr.io/cloud-builders/kubectl'
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - >-
-    if [ "$BRANCH_NAME" != "master" ] || [ "$TAG_NAME" ] ; then
-      /builder/kubectl.bash set image deployment/docs docs=eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME-$SHORT_SHA --namespace gwapi;
-    fi
-  env:
-    - 'CLOUDSDK_COMPUTE_ZONE=europe-west1'
-    - 'CLOUDSDK_CONTAINER_CLUSTER=gatewayapi-stage'
-  waitFor: ['push']
-images:
-- eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME-$SHORT_SHA
-- eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME  
+  waitFor: ['builder'] # The '-' indicates that this step begins immediately.
+  id: gsutil
