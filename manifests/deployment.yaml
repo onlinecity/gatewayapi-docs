@@ -19,6 +19,12 @@ spec:
       - name: docs
         image: eu.gcr.io/gatewayapi-212008/docs:master
         imagePullPolicy: Always
+        env:
+        - name: NGINX_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: docs-configmap
+              key: Host
         ports:
         - containerPort: 80
         resources:

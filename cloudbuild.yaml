@@ -42,7 +42,7 @@ steps:
     path: /root/.ssh
   waitFor: ['ssh']
   id: git
-
+  
 - name: 'eu.gcr.io/gatewayapi-212008/sphinx'
   entrypoint: 'bash'
   args:
@@ -59,7 +59,7 @@ steps:
     docker build
     -t eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME-$SHORT_SHA
     -t eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME
-    -f Dockerfile.dev
+    -f Dockerfile
     .
   waitFor: ['builder']
   id: runner
