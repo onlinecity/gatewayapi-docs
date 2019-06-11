@@ -1,0 +1,7 @@
+FROM python:2.7-jessie as builder
+RUN apt update && apt install -y graphviz texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-latex-recommended latexmk
+ADD requirements.txt .
+RUN pip install -r requirements.txt
+RUN pip install --upgrade sphinx sphinxcontrib-httpdomain
+
+WORKDIR /workspace/docs
