@@ -58,9 +58,9 @@ steps:
   - >
     cd docs/_build/html &&
     if [ "$BRANCH_NAME" == "master" ] ; then
-        gsutil -m cp -R * gs://gatewayapi-cdn/docs/
+        gsutil -m cp -R * gs://docs.gatewayapi.com/docs
     else
-        gsutil -m cp -R * gs://gatewayapi-cdn-dev/docs/
+        gsutil -m cp -R * gs://docs.gatewayapi.dev/docs
     fi
   waitFor: ['builder'] # The '-' indicates that this step begins immediately.
   id: gsutil
