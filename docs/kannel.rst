@@ -2,7 +2,7 @@ Kannel API
 ==========
 
 For this APIs you need a set of credentials. These are different from the
-OAuth API the Rest API uses. You'll find them in the dashboard, under Settings.
+OAuth API the Rest API uses. You'll find them in the dashboard, under "API".
 
 We use the term Kannel API, because this is an API designed specifically for
 the Open Source Kannel SMS Gateway. It uses the Kannel--HTTP--Kannel interface,
@@ -122,13 +122,7 @@ concatenate them together. Unfortunately kannel insists on doing this on it's
 end, so in the GatewayAPI traffic log it is going to show each segment
 separately.
 
-SSL troubles?
-^^^^^^^^^^^^^
 
-If you are having problems connecting over SSL to gatewayapi.com, try
-badssl.gatewayapi.com. You can use badssl.gatewayapi.com without ssl, but we
-strongly recommend against it, since these APIs send your credentials in
-plaintext.
 
 Feedback appreciated
 ^^^^^^^^^^^^^^^^^^^^
