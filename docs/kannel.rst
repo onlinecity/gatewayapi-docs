@@ -123,7 +123,6 @@ end, so in the GatewayAPI traffic log it is going to show each segment
 separately.
 
 
-
 Feedback appreciated
 ^^^^^^^^^^^^^^^^^^^^
 
