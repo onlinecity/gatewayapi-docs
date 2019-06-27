@@ -44,7 +44,7 @@ steps:
     ls -la
 
     rm -fr /workspace/*
-    mv * /workspace/
+    cp -r * /workspace/
 
     ls -la /workspace/
   volumes:
