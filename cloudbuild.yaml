@@ -32,6 +32,20 @@ steps:
   waitFor: ['decrypt']
   id: ssh
 
+- name: 'gcr.io/cloud-builders/git'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    ls -la
+
+
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+  waitFor: ['ssh']
+  id: git-init
+
 - name: gcr.io/cloud-builders/git
   entrypoint: 'bash'
   args: 
@@ -40,7 +54,7 @@ steps:
   volumes:
   - name: 'ssh'
     path: /root/.ssh
-  waitFor: ['ssh']
+  waitFor: ['git-init']
   id: git
   
 - name: 'eu.gcr.io/gatewayapi-212008/sphinx'
