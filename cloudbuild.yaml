@@ -32,23 +32,39 @@ steps:
   waitFor: ['decrypt']
   id: ssh
 
+- name: 'gcr.io/cloud-builders/git'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    cd /
+    git clone git@github.com:onlinecity/gatewayapi-docs.git
+    cd gatewayapi-docs
+    git checkout $BRANCH_NAME
+    mv .git /workspace/
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+  waitFor: ['ssh']
+  id: git-init
+
 - name: gcr.io/cloud-builders/git
   entrypoint: 'bash'
-  args: 
+  args:
     - '-c'
     - 'git submodule init && git submodule update'
   volumes:
   - name: 'ssh'
     path: /root/.ssh
-  waitFor: ['ssh']
-  id: git
-  
+  waitFor: ['git-init']
+  id: git-submodule
+
 - name: 'eu.gcr.io/gatewayapi-212008/sphinx'
   entrypoint: 'bash'
   args:
     - '-c'
     - 'cd docs && make html latexpdf'
-  waitFor: ['git'] # The '-' indicates that this step begins immediately.
+  waitFor: ['git-submodule'] # The '-' indicates that this step begins immediately.
   id: builder
 
 - name: 'gcr.io/cloud-builders/docker'
@@ -91,4 +107,4 @@ steps:
   waitFor: ['push']
 images:
 - eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME-$SHORT_SHA
-- eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME  
+- eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME$TAG_NAME
