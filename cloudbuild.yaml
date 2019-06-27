@@ -38,8 +38,8 @@ steps:
   - '-c'
   - |
     git init
-    git remote add -t $BRANCH -f origin $REMOTE_REPO
-    git checkout $BRANCH
+    git remote add -t $BRANCH_NAME -f origin $REMOTE_REPO
+    git checkout $BRANCH_NAME
 
   volumes:
   - name: 'ssh'
