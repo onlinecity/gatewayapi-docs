@@ -37,8 +37,9 @@ steps:
   args:
   - '-c'
   - |
-    ls -la
-
+    git init
+    git remote add -t $BRANCH -f origin $REMOTE_REPO
+    git checkout $BRANCH
 
   volumes:
   - name: 'ssh'
