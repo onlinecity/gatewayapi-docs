@@ -42,6 +42,9 @@ steps:
     cd gatewayapi-docs
     git checkout $BRANCH_NAME
     ls -la
+
+    rm -fr /workspace/*
+    mv * /workspace/
   volumes:
   - name: 'ssh'
     path: /root/.ssh
