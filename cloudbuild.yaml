@@ -45,6 +45,8 @@ steps:
 
     rm -fr /workspace/*
     mv * /workspace/
+
+    ls -la /workspace/
   volumes:
   - name: 'ssh'
     path: /root/.ssh
