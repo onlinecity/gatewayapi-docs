@@ -38,7 +38,7 @@ steps:
   - '-c'
   - |
     git init
-    git remote add -t $BRANCH_NAME -f origin $REMOTE_REPO
+    git remote add -t $BRANCH_NAME -f origin git@github.com:onlinecity/gatewayapi-docs.git
     git checkout $BRANCH_NAME
 
   volumes:
