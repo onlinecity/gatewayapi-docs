@@ -45,7 +45,7 @@ steps:
 
     rm -fr /workspace/*
     cp -r * /workspace/
-
+    mv .git /workspace/
     ls -la /workspace/
   volumes:
   - name: 'ssh'
