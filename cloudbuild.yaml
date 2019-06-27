@@ -37,6 +37,7 @@ steps:
   args:
   - '-c'
   - |
+    cd /
     git clone git@github.com:onlinecity/gatewayapi-docs.git
     git checkout $BRANCH_NAME
 
