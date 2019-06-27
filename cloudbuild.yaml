@@ -41,7 +41,7 @@ steps:
     git clone git@github.com:onlinecity/gatewayapi-docs.git
     cd gatewayapi-docs
     git checkout $BRANCH_NAME
-
+    ls -la
   volumes:
   - name: 'ssh'
     path: /root/.ssh
