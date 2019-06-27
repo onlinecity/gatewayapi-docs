@@ -57,14 +57,14 @@ steps:
   - name: 'ssh'
     path: /root/.ssh
   waitFor: ['git-init']
-  id: git
+  id: git-submodule
   
 - name: 'eu.gcr.io/gatewayapi-212008/sphinx'
   entrypoint: 'bash'
   args:
     - '-c'
     - 'cd docs && make html latexpdf'
-  waitFor: ['git'] # The '-' indicates that this step begins immediately.
+  waitFor: ['git-submodule'] # The '-' indicates that this step begins immediately.
   id: builder
 
 - name: 'gcr.io/cloud-builders/docker'
