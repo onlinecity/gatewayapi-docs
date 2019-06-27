@@ -37,9 +37,12 @@ steps:
   args:
   - '-c'
   - |
-    git init
-    git remote add -t $BRANCH_NAME -f origin git@github.com:onlinecity/gatewayapi-docs.git
-    git checkout $BRANCH_NAME
+    cd ..
+    ls -la
+
+    #git init
+    #git remote add -t $BRANCH_NAME -f origin git@github.com:onlinecity/gatewayapi-docs.git
+    #git checkout $BRANCH_NAME
 
   volumes:
   - name: 'ssh'
