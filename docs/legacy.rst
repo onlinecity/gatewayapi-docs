@@ -4,10 +4,6 @@ Legacy HTTP API
 For these APIs you need a set of credentials. These are different from the
 API Keys the REST API uses. You'll find them in the dashboard, under Settings.
 
-If you are having problems connecting over SSL to gatewayapi.com, try
-badssl.gatewayapi.com. You can use badssl.gatewayapi.com without ssl, but we
-strongly recommend against it, since these APIs send your credentials in
-plaintext.
 
 Sending SMS'es
 --------------
