@@ -33,6 +33,9 @@ For security reasons we highly recommend option 1, since e-mails in most cases a
 unencrypted over SMTP, an attacker might be able to capture your API tokens.
 We do provide the second option for customers that are unable to setup SPF and DKIM for their e-mail.
 
+If you use API token and you also use our IP whitelist, then you will need to whitelist the IP-address
+of your outgoing e-mail server as well.
+
 Sending an SMS
 ^^^^^^^^^^^^^^
 
