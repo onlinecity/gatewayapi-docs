@@ -29,9 +29,9 @@ To successfully deliver your email as a SMS you have two options for proper auth
 1. Your whitelisted emails or domain, need to pass SPF check and have a DKIM record.
 2. You need to put an API token in the Subject field of the e-mail.
 
-For security reasons we highly recommend option 1, since e-mails are transferred unencrypted over
-SMTP, an attacker might be able to capture your API tokens. We do provide the second option for
-customers that are unable to setup SPF and DKIM for their e-mail.
+For security reasons we highly recommend option 1, since e-mails in most cases are transferred
+unencrypted over SMTP, an attacker might be able to capture your API tokens.
+We do provide the second option for customers that are unable to setup SPF and DKIM for their e-mail.
 
 Sending an SMS
 ^^^^^^^^^^^^^^
