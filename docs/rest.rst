@@ -613,7 +613,7 @@ Advanced usage
    :<json int max_parts: A number between 1 and 255 used to limit the number of smses a single message will send. Can be used if you send smses from systems that generates messages that you can't control, this way you can ensure that you don't send very long smses. You will not be charged for more than the amount specified here. Can't be used with Tags or BINARY smses.
    :<json string extra_details: To get more details about the number of parts sent to each recipient set this to 'recipients_usage'. See example response below.
    :<json array recipients: Array of recipients, described below. The number of recipients in a single message is limited to 10.000. *required*
-   :<jsonarr string msisdn: :term:`MSISDN` aka the full mobile phone number of the recipient. *required*
+   :<jsonarr string msisdn: :term:`MSISDN` aka the full mobile phone number of the recipient. Duplicates are not allowed in the same message. *required*
    :<jsonarr object charge: Charge data. See `Overcharged SMSes`_.
    :<jsonarr array tagvalues: A list of string values corresponding to the tags in message. The order and amount of tag values must exactly match the tags.
    :>json array ids: If successful you receive a object containing a list of message ids.
