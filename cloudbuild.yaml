@@ -103,7 +103,7 @@ steps:
     fi
   env:
     - 'CLOUDSDK_COMPUTE_ZONE=europe-west1'
-    - 'CLOUDSDK_CONTAINER_CLUSTER=gatewayapi-stage'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=gatewayapi-staging'
   waitFor: ['push']
 images:
 - eu.gcr.io/gatewayapi-212008/docs:$BRANCH_NAME-$SHORT_SHA
