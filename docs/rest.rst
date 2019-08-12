@@ -611,6 +611,7 @@ Advanced usage
    :<json string callback_url: If specified send status notifications to this URL, else use the default webhook.
    :<json string label: A label added to each sent message, can be used to uniquely identify a customer or company that you sent the message on behalf of, to help with invoicing your customers. If specied it must be the same for all messages in the request.
    :<json int max_parts: A number between 1 and 255 used to limit the number of smses a single message will send. Can be used if you send smses from systems that generates messages that you can't control, this way you can ensure that you don't send very long smses. You will not be charged for more than the amount specified here. Can't be used with Tags or BINARY smses.
+   :<json string extra_details: To get more details about the number of parts sent to each recipient set this to 'recipients_usage'. See example response below.
    :<json array recipients: Array of recipients, described below. The number of recipients in a single message is limited to 10.000. *required*
    :<jsonarr string msisdn: :term:`MSISDN` aka the full mobile phone number of the recipient. *required*
    :<jsonarr object charge: Charge data. See `Overcharged SMSes`_.
@@ -732,6 +733,56 @@ Advanced usage
 
    ``code`` and ``variables`` are left out of the response if they are empty.
    For a complete list of the various codes see :ref:`apierror`.
+
+   If the ``extra_details`` option is set to ``recipients_usage`` the response will look like:
+
+
+   .. sourcecode:: http
+
+     HTTP/1.1 200 OK
+     Content-Type: application/json
+
+     {
+         "ids": [
+             421332671, 4421332672
+         ],
+         "usage": {
+             "countries": {
+                 "DK": 3
+             },
+             "currency": "DKK",
+             "total_cost": 0.36
+         },
+         "details": {
+            "messages": [
+               {
+                  "id": 421332671,
+                  "recipients": [
+                     {
+                        "country": "DK",
+                        "msisdn": 1514654321,
+                        "parts": 1
+                     },
+                     {
+                        "country": "DK",
+                        "msisdn": 1514654322,
+                        "parts": 1
+                     }
+                  ]
+               },
+               {
+                  "id": 421332672,
+                  "recipients": [
+                     {
+                        "country": "DK",
+                        "msisdn": 4512345678,
+                        "parts": 1
+                     }
+                  ]
+               }
+            ]
+         }
+     }
 
 Overcharged SMSes
 ^^^^^^^^^^^^^^^^^
