@@ -1769,34 +1769,36 @@ You can use this API to programmatically add new keywords to your account, for u
 
 Access to this API requires a separate agreement with GatewayAPI, intended for resellers and/or accounts with large needs for two-way messaging.
 
-Get a list of keywords
-^^^^^^^^^^^^^^^^^^^^^^
-:reqheader Authorization: API Token or OAuth bearer token
+.. http:get:: /api/vas
 
-.. sourcecode:: http
+    Get a list of keywords
 
-    GET /api/vas HTTP/1.1
-    User-Agent: curl/7.37.1
-    Host: gatewayapi.com
-    Accept: */*
-    authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXV...
+    :reqheader Authorization: API Token or OAuth bearer token
 
-**Example response**:
+    .. sourcecode:: http
 
-.. sourcecode:: http
+        GET /api/vas HTTP/1.1
+        User-Agent: curl/7.37.1
+        Host: gatewayapi.com
+        Accept: */*
+        authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXV...
 
-    HTTP/1.0 200 OK
-    Content-Type: application/json
-    Content-Length: 148
-    Date: Mon, 18 May 2015 12:53:59 GMT
+    **Example response**:
 
-    [
-        {
-            'shortcode': 451204,
-            'keyword': 'charlie',
-            'pushsetting_reference': 'foo'
-        }
-    ],
+    .. sourcecode:: http
+
+        HTTP/1.0 200 OK
+        Content-Type: application/json
+        Content-Length: 148
+        Date: Mon, 18 May 2015 12:53:59 GMT
+
+        [
+            {
+                'shortcode': 451204,
+                'keyword': 'charlie',
+                'pushsetting_reference': 'foo'
+            }
+        ],
 
 
 Check if a keyword is available
