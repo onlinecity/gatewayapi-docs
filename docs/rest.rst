@@ -1762,3 +1762,148 @@ updated.
    :status 404: SMS is not found.
    :status 422: Invalid json request body
    :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
+
+VAS
+---
+You can use this API to programmatically add new keywords to your account, for use with value added services (VAS), ie. your services.
+
+Access to this API requires a separate agreement with GatewayAPI, intended for resellers and/or accounts with large needs for two-way messaging.
+
+.. http:get:: /api/vas
+
+    Get a list of keywords
+
+    :reqheader Authorization: API Token or OAuth bearer token
+
+    .. sourcecode:: http
+
+        GET /api/vas HTTP/1.1
+        User-Agent: curl/7.37.1
+        Host: gatewayapi.com
+        Accept: */*
+        authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXV...
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+        HTTP/1.0 200 OK
+        Content-Type: application/json
+        Content-Length: 148
+        Date: Mon, 18 May 2015 12:53:59 GMT
+
+        [
+            {
+                'shortcode': 451204,
+                'keyword': 'charlie',
+                'pushsetting_reference': 'foo'
+            }
+        ],
+
+.. http:post:: /api/vas/check
+
+    Check if a keyword is available
+
+    :<json string keyword: Keyword to search for
+    :<json integer shortcode: ie. 451204
+    :>json string system: System using the keyword (gatewayapi/nimta)
+    :>json boolean available: Is the keyword available
+    :reqheader Authorization: API Token or OAuth bearer token
+    :statuscode 200: no error, see json output
+    :statuscode 422: input validation error
+
+
+    .. sourcecode:: http
+
+        POST /api/vas/check HTTP/1.1
+        Host: gatewayapi.com
+        Accept: */*
+        Authorization: Basic TzFsa3FtTGhRdHFRMXpHNHp
+        Content-Type: application/json
+
+        { "shortcode": 451204, "keyword": "foobar" }
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+        Content-Type: application/json
+
+        {
+            "available": false,
+            "system": "nimta"
+        }
+
+.. http:post:: /api/vas
+
+    Add a new keyword
+
+    Please note that the price for the keyword will be deducted from your
+    GatewayAPI Credit immediately upon adding the keyword.
+
+    In addition once a month you will receive an invoice for all the keywords
+    you use.
+
+    When adding a new keyword you are charged the full price, regardless how
+    many days are left in the month until next invoice period.
+
+    If you want to assign the new keyword to a webhook right away, set the
+    optional field pushsetting_reference to the "unique label" of the webhook.
+
+    :<json string keyword: Keyword to add
+    :<json integer shortcode: ie. 451204
+    :<json string pushsetting_reference: Optional webhook to assign to.
+    :reqheader Authorization: API Token or OAuth bearer token
+    :statuscode 201: created
+    :statuscode 422: input validation error
+
+
+    .. sourcecode:: http
+
+        POST /api/vas HTTP/1.1
+        Host: gatewayapi.com
+        Accept: */*
+        Authorization: Basic TzFsa3FtTGhRdHFRMXpHNHp
+        Content-Type: application/json
+
+        { "shortcode": 451204, "keyword": "foobar" }
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 201 CREATED
+        Content-Type: application/json
+
+        {
+            "account_id": 1,
+            "keyword": "foobar",
+            "pushsetting_reference": null,
+            "shortcode": 451204
+        }
+
+.. http:delete:: /api/vas/(int: shortcode)/(keyword)
+
+    Cancel the keyword.
+
+    :query shortcode: ie. 451204
+    :query keyword: The keyword to delete
+    :reqheader Authorization: API Token or OAuth bearer token
+    :statuscode 202: Accepted for deletion at end of payment period.
+    :statuscode 404: couldn't find the keyword
+    :statuscode 422: input validation error
+
+    .. sourcecode:: http
+
+        DELETE /api/vas/451204/foobar HTTP/1.1
+        Host: gatewayapi.com
+        Accept: */*
+        Authorization: Basic TzFsa3FtTGhRdHFRMXpHNHp
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 204 OK
+        Content-Length: 0

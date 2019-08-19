@@ -1,7 +1,7 @@
 Kannel API
 ==========
 
-For this APIs you need a set of credentials. These are different from the
+For this API you need a set of credentials. These are different from the
 OAuth API the Rest API uses. You'll find them in the dashboard, under "API".
 
 We use the term Kannel API, because this is an API designed specifically for
