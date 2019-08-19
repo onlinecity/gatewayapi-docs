@@ -1765,6 +1765,9 @@ updated.
 
 VAS
 ---
+You can use this API to programmatically add new keywords to your account, for use with value added services (VAS), ie. your services.
+
+Access to this API requires a separate agreement with GatewayAPI, intended for resellers and/or accounts with large needs for two-way messaging.
 
 Get a list of keywords
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -1798,14 +1801,15 @@ Get a list of keywords
 
 Check if a keyword is available
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. sourcecode:: http
 
-:<json string keyword: Keyword to search for
-:<json integer shortcode: ie. 451204
-:>json string system: System using the keyword (gatewayapi/nimta)
-:>json boolean available: Is the keyword available
-:reqheader Authorization: API Token or OAuth bearer token
-:statuscode 200: no error, see json output
-:statuscode 422: input validation error
+    :<json string keyword: Keyword to search for
+    :<json integer shortcode: ie. 451204
+    :>json string system: System using the keyword (gatewayapi/nimta)
+    :>json boolean available: Is the keyword available
+    :reqheader Authorization: API Token or OAuth bearer token
+    :statuscode 200: no error, see json output
+    :statuscode 422: input validation error
 
 
 .. sourcecode:: http
@@ -1845,12 +1849,14 @@ many days are left in the month until next invoice period.
 If you want to assign the new keyword to a webhook right away, set the
 optional field pushsetting_reference to the "unique label" of the webhook.
 
-:<json string keyword: Keyword to add
-:<json integer shortcode: ie. 451204
-:<json string pushsetting_reference: Optional webhook to assign to.
-:reqheader Authorization: API Token or OAuth bearer token
-:statuscode 201: created
-:statuscode 422: input validation error
+.. sourcecode:: http
+
+    :<json string keyword: Keyword to add
+    :<json integer shortcode: ie. 451204
+    :<json string pushsetting_reference: Optional webhook to assign to.
+    :reqheader Authorization: API Token or OAuth bearer token
+    :statuscode 201: created
+    :statuscode 422: input validation error
 
 
 .. sourcecode:: http
@@ -1880,13 +1886,14 @@ optional field pushsetting_reference to the "unique label" of the webhook.
 
 Cancel the keyword.
 ^^^^^^^^^^^^^^^^^^^
+.. sourcecode:: http
 
-:query shortcode: ie. 451204
-:query keyword: The keyword to delete
-:reqheader Authorization: API Token or OAuth bearer token
-:statuscode 202: Accepted for deletion at end of payment period.
-:statuscode 404: couldn't find the keyword
-:statuscode 422: input validation error
+    :query shortcode: ie. 451204
+    :query keyword: The keyword to delete
+    :reqheader Authorization: API Token or OAuth bearer token
+    :statuscode 202: Accepted for deletion at end of payment period.
+    :statuscode 404: couldn't find the keyword
+    :statuscode 422: input validation error
 
 .. sourcecode:: http
 
