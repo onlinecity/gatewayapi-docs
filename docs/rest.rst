@@ -1800,10 +1800,9 @@ Access to this API requires a separate agreement with GatewayAPI, intended for r
             }
         ],
 
+.. http:post:: /api/vas/check
 
-Check if a keyword is available
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. sourcecode:: http
+    Check if a keyword is available
 
     :<json string keyword: Keyword to search for
     :<json integer shortcode: ie. 451204
@@ -1814,44 +1813,43 @@ Check if a keyword is available
     :statuscode 422: input validation error
 
 
-.. sourcecode:: http
+    .. sourcecode:: http
 
-    POST /api/vas/check HTTP/1.1
-    Host: gatewayapi.com
-    Accept: */*
-    Authorization: Basic TzFsa3FtTGhRdHFRMXpHNHp
-    Content-Type: application/json
+        POST /api/vas/check HTTP/1.1
+        Host: gatewayapi.com
+        Accept: */*
+        Authorization: Basic TzFsa3FtTGhRdHFRMXpHNHp
+        Content-Type: application/json
 
-    { "shortcode": 451204, "keyword": "foobar" }
+        { "shortcode": 451204, "keyword": "foobar" }
 
-**Example response**:
+    **Example response**:
 
-.. sourcecode:: http
+    .. sourcecode:: http
 
-    HTTP/1.1 200 OK
-    Content-Type: application/json
+        HTTP/1.1 200 OK
+        Content-Type: application/json
 
-    {
-        "available": false,
-        "system": "nimta"
-    }
+        {
+            "available": false,
+            "system": "nimta"
+        }
 
-Add a new keyword
-^^^^^^^^^^^^^^^^^
+.. http:post:: /api/vas
 
-Please note that the price for the keyword will be deducted from your
-GatewayAPI Credit immediately upon adding the keyword.
+    Add a new keyword
 
-In addition once a month you will receive an invoice for all the keywords
-you use.
+    Please note that the price for the keyword will be deducted from your
+    GatewayAPI Credit immediately upon adding the keyword.
 
-When adding a new keyword you are charged the full price, regardless how
-many days are left in the month until next invoice period.
+    In addition once a month you will receive an invoice for all the keywords
+    you use.
 
-If you want to assign the new keyword to a webhook right away, set the
-optional field pushsetting_reference to the "unique label" of the webhook.
+    When adding a new keyword you are charged the full price, regardless how
+    many days are left in the month until next invoice period.
 
-.. sourcecode:: http
+    If you want to assign the new keyword to a webhook right away, set the
+    optional field pushsetting_reference to the "unique label" of the webhook.
 
     :<json string keyword: Keyword to add
     :<json integer shortcode: ie. 451204
@@ -1861,34 +1859,33 @@ optional field pushsetting_reference to the "unique label" of the webhook.
     :statuscode 422: input validation error
 
 
-.. sourcecode:: http
+    .. sourcecode:: http
 
-    POST /api/vas HTTP/1.1
-    Host: gatewayapi.com
-    Accept: */*
-    Authorization: Basic TzFsa3FtTGhRdHFRMXpHNHp
-    Content-Type: application/json
+        POST /api/vas HTTP/1.1
+        Host: gatewayapi.com
+        Accept: */*
+        Authorization: Basic TzFsa3FtTGhRdHFRMXpHNHp
+        Content-Type: application/json
 
-    { "shortcode": 451204, "keyword": "foobar" }
+        { "shortcode": 451204, "keyword": "foobar" }
 
-**Example response**:
+    **Example response**:
 
-.. sourcecode:: http
+    .. sourcecode:: http
 
-    HTTP/1.1 201 CREATED
-    Content-Type: application/json
+        HTTP/1.1 201 CREATED
+        Content-Type: application/json
 
-    {
-        "account_id": 1,
-        "keyword": "foobar",
-        "pushsetting_reference": null,
-        "shortcode": 451204
-    }
+        {
+            "account_id": 1,
+            "keyword": "foobar",
+            "pushsetting_reference": null,
+            "shortcode": 451204
+        }
 
+.. http:delete:: /api/vas/(int: shortcode)/(keyword)
 
-Cancel the keyword.
-^^^^^^^^^^^^^^^^^^^
-.. sourcecode:: http
+    Cancel the keyword.
 
     :query shortcode: ie. 451204
     :query keyword: The keyword to delete
@@ -1897,16 +1894,16 @@ Cancel the keyword.
     :statuscode 404: couldn't find the keyword
     :statuscode 422: input validation error
 
-.. sourcecode:: http
+    .. sourcecode:: http
 
-    DELETE /api/vas/451204/foobar HTTP/1.1
-    Host: gatewayapi.com
-    Accept: */*
-    Authorization: Basic TzFsa3FtTGhRdHFRMXpHNHp
+        DELETE /api/vas/451204/foobar HTTP/1.1
+        Host: gatewayapi.com
+        Accept: */*
+        Authorization: Basic TzFsa3FtTGhRdHFRMXpHNHp
 
-**Example response**:
+    **Example response**:
 
-.. sourcecode:: http
+    .. sourcecode:: http
 
-    HTTP/1.1 204 OK
-    Content-Length: 0
+        HTTP/1.1 204 OK
+        Content-Length: 0
