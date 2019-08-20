@@ -1763,8 +1763,8 @@ updated.
    :status 422: Invalid json request body
    :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
 
-VAS
----
+Keywords
+--------
 You can use this API to programmatically add new keywords to your account, for use with value added services (VAS), ie. your services.
 
 Access to this API requires a separate agreement with GatewayAPI, intended for resellers and/or accounts with large needs for two-way messaging.
@@ -1806,7 +1806,7 @@ Access to this API requires a separate agreement with GatewayAPI, intended for r
 
     :<json string keyword: Keyword to search for
     :<json integer shortcode: ie. 451204
-    :>json string system: System using the keyword (gatewayapi/nimta)
+    :>json string system: System using the keyword (gatewayapi)
     :>json boolean available: Is the keyword available
     :reqheader Authorization: API Token or OAuth bearer token
     :statuscode 200: no error, see json output
@@ -1832,7 +1832,7 @@ Access to this API requires a separate agreement with GatewayAPI, intended for r
 
         {
             "available": false,
-            "system": "nimta"
+            "system": "gatewayapi"
         }
 
 .. http:post:: /api/vas
@@ -1841,9 +1841,6 @@ Access to this API requires a separate agreement with GatewayAPI, intended for r
 
     Please note that the price for the keyword will be deducted from your
     GatewayAPI Credit immediately upon adding the keyword.
-
-    In addition once a month you will receive an invoice for all the keywords
-    you use.
 
     When adding a new keyword you are charged the full price, regardless how
     many days are left in the month until next invoice period.
@@ -1886,6 +1883,9 @@ Access to this API requires a separate agreement with GatewayAPI, intended for r
 .. http:delete:: /api/vas/(int: shortcode)/(keyword)
 
     Cancel the keyword.
+    
+    Note that your keyword will remain active on your account until
+    the end of the subscribtion period.
 
     :query shortcode: ie. 451204
     :query keyword: The keyword to delete
