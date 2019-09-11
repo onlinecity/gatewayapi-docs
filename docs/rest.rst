@@ -1481,6 +1481,16 @@ label) if you do not keep track of each sms sent yourself.
    :status 403: Ie. unauthorized ip address
    :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
 
+
+   **Request example**
+
+    .. sourcecode:: bash
+
+      curl -v https://gatewayapi.com/api/usage/labels 
+      -u 'Your_API_Token_Here': 
+      -d '{"from":"2019-08-01","to":"2019-08-24"}' 
+      -H 'Content-Type: application/json' 
+
    **Response example**
 
    .. sourcecode:: http
