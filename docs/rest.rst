@@ -404,8 +404,7 @@ C#
 ~~
 
 This example uses `RestSharp`_. and `NewtonSoft`_. If you're using the NuGet
-Package Manager Console: ``Install-Package RestSharp``,
-``Install-Package Newtonsoft.Json ``.
+Package Manager Console: ``Install-Package RestSharp``, ``Install-Package Newtonsoft.Json``.
 
 .. sourcecode:: csharp
 
