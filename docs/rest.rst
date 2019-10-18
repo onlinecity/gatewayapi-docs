@@ -12,10 +12,31 @@ Win2k8/Vista+, Java 7+).
 
 Authentication
 --------------
-Use either :ref:`oauth`, :ref:`HTTP Basic Authentication` or
-:ref:`API Token`. We encourage the use of :ref:`oauth`, since it
-provides the best protection and although not as ubiquitous as basic auth, it's
-well supported by most frameworks.
+Use either :ref:`API Token`, :ref:`HTTP Basic Authentication` or
+:ref:`oauth`. We encourage the use of :ref:`API Token` to most users.
+
+.. _`API Token`:
+
+API Token
+^^^^^^^^^
+Your API keys are expressed as a key+secret combo, and as an API token. The
+key+secret is used for :ref:`oauth` while the token can be used for a simpler
+scheme with better compatibility.
+
+You can send the token as the username via :ref:`HTTP Basic Authentication`,
+or you may send the token as a query argument or form value. This means that
+if you can send a HTTP request, you can use Token Authentication.
+
+Example of JSON body and API token as a query argument.
+
+.. sourcecode:: http
+
+   POST /rest/mtsms?token=Go-Create-an-API-token HTTP/1.1
+   Host: gatewayapi.com
+   Accept: application/json, text/javascript
+   Content-Type: application/json
+
+   { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] }
 
 .. _oauth:
 
@@ -94,29 +115,6 @@ empty. You can find and create a set of credentials under "Settings",
 If you can't use/specify an Authorization header, you can provide the username
 and password as form or query arguments. The username is sent as 'user', and
 the password as 'password'.
-
-.. _`API Token`:
-
-API Token
-^^^^^^^^^
-Your API keys are expressed as a key+secret combo, and as an API token. The
-key+secret is used for :ref:`oauth` while the token can be used for a simpler
-scheme with better compatibility.
-
-You can send the token as the username via :ref:`HTTP Basic Authentication`,
-or you may send the token as a query argument or form value. This means that
-if you can send a HTTP request, you can use Token Authentication.
-
-Example of JSON body and API token as a query argument.
-
-.. sourcecode:: http
-
-   POST /rest/mtsms?token=Go-Create-an-API-token HTTP/1.1
-   Host: gatewayapi.com
-   Accept: application/json, text/javascript
-   Content-Type: application/json
-
-   { "message": "Hello World", "recipients": [ { "msisdn": 4512345678 } ] }
 
 Sending SMS'es
 --------------
