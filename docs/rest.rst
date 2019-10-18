@@ -405,35 +405,41 @@ C#
 
 This example uses `RestSharp`_. and `NewtonSoft`_. If you're using the NuGet
 Package Manager Console: ``Install-Package RestSharp``,
-``Install-Package Newtonsoft.Json -Version 9.0.1``.
+``Install-Package Newtonsoft.Json ``.
 
 .. sourcecode:: csharp
 
    var client = new RestSharp.RestClient("https://gatewayapi.com/rest");
-   var apiKey = "Create-an-API-Key";
-   var apiSecret = "GoGenerateAnApiKeyAndSecret";
-   client.Authenticator = RestSharp.Authenticators
-       .OAuth1Authenticator.ForRequestToken(apiKey, apiSecret);
+   var apiToken = "GoGenerateAnApiToken";
+
+   client.Authenticator = new RestSharp.Authenticators
+      .HttpBasicAuthenticator(apiToken, "");
    var request = new RestSharp.RestRequest("mtsms", RestSharp.Method.POST);
-   request.AddJsonBody(new {
-       sender = "ExampleSMS",
-       recipients = new[] { new { msisdn = 4512345678} },
-       message = "Hello World"
+   request.AddJsonBody(new
+   {
+      sender = "ExampleSMS",
+      message = "Hello World",
+      recipients = new[] { new { msisdn = 4512345678 } }
    });
    var response = client.Execute(request);
 
    // On 200 OK, parse the list of SMS IDs else print error
-   if ((int) response.StatusCode == 200) {
-       var res = Newtonsoft.Json.Linq.JObject.Parse(response.Content);
-       foreach (var i in res["ids"]) {
-           Console.WriteLine(i);
-       }
-   } else if (response.ResponseStatus == RestSharp.ResponseStatus.Completed) {
+   if ((int)response.StatusCode == 200)
+   {
+      var res = Newtonsoft.Json.Linq.JObject.Parse(response.Content);
+      foreach (var i in res["ids"])
+      {
+         Console.WriteLine(i);
+      }
+   }
+   else if (response.ResponseStatus == RestSharp.ResponseStatus.Completed)
+   {
       Console.WriteLine(response.Content);
-    } else {
+   }
+   else
+   {
       Console.WriteLine(response.ErrorMessage);
-    }
-
+   }
 
 Ruby
 ~~~~
