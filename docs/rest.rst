@@ -1489,10 +1489,10 @@ label) if you do not keep track of each sms sent yourself.
 
     .. sourcecode:: bash
 
-      curl -v https://gatewayapi.com/api/usage/labels 
-      -u 'Your_API_Token_Here': 
-      -d '{"from":"2019-08-01","to":"2019-08-24"}' 
-      -H 'Content-Type: application/json' 
+      curl -v https://gatewayapi.com/api/usage/labels
+      -u 'Your_API_Token_Here':
+      -d '{"from":"2019-08-01","to":"2019-08-24"}'
+      -H 'Content-Type: application/json'
 
    **Response example**
 
@@ -1537,7 +1537,6 @@ If you need SPF on your domain, you will need to include the following in your D
    :<json string subject: The subject line of the email, tags can be used like in the message to personalise the subject.
    :<json string from: The name and email of the sender, can be just the email if no name is specified, see below for format.
    :<json string reply: The name and email of the sender, can be just the email if no name is specified, see below for format.
-   :<json string returnpath: Receive emails with bounce information.
    :<json array tags: A list of string tags, which will be replaced with the tag values for each recipient, if used remember to also add tagvalues to all recipients.
    :<json array attachments: A list of base64 encoded files to be attached to the email, described below:
    :<json string data: The base64 encoded data of the file to attach.
@@ -1898,7 +1897,7 @@ Access to this API requires a separate agreement with GatewayAPI, intended for r
 .. http:delete:: /api/vas/(int: shortcode)/(keyword)
 
     Cancel the keyword.
-    
+
     Note that your keyword will remain active on your account until
     the end of the subscribtion period.
 
