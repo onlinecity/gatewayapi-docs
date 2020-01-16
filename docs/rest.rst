@@ -1522,10 +1522,9 @@ label) if you do not keep track of each sms sent yourself.
 
 .. _email:
 
-Sending emails (beta)
+Sending emails
 ---------------------
-You can send emails through gatewayapi using our email endpoint. This endpoint
-is in private beta, contact sales@gatewayapi.com to request access to the beta.
+You can send emails through gatewayapi using our email endpoint. Contact sales@gatewayapi.com to request access.
 
 If you need SPF on your domain, you will need to include the following in your DNS SPF record: ``include:_spf.gatewayapi.com``
 
