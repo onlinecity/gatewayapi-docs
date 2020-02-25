@@ -652,7 +652,7 @@ Advanced usage
               "class": "standard",
               "message": "Hello World, regards %Firstname, --Lastname--",
               "payload": "cGF5bG9hZCBlbmNvZGVkIGFzIGI2NAo=",
-              "label": "Deathstar inc."
+              "label": "Deathstar inc.",
               "recipients": [
                   {
                       "msisdn": 1514654321,
@@ -886,8 +886,8 @@ reporting infrastructure.
              "class": "standard",
              "message": "Hello World, regards %Firstname, --Lastname--",
              "payload": null,
-             "id": 1
-             "label": "Deathstar inc."
+             "id": 1,
+             "label": "Deathstar inc.",
              "recipients": [
                  {
                      "country": "DK",
@@ -1487,7 +1487,7 @@ label) if you do not keep track of each sms sent yourself.
 
    **Request example**
 
-    .. sourcecode:: bash
+   .. sourcecode:: bash
 
       curl -v https://gatewayapi.com/api/usage/labels
       -u 'Your_API_Token_Here':
@@ -1553,8 +1553,9 @@ If you need SPF on your domain, you will need to include the following in your D
    :status 403: Ie. unauthorized ip address
    :status 422: Invalid json request body
    :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
-
-
+   
+   **Request example**
+   
    .. sourcecode:: http
 
       POST /rest/email HTTP/1.1
