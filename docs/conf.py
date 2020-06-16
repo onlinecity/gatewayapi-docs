@@ -12,8 +12,6 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
-import os
 import sphinx_rtd_theme
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -46,7 +44,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'gatewayapi.com'
-copyright = u'2019, OnlineCity'
+copyright = u'2020, OnlineCity'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
