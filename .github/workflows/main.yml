@@ -18,7 +18,7 @@ jobs:
           gcloud: ${{ secrets.GCLOUD_SERVICE_KEY }}
   deploy:
     runs-on: ubuntu-latest
-    needs: [lint,test,build]
+    needs: [build]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/checkout@v2
