@@ -1,0 +1,38 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          repository: onlinecity/action-docker-build
+          path: actions-build
+          token: ${{ secrets.GIT_DEPLOY_TOKEN }}
+      - uses: ./actions-build
+        with:
+          repository: ${{ github.repository }}
+          gcloud: ${{ secrets.GCLOUD_SERVICE_KEY }}
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [lint,test,build]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          repository: onlinecity/action-k8s-deployment
+          path: actions-deploy
+          token: ${{ secrets.GIT_DEPLOY_TOKEN }}
+      - uses: actions/checkout@v2
+        with:
+          repository: onlinecity/deployment-k8s
+          path: deploy
+          token: ${{ secrets.GIT_DEPLOY_TOKEN }}
+      - uses: ./actions-deploy
+        with:
+          repository: ${{ github.repository }}
+          token: ${{ secrets.GIT_DEPLOY_TOKEN }}
+          gcloud: ${{ secrets.GCLOUD_SERVICE_KEY }}
