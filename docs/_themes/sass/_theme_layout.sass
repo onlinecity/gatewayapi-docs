@@ -11,15 +11,20 @@ a:visited
 
 .wy-menu-horiz
   +clearfix
+
   ul, li
     display: inline-block
+
   li:hover
-    background: rgba(255,255,255,.1)
+    background: rgba(255, 255, 255, .1)
+
   li
     &.divide-left
       border-left: solid 1px hsl(0, 0%, 25%)
+
     &.divide-right
       border-right: solid 1px hsl(0, 0%, 25%)
+
   a
     height: $base-font-size * 2
     display: inline-block
@@ -28,6 +33,7 @@ a:visited
 
 .wy-menu-vertical
   width: $nav-desktop-width
+
   header, p.caption
     height: $base-font-size * 2
     display: inline-block
@@ -45,23 +51,30 @@ a:visited
 
   ul
     margin-bottom: 0
+
   li
     a
       &:hover
         color: $white
         background: transparent
+
     &.divide-top
       border-top: solid 1px hsl(0, 0%, 25%)
+
     &.divide-bottom
       border-bottom: solid 1px hsl(0, 0%, 25%)
+
     &.current
       background: transparent
+
       a
         color: $white
         border-right: solid 0px darken($menu-vertical-background-color, 20%)
         padding: $gutter / 4 $gutter * 1.5
+
         &:hover
           background: transparent
+
     code
       border: none
       background: inherit
@@ -91,11 +104,14 @@ a:visited
     border-top: solid 0px darken($menu-vertical-background-color, 20%)
     padding-left: $gutter -4px
     +font-smooth
+
     &:hover
       //background: $menu-vertical-background-color
       color: $white
+
       span.toctree-expand
         color: $menu-link-medium
+
     span.toctree-expand
       @extend .fa
       @extend .fa-minus-square-o
@@ -108,38 +124,48 @@ a:visited
   li.toctree-l1.current li.toctree-l2, li.toctree-l2.current li.toctree-l3
     > ul
       display: none
+
     &.current > ul
       display: block
+
   li.toctree-l2
     a
       color: $menu-link-color
 
     background: #1d242e
+
     &.current
       > a
         background: #1d242e
         padding: $gutter / 4 $gutter * 1.5
         color: $white
+
         &:hover
           background: #1d242e
+
       li.toctree-l3 > a
         display: block
         background: #1d242e
         padding: $gutter / 4 $gutter * 2.5
+
     a:hover span.toctree-expand
       color: $menu-link-medium
+
     span.toctree-expand
       color: $menu-link-color
-  li.toctree-l3,li.toctree-l4
+
+  li.toctree-l3, li.toctree-l4
     a
       color: $menu-link-color
 
     font-size: .9em
+
     &.current
       > a
         background: #1d242e
         padding: $gutter / 4 $gutter * 2.5
         color: $white
+
       li.toctree-l4 > a
         display: block
         background: #1d242e
@@ -149,23 +175,29 @@ a:visited
 
     a:hover span.toctree-expand
       color: $menu-link-medium
+
     span.toctree-expand
       color: $menu-link-color
+
   li.toctree-l4
     font-size: .9em
 
   li.current ul
     display: block
+
   li ul
     margin-bottom: 0
     display: none
+
   .local-toc
     li ul
       display: block
+
   li ul li a
     margin-bottom: 0
     color: $menu-link-light
     font-weight: normal
+
   a
     display: inline-block
     line-height: 18px
@@ -174,15 +206,19 @@ a:visited
     position: relative
     font-size: 90%
     color: $menu-link-light
+
     &:hover
       background-color: lighten($menu-background-color, 10%)
       cursor: pointer
+
       span.toctree-expand
         color: $menu-link-light
+
     &:active
       background-color: $menu-logo-color
       cursor: pointer
       color: $menu-link-active
+
       span.toctree-expand
         color: $menu-link-active
 
@@ -198,12 +234,14 @@ a:visited
   display: block
   color: $nav-search-color
   margin-bottom: $gutter / 2
+
   input[type=text]
     width: 100%
     border-radius: 50px
     padding: 6px 12px
     border-color: $white
     box-shadow: none
+
   img
     display: block
     margin: auto auto $gutter / 2 auto
@@ -212,6 +250,7 @@ a:visited
     background-color: $menu-logo-color
     padding: 5px
     border-radius: 100%
+
   > a, .wy-dropdown > a
     color: $nav-search-color
     font-size: 100%
@@ -220,26 +259,35 @@ a:visited
     padding: $base-line-height / 6 $base-line-height / 4
     margin-bottom: $gutter / 2
     +font-smooth
+
     &:hover
-      background: rgba(255,255,255,.1)
+      background: rgba(255, 255, 255, .1)
+
     img.logo
-      display: block  // display on its own line all the time
+      display: block
+      // display on its own line all the time
       margin: 0 auto
-      height: auto  // undo badge styling above
+      height: auto
+      // undo badge styling above
       width: auto
       border-radius: 0
-      max-width: 100%  // shrink on mobile, if appropriate
-      background: rgba(0,0,0,0)  // make hover background of parent show up properly
+      max-width: 100%
+      // shrink on mobile, if appropriate
+      background: rgba(0, 0, 0, 0)
+    // make hover background of parent show up properly
     &.icon
       img.logo
-        margin-top: 0.85em  // space it away from the title text
+        margin-top: 0.85em
+// space it away from the title text
 
 
 .wy-nav .wy-menu-vertical
   header
     color: $link-color
+
   a
     color: $text-light
+
     &:hover
       background-color: $link-color
       color: $white
@@ -250,14 +298,17 @@ a:visited
   opacity: 1
   width: 100%
   opacity: 0
+
   &.move-center
     left: 0
     right: auto
     opacity: 1
+
   &.move-left
     right: auto
     left: -100%
     opacity: 0
+
   &.move-right
     right: -100%
     left: auto
@@ -294,15 +345,18 @@ a:visited
   background-color: #1d242e
   border-bottom: 1px solid #262a32
   padding-left: 20px
+
   > a > img
+    width: 157px
     height: 60px
+
   > div.version
     margin-top: -1 * ($gutter / 4)
     margin-bottom: $gutter / 2
     font-weight: normal
     font-size: 11px
     margin-right: 20px
-    color: rgba(255,255,255,.3)
+    color: rgba(255, 255, 255, .3)
     float: right
 
 .wy-side-scroll
@@ -319,7 +373,7 @@ a:visited
   background-color: #1d242e
 
 .wy-side-scroll::-webkit-scrollbar-thumb
-  background-color: rgba(255,255,255,0.3)
+  background-color: rgba(255, 255, 255, 0.3)
 
 .wy-side-scroll::-webkit-scrollbar-button
   background-color: #7c2929
@@ -338,10 +392,12 @@ a:visited
   text-align: center
   font-size: 100%
   +clearfix
+
   a
     color: #000000
     font-weight: bold
     +font-smooth
+
   img
 
     &.mobile-logo
@@ -371,17 +427,21 @@ a:visited
   position: fixed
   width: 100%
   height: 100%
-  background: rgba(0,0,0,.2)
+  background: rgba(0, 0, 0, .2)
   display: none
   z-index: $z-index-modal - 1
+
   &.on
     display: block
+
 footer
   color: $footer-color
   font-size: 12px
   margin-bottom: 40px
+
   p
     margin-bottom: $base-line-height / 2
+
   span.commit code
     padding: 0px
     font-family: $code-font-family
@@ -398,13 +458,16 @@ footer
     margin-bottom: $base-line-height
     border-bottom: solid 1px $table_border_color
     padding-bottom: $base-line-height
+
   .search li:first-child
     border-top: solid 1px $table_border_color
     padding-top: $base-line-height
+
   .search li a
     font-size: 120%
     margin-bottom: $base-line-height / 2
     display: inline-block
+
   .context
     color: $text-medium
     font-size: 90%
@@ -461,6 +524,7 @@ footer
         opacity: 0.5
         font-size: 12px
         font-weight: bold
+
         &:hover
           opacity: 0.75
 
@@ -473,8 +537,10 @@ footer
   .menu-wrap
     margin-right: 15px
     padding-right: 15px
+
     &.menu-base
       border-right: 1px solid #e0e0e0
+
     > ul
       > li
         display: inline-block
@@ -491,9 +557,9 @@ footer
           color: #000000
           opacity: 0.5
           letter-spacing: 0.01em
+
           &:hover
             opacity: 0.75
-
 
 
 .wy-breadcrumbs
@@ -512,14 +578,18 @@ footer
   text-transform: uppercase
   line-height: 28px
   padding: 0 17px
+
   &:focus
     background: darken($class-color, 10%)
+
   &:hover
     background: darken($class-color, 10%)
+
   &:active
     background: darken($class-color, 10%)
     line-height: 28px
     padding: 0 17px
+
   &:active
     background: darken($class-color, 10%)
 
@@ -537,13 +607,16 @@ footer
       left: -$nav-desktop-width
     @else
       right: -$nav-desktop-width
+
     &.shift
       width: 85%
       left: 0
   .wy-side-logo
     overflow: hidden
+
     .version
       display: none
+
     > a > img
       float: left
       height: 60px
@@ -557,9 +630,11 @@ footer
     width: auto
   .wy-nav-content-wrap
     margin-left: 0
+
     .wy-nav-content
       padding: $gutter
       margin-top: 0px
+
     &.shift
       position: fixed
       min-width: 100%
