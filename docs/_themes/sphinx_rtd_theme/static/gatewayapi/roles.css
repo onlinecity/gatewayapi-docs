@@ -1,0 +1,15 @@
+body:not(.is-gadmin) .need-gadmin {
+    display: none !important;
+}
+
+body.accountrole-admin .need-owner, body.accountrole-technician .need-owner, body.accountrole-viewer .need-owner {
+    display: none !important;
+}
+
+body.accountrole-technician .need-admin, body.accountrole-viewer .need-admin {
+    display: none !important;
+}
+
+body.accountrole-viewer .need-technician {
+    display: none !important;
+}
