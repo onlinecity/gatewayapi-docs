@@ -1,0 +1,260 @@
+{# TEMPLATE VAR SETTINGS #}
+{%- set url_root = pathto('', 1) %}
+{%- if url_root == '#' %}{% set url_root = '' %}{% endif %}
+{%- if not embedded and docstitle %}
+{%- set titlesuffix = " &mdash; "|safe + docstitle|e %}
+{%- else %}
+{%- set titlesuffix = "" %}
+{%- endif %}
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    {{ metatags }}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block htmltitle %}
+    <title>{{ title|striptags|e }}{{ titlesuffix }}</title>
+    {% endblock %}
+
+    {# FAVICON #}
+    {% if favicon %}
+    <link rel="shortcut icon" href="{{ pathto('_static/' + favicon, 1) }}"/>
+    {% endif %}
+
+    {# CSS #}
+
+    {# OPENSEARCH #}
+    {% if not embedded %}
+    {% if use_opensearch %}
+    <link rel="search" type="application/opensearchdescription+xml" title="{% trans docstitle=docstitle|e %}Search within {{ docstitle }}{% endtrans %}" href="{{ pathto('_static/opensearch.xml', 1) }}"/>
+    {% endif %}
+
+    {% endif %}
+
+    {# RTD hosts this file, so just load on non RTD builds #}
+    {% if not READTHEDOCS %}
+    <link rel="stylesheet" href="{{ pathto('_static/' + style, 1) }}" type="text/css" />
+    {% endif %}
+
+    {% for cssfile in css_files %}
+    <link rel="stylesheet" href="{{ pathto(cssfile, 1) }}" type="text/css" />
+    {% endfor %}
+
+    {% for cssfile in extra_css_files %}
+    <link rel="stylesheet" href="{{ pathto(cssfile, 1) }}" type="text/css" />
+    {% endfor %}
+
+    <link rel="stylesheet" href="/icons/_/icons.css" />
+    <link rel="stylesheet" href="{{ pathto('_static/gatewayapi/profile.css', 1) }}" />
+    <link rel="stylesheet" href="{{ pathto('_static/gatewayapi/roles.css', 1) }}" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+
+    {%- block linktags %}
+    {%- if hasdoc('about') %}
+    <link rel="author" title="{{ _('About these documents') }}"
+          href="{{ pathto('about') }}"/>
+    {%- endif %}
+    {%- if hasdoc('genindex') %}
+    <link rel="index" title="{{ _('Index') }}"
+          href="{{ pathto('genindex') }}"/>
+    {%- endif %}
+    {%- if hasdoc('search') %}
+    <link rel="search" title="{{ _('Search') }}" href="{{ pathto('search') }}"/>
+    {%- endif %}
+    {%- if hasdoc('copyright') %}
+    <link rel="copyright" title="{{ _('Copyright') }}" href="{{ pathto('copyright') }}"/>
+    {%- endif %}
+    <link rel="top" title="{{ docstitle|e }}" href="{{ pathto('index') }}"/>
+    {%- if parents %}
+    <link rel="up" title="{{ parents[-1].title|striptags|e }}" href="{{ parents[-1].link|e }}"/>
+    {%- endif %}
+    {%- if next %}
+    <link rel="next" title="{{ next.title|striptags|e }}" href="{{ next.link|e }}"/>
+    {%- endif %}
+    {%- if prev %}
+    <link rel="prev" title="{{ prev.title|striptags|e }}" href="{{ prev.link|e }}"/>
+    {%- endif %}
+    {%- endblock %}
+    {%- block extrahead %} {% endblock %}
+
+    <link rel="shortcut icon" href="{{ pathto('_static/img/favicon.ico', 1) }}" type="image/x-icon">
+    <link rel="icon" href="{{ pathto('_static/img/favicon.ico', 1) }}" type="image/x-icon">
+
+    {# Keep modernizr in head - http://modernizr.com/docs/#installing #}
+    <script src="{{ pathto('_static/js/modernizr.min.js', 1) }}"></script>
+
+    <!-- Google Tag Manager -->
+    <script>
+      if (!localStorage.getItem('tracking_disabled')) {
+        (function (w, d, s, l, i) {
+          w[l] = w[l] || [];
+          w[l].push({
+            'gtm.start': new Date().getTime(), event: 'gtm.js'
+          });
+          var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+          j.async = true;
+          j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+          f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-KV8W3HS');
+      }
+    </script>
+    <!-- End Google Tag Manager -->
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+{% include "header.html" %}
+
+<div class="wy-grid-for-nav">
+
+    {# SIDE NAV, TOGGLES ON MOBILE #}
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+        <div class="wy-side-logo">
+            <a href="/docs/">
+              <img src="{{ pathto('_static/img/logo_white_landscape.svg', 1) }}" class="logo">
+            </a>
+            {% if theme_display_version %}
+            {%- set nav_version = version %}
+            {% if READTHEDOCS and current_version %}
+            {%- set nav_version = current_version %}
+            {% endif %}
+            {% if nav_version %}
+            <div class="version">
+                {{ nav_version }}
+            </div>
+            {% endif %}
+            {% endif %}
+        </div>
+        <div class="wy-side-scroll">
+            <div class="wy-side-nav-search">
+                {% block sidebartitle %}
+
+                {% include "searchbox.html" %}
+
+                {% endblock %}
+            </div>
+
+            <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                {% block menu %}
+                {% set toctree = toctree(maxdepth=4, collapse=theme_collapse_navigation, includehidden=True) %}
+                {% if toctree %}
+                {{ toctree }}
+                {% else %}
+                <!-- Local TOC -->
+                <div class="local-toc">{{ toc }}</div>
+                {% endif %}
+                {% endblock %}
+
+                <div class="sidewide-nav">
+                    <p class="caption"><span class="caption-text">Your Profile</span></p>
+                    <ul class="menu">
+                        <li class="profile hidden">
+                            <a class="" href="https://gatewayapi.com/app/profile/"><i class="fa fa-cog"></i> Profile</a>
+                        </li>
+                        <li class="login">
+                            <a class="" href="https://gatewayapi.com/#login">Login</a>
+                        </li>
+                        <li class="dashboard hidden">
+                            <a href="https://gatewayapi.com/app/"><i class="fa fa-tachometer"></i> Dashboard</a>
+                        </li>
+                    </ul>
+                    <p class="caption"><span class="caption-text">Menu</span></p>
+                    <ul class="menu">
+                        <li>
+                            <a href="https://gatewayapi.com/#prices">Prices</a>
+                        </li>
+                        <li class="">
+                            <a href="https://gatewayapi.com/#features">Features</a>
+                        </li>
+                        <li>
+                            <a href="https://status.gatewayapi.com/">Status</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+        {# MOBILE NAV, TRIGGLES SIDE NAV ON TOGGLE #}
+        <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+            <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+            <img src="{{ pathto('_static/img/logo_color_landscape.svg', 1) }}" class="mobile-logo" width="157" height="60">
+        </nav>
+
+
+        {# PAGE CONTENT #}
+        <div class="wy-nav-content">
+            <div class="rst-content">
+                {% include "breadcrumbs.html" %}
+                <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+                    <div itemprop="articleBody">
+                        {% block body %}{% endblock %}
+                    </div>
+                </div>
+                {% include "footer.html" %}
+            </div>
+        </div>
+
+    </section>
+
+</div>
+{% include "versions.html" %}
+
+{% if not embedded %}
+
+<script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:'{{ url_root }}',
+        VERSION:'{{ release|e }}',
+        COLLAPSE_INDEX:false,
+        FILE_SUFFIX:'{{ '' if no_search_suffix else file_suffix }}',
+        HAS_SOURCE:  {{ has_source|lower }}
+    };
+</script>
+{%- for scriptfile in script_files %}
+<script type="text/javascript" src="{{ pathto(scriptfile, 1) }}"></script>
+{%- endfor %}
+
+{% endif %}
+
+{# RTD hosts this file, so just load on non RTD builds #}
+{% if not READTHEDOCS %}
+<script type="text/javascript" src="{{ pathto('_static/js/theme.js', 1) }}"></script>
+{% endif %}
+
+<script type="text/javascript" src="{{ pathto('_static/js/lscache.min.js', 1) }}"></script>
+<script type="text/javascript" src="{{ pathto('_static/js/app.js', 1) }}"></script>
+
+{# STICKY NAVIGATION #}
+{% if theme_sticky_navigation %}
+<script type="text/javascript">
+    jQuery(function () {
+        SphinxRtdTheme.StickyNav.enable();
+    });
+</script>
+{% endif %}
+
+{%- block footer %} {% endblock %}
+
+<!-- Chatlio -->
+<script type="text/javascript">
+ var _chatlio=_chatlio||[];
+!function(){var t=document.getElementById("chatlio-widget-embed");if(t&&window.React&&_chatlio.init)return void _chatlio.init(t,React);for(var e=function(t){return function(){_chatlio.push([t].concat(arguments))}},i=["configure","identify","track","show","hide","isShown","isOnline"],a=0;a<i.length;a++)_chatlio[i[a]]||(_chatlio[i[a]]=e(i[a]));var n=document.createElement("script"),c=document.getElementsByTagName("script")[0];n.id="chatlio-widget-embed",n.src="https://w.chatlio.com/w.chatlio-widget.js",n.async=!0,n.setAttribute("data-embed-version","2.0");
+
+  n.setAttribute("data-widget-id","5c69c12f-2814-466f-6e24-83e8cbd910b7");
+  n.setAttribute("data-start-hidden", false);
+  c.parentNode.insertBefore(n,c);
+ }();
+</script>
+
+</body>
+</html>
