@@ -57,8 +57,11 @@ Your sender ID is controlled by the default sender setting found under
 SMS length
 ~~~~~~~~~~
 
-Note that emails with long conversation threads or long signatures will result in
-long - and expensive - SMSes. So use this feature with care.
+Smses send on this API is limited to 20 sms parts, equal to 3060 characters, this
+is a measure to try and prevent unintenionally long smses send, when using email
+clients like e.g. Gmail, where the mails are kept as conversation threads,
+where responding to the original email, will keep the entrie conversation in
+the email.
 
 SMS to Email
 ------------
