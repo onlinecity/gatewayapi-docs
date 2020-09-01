@@ -86,24 +86,7 @@
     {# Keep modernizr in head - http://modernizr.com/docs/#installing #}
     <script src="{{ pathto('_static/js/modernizr.min.js', 1) }}"></script>
 
-    <!-- Google Tag Manager -->
-    <script>
-      if (!localStorage.getItem('tracking_disabled')) {
-        (function (w, d, s, l, i) {
-          w[l] = w[l] || [];
-          w[l].push({
-            'gtm.start': new Date().getTime(), event: 'gtm.js'
-          });
-          var f = d.getElementsByTagName(s)[0],
-            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
-          j.async = true;
-          j.src =
-            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-          f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-KV8W3HS');
-      }
-    </script>
-    <!-- End Google Tag Manager -->
+    <script src="{{ pathto('_static/js/t.js', 1) }}"></script>
 
 </head>
 
