@@ -2,9 +2,9 @@ function getCookie(key) {
   try {
     var result = '';
     if (document.cookie) {
-      const beginpos = document.cookie.indexOf(key) + key.length + 1;
-      if (beginpos !== -1) {
-        const endpos = document.cookie.indexOf(';', beginpos);
+      if (document.cookie.indexOf(key) !== -1) {
+        var beginpos = document.cookie.indexOf(key) + key.length + 1;
+        var endpos = document.cookie.indexOf(';', beginpos);
         result = document.cookie.substring(beginpos, endpos !== -1 ? endpos : document.cookie.length);
       }
     }
