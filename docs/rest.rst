@@ -649,7 +649,6 @@ Advanced usage
         {
             "class": "premium",
             "message": "Hello World, regards %Firstname%, %Lastname%",
-            "payload": "cGF5bG9hZCBlbmNvZGVkIGFzIGI2NAo=",
             "label": "Deathstar",
             "recipients": [
                 {
