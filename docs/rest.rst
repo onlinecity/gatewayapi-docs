@@ -630,9 +630,8 @@ Advanced usage
 
    **Fully fledged request**
 
-   This is a bit of contrived example since ``message`` and ``payload`` can't
-   both be set at the same time, but it shows every possible field in the API
-   like multiple recipients to the same message and multiple messages in the same payload.
+   This is a bit of contrived example since, but it shows most of the possible fields
+   in the API like multiple recipients to the same message using tags and various extra options.
 
    .. sourcecode:: http
 
@@ -647,53 +646,44 @@ Advanced usage
       Accept: application/json, text/javascript
       Content-Type: application/json
 
-      [
-          {
-              "class": "standard",
-              "message": "Hello World, regards %Firstname, --Lastname--",
-              "payload": "cGF5bG9hZCBlbmNvZGVkIGFzIGI2NAo=",
-              "label": "Deathstar inc.",
-              "recipients": [
-                  {
-                      "msisdn": 1514654321,
-                      "tagvalues": [
-                          "Vader",
-                          "Darth"
-                      ]
-                  },
-                  {
-                      "msisdn": 1514654322,
-                      "tagvalues": [
-                          "Maul",
-                          "Darth"
-                      ]
-                  }
-              ],
-              "sender": "Test Sender",
-              "sendtime": 915148800,
-              "tags": [
-                  "--Lastname--",
-                  "%Firstname"
-              ],
-              "userref": "1234",
-              "priority": "NORMAL",
-              "validity_period": 86400,
-              "encoding": "UTF8",
-              "destaddr": "MOBILE",
-              "udh": "BQQLhCPw",
-              "callback_url": "https://example.com/cb?foo=bar"
-          },
-          {
-              "message": "Hello World",
-              "recipients": [
-                  { "msisdn": 4512345678 }
-              ]
-          }
-      ]
+        {
+            "class": "premium",
+            "message": "Hello World, regards %Firstname%, %Lastname%",
+            "payload": "cGF5bG9hZCBlbmNvZGVkIGFzIGI2NAo=",
+            "label": "Deathstar",
+            "recipients": [
+                {
+                    "msisdn": 1514654321,
+                    "tagvalues": [
+                        "Vader",
+                        "Darth"
+                    ]
+                },
+                {
+                    "msisdn": 1514654322,
+                    "tagvalues": [
+                        "Maul",
+                        "Darth"
+                    ]
+                }
+            ],
+            "sender": "Empire",
+            "sendtime": 915148800,
+            "tags": [
+                "%Lastname%",
+                "%Firstname%"
+            ],
+            "userref": "1234",
+            "priority": "VERY_URGENT",
+            "validity_period": 86400,
+            "encoding": "UTF8",
+            "destaddr": "MOBILE",
+            "callback_url": "https://example.com/cb?foo=bar"
+        }
 
    **Example response**
 
-   If the request succeed, the internal message identifiers are returned to
+   If the request succeed, the internal message identifier are returned to
    the caller like this:
 
    .. sourcecode:: http
@@ -703,14 +693,14 @@ Advanced usage
 
      {
          "ids": [
-             421332671, 4421332672
+             421332671
          ],
          "usage": {
              "countries": {
-                 "DK": 3
+                 "DK": 2
              },
              "currency": "DKK",
-             "total_cost": 0.36
+             "total_cost": 0.30
          }
      }
 
@@ -1553,9 +1543,9 @@ If you need SPF on your domain, you will need to include the following in your D
    :status 403: Ie. unauthorized ip address
    :status 422: Invalid json request body
    :status 500: If the request can't be processed due to an exception. The exception details is returned in the JSON body
-   
+
    **Request example**
-   
+
    .. sourcecode:: http
 
       POST /rest/email HTTP/1.1
