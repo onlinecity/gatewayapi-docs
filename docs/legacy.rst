@@ -139,7 +139,7 @@ message. You can use this sessionid to track the message in your internal
 systems.
 
 When calling your service, we will perform a GET request, ie.
-https://example.com/callback?sessionid=4587654321:1234&statuscode=1
+``https://example.com/callback?sessionid=4587654321:1234&statuscode=1``
 
 Beware that if you specify any query params in your callbackurl they will not
 be returned to you, only the sessionid and statuscode params will be included.
@@ -158,7 +158,7 @@ in the SMS, known as the keyword. The SMS is then routed to the customer who
 has an active subscription for this keyword.
 
 We then send a HTTP GET request to the URL configured for that keyword, ie.
-https://example.com/mosms?sender=4512345678&smsc=unknown&sessionid=4512345678%3A9379401&appnr=1204&keyword=test
+``https://example.com/mosms?sender=4512345678&smsc=unknown&sessionid=4512345678%3A9379401&appnr=1204&keyword=test``
 
 You must respond with a very specific body, otherwise we'll treat your response
 as a failure and re-attempt delivery of the MO SMS. It's important that the
