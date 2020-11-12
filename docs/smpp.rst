@@ -5,14 +5,15 @@ We offer SMPP connection for select customers. Contact sales@gatewayapi.com to g
 
 Connection
 ----------
-Use the following to connect
+Use the following to connect. We recommend to connect to two hosts. When we do scheduled maintainence, only one host is restarted at a time. By keeping a connection to two hosts, constant
+connectivity can be achieved.
 
 ================= =================================
-Host              smpp1.gatewayapi.com
-Port              7777
-Port TLS          7778
+Host              a.smpp.gatewayapi.com
+Host              b.smpp.gatewayapi.com
+Port              2775, 7777
+Port TLS          7778, 8775
 Bind type         Transceiver or transmitter and receiver.
-Maximum sessions  1 transceiver or 1 transmitter/receiver.
 ================= =================================
 
 Supported SMPP commands
@@ -39,20 +40,53 @@ enquire_link            0x00000015
 enquire_link_resp       0x80000015
 ======================  ==========
 
-bind_receiver, bind_transmitter, bind_transceiver
--------------------------------------------------
-Multiple sessions are supported but must be enabled in SMPP server.
+Delivery reports
+----------------
+Connect with at least one transceiver or receiver to receive delivery reports. A maximum of 25.000 unacknowledged reports will be kept for 48 hours.
 
-*Note* that only first active session binded as transceiver or receiver will receive delivery receipts.
+The delivery report format is as follows:
 
-======== ================= ===================
-Type     Field             Description
-======== ================= ===================
-COctet   system_id         Account information
-COctet   password          Account information
-COctet   system_type       Empty or "EX"
-Integer  interface_version 0x33 or 0x34
-Integer  addr_ton          Ignored
-Integer  addr_npi          Ignored
-COctet   address_range     Ignored
-======== ================= ===================
+    id:{message_id} sub:{message_sub} dlvrd:{message_dlvrd}
+
+    submit date:{message_submit_date} done date:{message_done_date}
+
+    stat:{message_stat} err:{message_err}
+
+Following status types:
+
+* `ENROUTE`
+* `DELIVRD`
+* `EXPIRED`
+* `UNDELIV`
+* `ACCEPTD`
+* `UNKNOWN`
+* `REJECTD`
+
+
+Coding schemes
+----------------
+
+Following DCS values are supported
+
+===== ====================
+DCS   Encoding
+===== ====================
+0     IA5 / GSM7
+3     Latin1 / ISO-8859-1
+8     UCS2
+===== ====================
+
+
+TLV fields
+----------------
+
+We support the following common TLV fields for `submit_sm` as well as one our own custom for use with message classes.
+
+======== ======================= ======== ========================
+Tag      Name                    Size     Description
+======== ======================= ======== ========================
+0x0005   dest_addr_subunit       1 byte   For "flash" sms
+0x0204   user_message_reference  2 bytes  User assigned reference for delivery reports
+0x0424   message_payload         1 byte   For sending messages longer than 255 octets
+0x2900   message_class           octet    To send with a specific GatewayAPI messageclass
+======== ======================= ======== ========================
