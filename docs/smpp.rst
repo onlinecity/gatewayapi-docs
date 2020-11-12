@@ -54,16 +54,13 @@ The delivery report format is as follows:
 
 Following status types:
 
-===========
-===========
-ENROUTE
-DELIVRD
-EXPIRED
-UNDELIV
-ACCEPTD
-UNKNOWN
-REJECTD
-===========
+* ENROUTE
+* DELIVRD
+* EXPIRED
+* UNDELIV
+* ACCEPTD
+* UNKNOWN
+* REJECTD
 
 
 Coding schemes
