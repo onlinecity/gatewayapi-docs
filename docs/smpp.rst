@@ -11,8 +11,8 @@ connectivity can be achieved.
 ================= =================================
 Host              a.smpp.gatewayapi.com
 Host              b.smpp.gatewayapi.com
-Port              2775, 7777
-Port TLS          7778, 8775
+Port              2775
+Port TLS          8775
 Bind type         Transceiver or transmitter and receiver.
 ================= =================================
 
