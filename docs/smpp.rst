@@ -46,21 +46,24 @@ Connect with at least one transceiver or receiver to receive delivery reports. A
 
 The delivery report format is as follows:
 
+.. code-block:: none
+
     id:{message_id} sub:{message_sub} dlvrd:{message_dlvrd}
-
     submit date:{message_submit_date} done date:{message_done_date}
-
     stat:{message_stat} err:{message_err}
 
 Following status types:
 
-* `ENROUTE`
-* `DELIVRD`
-* `EXPIRED`
-* `UNDELIV`
-* `ACCEPTD`
-* `UNKNOWN`
-* `REJECTD`
+===========
+===========
+ENROUTE
+DELIVRD
+EXPIRED
+UNDELIV
+ACCEPTD
+UNKNOWN
+REJECTD
+===========
 
 
 Coding schemes
