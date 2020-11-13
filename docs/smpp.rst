@@ -5,8 +5,7 @@ We offer SMPP connection for select customers. Contact sales@gatewayapi.com to g
 
 Connection
 ----------
-Use the following to connect. We recommend to connect to two hosts. When we do scheduled maintainence, only one host is restarted at a time. By keeping a connection to two hosts, constant
-connectivity can be achieved.
+Use the following to connect. We recommend to connect to two hosts. When we do scheduled maintainence, only one host is restarted at a time. By keeping a connection to two hosts, constant connectivity can be achieved.
 
 ================= =================================
 Host              a.smpp.gatewayapi.com
@@ -40,7 +39,7 @@ enquire_link            0x00000015
 enquire_link_resp       0x80000015
 ======================  ==========
 
-We currently do not support `Schedule Delivery Time`
+We currently do not support `Schedule Delivery Time` on `submit_sm`.
 
 Delivery reports
 ----------------
@@ -84,11 +83,11 @@ TLV fields
 
 We support the following common TLV fields for `submit_sm` as well as one our own custom for use with message classes.
 
-======== ======================= ======== ========================
-Tag      Name                    Size     Description
-======== ======================= ======== ========================
-0x0005   dest_addr_subunit       1 byte   For "flash" sms
-0x0204   user_message_reference  2 bytes  User assigned reference for delivery reports
-0x0424   message_payload         1 byte   For sending messages longer than 255 octets
-0x2900   message_class           octet    To send with a specific GatewayAPI messageclass
-======== ======================= ======== ========================
+======== ======================= ============= ========================
+Tag      Name                    Size          Description
+======== ======================= ============= ========================
+0x0005   dest_addr_subunit       1 byte        For "flash" sms
+0x0204   user_message_reference  2 bytes       User assigned reference for delivery reports
+0x0424   message_payload         1 byte        For sending messages longer than 255 octets
+0x2900   message_class           octetstring   To send with a specific GatewayAPI messageclass
+======== ======================= ============= ========================
