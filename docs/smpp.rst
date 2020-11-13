@@ -40,6 +40,8 @@ enquire_link            0x00000015
 enquire_link_resp       0x80000015
 ======================  ==========
 
+We currently do not support `Schedule Delivery Time`
+
 Delivery reports
 ----------------
 Connect with at least one transceiver or receiver to receive delivery reports. A maximum of 25.000 unacknowledged reports will be kept for 48 hours.
