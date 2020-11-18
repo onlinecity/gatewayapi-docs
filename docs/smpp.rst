@@ -47,6 +47,8 @@ Delivery reports
 ----------------
 Connect with at least one transceiver or receiver to receive delivery reports. A maximum of 25.000 unacknowledged reports will be kept for 48 hours.
 
+The order of the delivery reports are not guaranteed, so in some cases, you may get an `ENROUTE` before a `DELIVRD`.
+
 The delivery report format is as in the following examples:
 
 .. code-block:: none
