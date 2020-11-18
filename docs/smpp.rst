@@ -50,11 +50,9 @@ Connect with at least one transceiver or receiver to receive delivery reports. A
 The delivery report format is as in the following examples:
 
 .. code-block:: none
+
    id:1390125333 sub:001 dlvrd:000 submit date:2011181054 done date:2011181054 stat:DELIVRD err:000 text:user_message_reference
-
    id:1390125333 sub:001 dlvrd:000 submit date:2011181145 done date:2011181145 stat:UNDELIV err:019 text:user_message_reference
-
-
 
 The fields `sub` and `dlvrd` can be ignored.
 
