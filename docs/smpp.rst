@@ -82,8 +82,12 @@ Following DCS values are supported
 DCS   Encoding
 ===== ====================
 0     IA5 / GSM7
+2     Binary
 3     Latin1 / ISO-8859-1
+4     Binary
 8     UCS2
+24    UCS2 (flash)
+240   GSM7 (flash)
 ===== ====================
 
 
