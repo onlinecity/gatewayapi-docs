@@ -1639,7 +1639,7 @@ using pip, simply do ``pip install requests_oauthlib``.
 
 
 .. _`OAuth 1.0a`: http://tools.ietf.org/html/rfc5849
-.. _`two-legged`: http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/2/spec.html
+.. _`two-legged`: https://dzone.com/articles/2-legged-oauth-oauth-10-and-20
 .. _`HTTP Basic Auth`: http://tools.ietf.org/html/rfc1945#section-11.1
 .. _`OAuth Authorization header`: http://tools.ietf.org/html/rfc5849#section-3.5.1
 .. _`Requests-OAuthlib`: https://requests-oauthlib.readthedocs.org/
