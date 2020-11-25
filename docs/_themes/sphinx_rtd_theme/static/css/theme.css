@@ -3833,15 +3833,15 @@ p {
 }
 
 h1 {
-    font-size: 175%;
+    font-size: 30px;
 }
 
 h2, .rst-content .toctree-wrapper p.caption {
-    font-size: 150%;
+    font-size: 24px;
 }
 
 h3 {
-    font-size: 125%;
+    font-size: 20px;
 }
 
 h4 {

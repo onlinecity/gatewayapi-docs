@@ -18,6 +18,9 @@
     <title>{{ title|striptags|e }}{{ titlesuffix }}</title>
     {% endblock %}
 
+    <meta name="description" content="Read the complete documentation for our REST API, Email to/from SMS, Kannel API, SMPP and HLR-lookup">
+    <meta name="keywords" content="sms, smsapi, gateway, smsgateway">
+
     {# FAVICON #}
     {% if favicon %}
     <link rel="shortcut icon" href="{{ pathto('_static/' + favicon, 1) }}"/>
