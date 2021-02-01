@@ -1527,17 +1527,13 @@ If you need SPF on your domain, you will need to include the following in your D
    :<json string reply: The name and email of the sender, can be just the email if no name is specified, see below for format.
    :<json string callback_url: Callback URL to get status reports.
    :<json string userref: Add your own custom reference to be passed back to the provided callback URL.
+   :<json array tags: A list of string tags, which will be replaced with the tag values for each recipient, if used remember to also add tagvalues to all recipients.
    :<json array recipients: list of email addresses to receive the email, described below:
    :<jsonarr string address: The recipient email address.
    :<jsonarr string name: The name of the recipient shown in the email client.
    :<jsonarr array tagvalues: A list of string values corresponding to the tags in the email. The order and amount of tag values must exactly match the tags.
    :<jsonarr array cc: A list of cc recipients, taks an address and optionally a name of the recipient.
    :<jsonarr array bcc: A list of cc recipients, taks an address and optionally a name of the recipient.
-   :<json array tags: A list of string tags, which will be replaced with the tag values for each recipient, if used remember to also add tagvalues to all recipients.
-   :<json array attachments: A list of base64 encoded files to be attached to the email, described below:
-   :<jsonarr string data: The base64 encoded data of the file to attach.
-   :<jsonarr string filename: The name of the file attached to the email.
-   :<jsonarr string mimetype: The mimetype of the file, eg. text/csv.
    :status 200: Returns a dict with an array of message IDs and a dictionary with usage information on success
    :status 400: Ie. invalid arguments, details in the JSON body
    :status 401: Ie. invalid API key or signature
@@ -1565,13 +1561,18 @@ If you need SPF on your domain, you will need to include the following in your D
           "plaintext": "Hello %firsname %surname %target is about to be removed.",
           "subject": "Annihilation: %target",
           "from": "Darth Vader <darth@example.com>",
-          "returnpath": "bounce@example.com",
+          "reply": "bounce@example.com",
           "tags": ["%firstname", "%surname", '%target'],
           "recipients": [
               {"address": "l.organa@example.com", "name": "Leia Organa", "tagvalues": ["Leia", "Organa", "Alderaan"], "cc": [{"address": "h.solo@example.com", "name": "Han Solo"}], "bcc": [{"address": "chewie@example.com", "name": "Chewbacca"}]},
               {"address": "l.skywalker@example.com", "name": "Luke Skywalker", "tagvalues": ["Luke", "Skywalker", "Alderaan"] }
           ]
-      }
+          "attachments": [{
+            "data": "/9j/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCg"
+                    "sOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/yQALCAABAAEBAREA/8wABgAQEAX/2gAIAQEA"
+                    "AD8A0s8g/9k=",
+            "filename": "kyber.jpeg", "mimetype": "image/jpeg"}]
+          }
 
 
    **Example response**
@@ -1595,6 +1596,16 @@ If you need SPF on your domain, you will need to include the following in your D
            }
 
        }
+
+If you want to send attachments, encode them as base64 add the following to the payload. The maximum *total* size for attachments is 5MB.
+
+.. http:post:: /rest/email
+   :synopsis: Add attachments.
+
+   :<json array attachments: A list of base64 encoded files to be attached to the email, described below:
+   :<jsonarr string data: The base64 encoded data of the file to attach.
+   :<jsonarr string filename: The name of the file attached to the email.
+   :<jsonarr string mimetype: The mimetype of the file, eg. text/csv.
 
 
 Email code examples
