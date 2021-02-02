@@ -1608,6 +1608,60 @@ If you want to send attachments, encode them as base64 add the following to the 
    :<jsonarr string mimetype: The mimetype of the file, eg. text/csv.
 
 
+Email status callback
+^^^^^^^^^^^^^^^^^^^
+If you add a callback url to your email request, you will receive a callback with the following JSON payload. For more information about callbacks, see the `Webhooks`_  section.
+
+
+.. http:post:: /example/callback
+   :noindex:
+
+   Example of how our request to you could look like.
+
+   :<json integer id: The ID of the email this notification concerns
+   :<json integer time: The UNIX Timestamp for the delivery status event
+   :<json string email_address: The email address of the recipient
+   :<json string status: One of the states below, in all-caps, ie. DELIVERED
+   :<json string userref: If you specified a reference when sending the message, it's returned to you
+   :<json string details: If available, will contain extra information about the email with output from the SMTP server.
+   :<json string callback_url: The callback url provided
+   :status 200: If you reply with a 2xx code, we will consider the status delivered successfully.
+   :status 500: If we get a code >= 300, we will re-attempt delivery at a later time.
+
+   **Callback example**
+
+   .. sourcecode:: http
+
+      POST /example/callback HTTP/1.1
+      Host: example.com
+      Accept: */*
+      Content-Type: application/json
+
+      {
+          "id": 1000001,
+          "time": 1450000000,
+          "email_address": "example@test.com",
+          "status": "DELIVERED",
+          "userref": "foobar",
+          "details": "250 2.0.0 OK",
+          "callback_url": "https://example.com/example/callback",
+      }
+
+The status field can be of the follwing values.
+
+
+============= =========================================
+Status        Description
+============= =========================================
+PROCESSSED    The email has been successfully received by the system and is ready to be sent
+DELIVERED     The email was successfully delivered to the recipients inbox.
+DEFERRED      The email is delayed and will try to be sent at a later point. This typically happens if the recipients mailserver has a temporary issue.
+BOUNCED       The email could not be delivered. Typically when the address is unknown at the server.
+BLOCKED       The email has been blocked by the server.
+============= =========================================
+
+Depending on the error, the states `BLOCKED` and `BOUNCED` will have more information in the `details` field.
+
 Email code examples
 ^^^^^^^^^^^^^^^^^^^
 Code examples for sending emails.
