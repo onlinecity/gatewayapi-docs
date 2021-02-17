@@ -7,6 +7,8 @@ Connection
 ----------
 Use the following to connect. We recommend to connect to two hosts. When we do scheduled maintainence, only one host is restarted at a time. By keeping a connection to two hosts, constant connectivity can be achieved.
 
+You can connect as a transceiver/receiver more than once. Delivery reports will be distributed evenly among your binds, each report only through one bind.
+
 ================= =================================
 Host              a.smpp.gatewayapi.com
 Host              b.smpp.gatewayapi.com
@@ -45,15 +47,22 @@ Delivery reports
 ----------------
 Connect with at least one transceiver or receiver to receive delivery reports. A maximum of 25.000 unacknowledged reports will be kept for 48 hours.
 
-The delivery report format is as follows:
+The order of the delivery reports are not guaranteed, so in some cases, you may get an `ENROUTE` before a `DELIVRD`.
+
+The delivery report format is as in the following examples:
 
 .. code-block:: none
 
-    id:{message_id} sub:{message_sub} dlvrd:{message_dlvrd}
-    submit date:{message_submit_date} done date:{message_done_date}
-    stat:{message_stat} err:{message_err}
+   id:1390125333 sub:001 dlvrd:000 submit date:2011181054 done date:2011181054 stat:DELIVRD err:000 text:user_message_reference
+   id:1390125333 sub:001 dlvrd:000 submit date:2011181145 done date:2011181145 stat:UNDELIV err:019 text:user_message_reference
 
-Following status types:
+The fields `sub` and `dlvrd` can be ignored.
+
+The `text` is the first 20 characters of the `user_message_reference` TLV if submitted with `submit_sm`. The full reference is added in the TLV as well.
+
+The `err` field is a base 10 representation of our error codes listed in :ref:`smserror`. Since we only have three digits available we take a SMS error code like 0x107E, keep the 07E and format in base 10 to 126. If you need to convert back, simply add 0x1000 to the SMPP error code, and format as hex.
+
+The `stat` field is the following status types:
 
 * ENROUTE
 * DELIVRD
@@ -74,7 +83,10 @@ DCS   Encoding
 ===== ====================
 0     IA5 / GSM7
 3     Latin1 / ISO-8859-1
+4     Binary
 8     UCS2
+24    UCS2 (flash)
+240   GSM7 (flash)
 ===== ====================
 
 

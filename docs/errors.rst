@@ -93,6 +93,7 @@ failures.
 ======= ====== =============================================
 Group   Code   Description
 ======= ====== =============================================
+HLR     0x1001 Unspecified delivery error
 HLR     0x1010 Unknown subscriber
 HLR     0x1011 Call barred
 HLR     0x1012 Teleservice not provisioned
@@ -200,4 +201,7 @@ SP      0x1091 Network time-out
 SP      0x1092 Operation barred - insufficient funds
 SP      0x1093 Illegal mobile subscriber - blocked
 SP      0x1094 Refunded by network operator
+GWAPI   0x1902 Messageclass not configured
+GWAPI   0x1903 Link not whitelisted
+GWAPI   0x1904 Message filtered by content
 ======= ====== =============================================

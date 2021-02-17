@@ -1525,17 +1525,15 @@ If you need SPF on your domain, you will need to include the following in your D
    :<json string subject: The subject line of the email, tags can be used like in the message to personalise the subject.
    :<json string from: The name and email of the sender, can be just the email if no name is specified, see below for format.
    :<json string reply: The name and email of the sender, can be just the email if no name is specified, see below for format.
+   :<json string callback_url: Callback URL to get status reports.
+   :<json string userref: Add your own custom reference to be passed back to the provided callback URL.
    :<json array tags: A list of string tags, which will be replaced with the tag values for each recipient, if used remember to also add tagvalues to all recipients.
-   :<json array attachments: A list of base64 encoded files to be attached to the email, described below:
-   :<json string data: The base64 encoded data of the file to attach.
-   :<json string filename: The name of the file attached to the email.
-   :<json string mimetype: The mimetype of the file, eg. text/csv.
    :<json array recipients: list of email addresses to receive the email, described below:
-   :<json string address: The recipient email address.
-   :<json string name: The name of the recipient shown in the email client.
-   :<json array tagvalues: A list of string values corresponding to the tags in the email. The order and amount of tag values must exactly match the tags.
-   :<json array cc: A list of cc recipients, taks an address and optionally a name of the recipient.
-   :<json array bcc: A list of cc recipients, taks an address and optionally a name of the recipient.
+   :<jsonarr string address: The recipient email address.
+   :<jsonarr string name: The name of the recipient shown in the email client.
+   :<jsonarr array tagvalues: A list of string values corresponding to the tags in the email. The order and amount of tag values must exactly match the tags.
+   :<jsonarr array cc: A list of cc recipients, taks an address and optionally a name of the recipient.
+   :<jsonarr array bcc: A list of cc recipients, taks an address and optionally a name of the recipient.
    :status 200: Returns a dict with an array of message IDs and a dictionary with usage information on success
    :status 400: Ie. invalid arguments, details in the JSON body
    :status 401: Ie. invalid API key or signature
@@ -1563,13 +1561,18 @@ If you need SPF on your domain, you will need to include the following in your D
           "plaintext": "Hello %firsname %surname %target is about to be removed.",
           "subject": "Annihilation: %target",
           "from": "Darth Vader <darth@example.com>",
-          "returnpath": "bounce@example.com",
+          "reply": "bounce@example.com",
           "tags": ["%firstname", "%surname", '%target'],
           "recipients": [
               {"address": "l.organa@example.com", "name": "Leia Organa", "tagvalues": ["Leia", "Organa", "Alderaan"], "cc": [{"address": "h.solo@example.com", "name": "Han Solo"}], "bcc": [{"address": "chewie@example.com", "name": "Chewbacca"}]},
               {"address": "l.skywalker@example.com", "name": "Luke Skywalker", "tagvalues": ["Luke", "Skywalker", "Alderaan"] }
           ]
-      }
+          "attachments": [{
+            "data": "/9j/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCg"
+                    "sOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/yQALCAABAAEBAREA/8wABgAQEAX/2gAIAQEA"
+                    "AD8A0s8g/9k=",
+            "filename": "kyber.jpeg", "mimetype": "image/jpeg"}]
+          }
 
 
    **Example response**
@@ -1587,13 +1590,77 @@ If you need SPF on your domain, you will need to include the following in your D
                431332671
            ]
            "usage": {
-               "amount": 1,
+               "amount": 4,
                "currency": "DKK",
                "total_cost": 0.003
            }
 
        }
 
+If you want to send attachments, encode them as base64 add the following to the payload. The maximum *total* size for attachments is 5MB.
+
+.. http:post:: /rest/email
+   :synopsis: Add attachments.
+
+   :<json array attachments: A list of base64 encoded files to be attached to the email, described below:
+   :<jsonarr string data: The base64 encoded data of the file to attach.
+   :<jsonarr string filename: The name of the file attached to the email.
+   :<jsonarr string mimetype: The mimetype of the file, eg. text/csv.
+
+
+Email status callback
+^^^^^^^^^^^^^^^^^^^
+If you add a callback url to your email request, you will receive a callback with the following JSON payload. For more information about callbacks, see the `Webhooks`_  section.
+
+
+.. http:post:: /example/callback
+   :noindex:
+
+   Example of how our request to you could look like.
+
+   :<json integer id: The ID of the email this notification concerns
+   :<json integer time: The UNIX Timestamp for the delivery status event
+   :<json string email_address: The email address of the recipient
+   :<json string status: One of the states below, in all-caps, ie. DELIVERED
+   :<json string userref: If you specified a reference when sending the message, it's returned to you
+   :<json string details: If available, will contain extra information about the email with output from the SMTP server.
+   :<json string callback_url: The callback url provided
+   :status 200: If you reply with a 2xx code, we will consider the status delivered successfully.
+   :status 500: If we get a code >= 300, we will re-attempt delivery at a later time.
+
+   **Callback example**
+
+   .. sourcecode:: http
+
+      POST /example/callback HTTP/1.1
+      Host: example.com
+      Accept: */*
+      Content-Type: application/json
+
+      {
+          "id": 1000001,
+          "time": 1450000000,
+          "email_address": "example@test.com",
+          "status": "DELIVERED",
+          "userref": "foobar",
+          "details": "250 2.0.0 OK",
+          "callback_url": "https://example.com/example/callback",
+      }
+
+The status field can be of the follwing values.
+
+
+============= =========================================
+Status        Description
+============= =========================================
+PROCESSSED    The email has been successfully received by the system and is ready to be sent
+DELIVERED     The email was successfully delivered to the recipients inbox.
+DEFERRED      The email is delayed and will try to be sent at a later point. This typically happens if the recipients mailserver has a temporary issue.
+BOUNCED       The email could not be delivered. Typically when the address is unknown at the server.
+BLOCKED       The email has been blocked by the server.
+============= =========================================
+
+Depending on the error, the states `BLOCKED` and `BOUNCED` will have more information in the `details` field.
 
 Email code examples
 ^^^^^^^^^^^^^^^^^^^
