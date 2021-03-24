@@ -5,9 +5,11 @@ We offer SMPP connection for select customers. Contact sales@gatewayapi.com to g
 
 Connection
 ----------
-Use the following to connect. We recommend to connect to two hosts. When we do scheduled maintainence, only one host is restarted at a time. By keeping a connection to two hosts, constant connectivity can be achieved.
+Use the following to connect. We recommend to connect to two hosts. When we do maintainence, only one host is restarted at a time. By keeping a connection to two hosts, constant connectivity can be achieved.
 
 You can connect as a transceiver/receiver more than once. Delivery reports will be distributed evenly among your binds, each report only through one bind.
+
+We regurlarily deploy improvements to the SMPP software, so you may experience a session being disconnected, but you can reconnect immediately. As long as your client can reconnect automatically, no downtime or sevice disruption will occur.
 
 ================= =================================
 Host              a.smpp.gatewayapi.com
