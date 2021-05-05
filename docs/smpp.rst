@@ -17,6 +17,9 @@ Host              b.smpp.gatewayapi.com
 Port              2775
 Port TLS          8775
 Bind type         Transceiver or transmitter and receiver.
+Enquire link      Every 30 seconds
+Reconnect delay   30 seconds
+System type       Not required
 ================= =================================
 
 Supported SMPP commands
@@ -44,6 +47,8 @@ enquire_link_resp       0x80000015
 ======================  ==========
 
 We currently do not support `Schedule Delivery Time` on `submit_sm`.
+
+Only TON values of `0` and `1` are supported for destination address.
 
 Delivery reports
 ----------------
