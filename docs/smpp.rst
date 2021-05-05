@@ -48,7 +48,7 @@ enquire_link_resp       0x80000015
 
 We currently do not support `Schedule Delivery Time` on `submit_sm`.
 
-Only TON values of `0` and `1` are supported for destination address. `0` will be intepreted as `1`.
+Only TON values of `0` and `1` are supported for destination address. `0` will be interpreted as `1`.
 
 Delivery reports
 ----------------
